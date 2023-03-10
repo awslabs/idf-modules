@@ -27,8 +27,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
           pip install -r modules/optionals/networking/requirements.txt
-      - name: Fix Linting (mypy, flake8, black, isort)
-        run: scripts/fix.sh --language python --path modules/optionals/networking/
       - name: Static checks and linting (mypy, flake8, black, isort)
         run: scripts/validate.sh --language python --path modules/optionals/networking/
         
@@ -48,7 +46,5 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
           pip install -r modules/storage/buckets/requirements.txt
-      - name: Fix Linting (mypy, flake8, black, isort)
-        run: scripts/fix.sh --language python --path modules/storage/buckets/
       - name: Static checks and linting (mypy, flake8, black, isort)
         run: scripts/validate.sh --language python --path modules/storage/buckets/
