@@ -1,17 +1,23 @@
-## My Project
 
-TODO: Fill this README out!
+# seedfarmer-modules
 
-Be sure to:
+This is a repository for resuable modules that work with [SeedFarmer CLI ](https://github.com/awslabs/seed-farmer).
 
-* Change the title in this README
-* Edit your repository description on GitHub
+Please see the [DOCS](https://seed-farmer.readthedocs.io/en/latest/) for all things seed-farmer.
 
-## Security
 
-See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
 
-## License
+## General Information
 
-This project is licensed under the Apache-2.0 License.
+The modules in this repository are / must be generic for resuse without affiliation to any one particular project or use case.
 
+All modules in this repository adhere to the module strutucture defined in the the [SeedFarmer Guide](https://seed-farmer.readthedocs.io/en/latest)
+
+- [Project Structure](https://seed-farmer.readthedocs.io/en/latest/project_development.html)
+- [Module Development](https://seed-farmer.readthedocs.io/en/latest/module_development.html)
+- [Module Manifest Guide](https://seed-farmer.readthedocs.io/en/latest/manifests.html)
+
+
+## Getting started
+
+Make sure that seed-farmer cli is [installed](https://seed-farmer.readthedocs.io/en/latest/usage.html#install-seedfarmer).  
