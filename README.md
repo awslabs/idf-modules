@@ -20,4 +20,4 @@ All modules in this repository adhere to the module strutucture defined in the t
 
 ## Getting started
 
-Make sure that seed-farmer cli is [installed](https://seed-farmer.readthedocs.io/en/latest/usage.html#install-seedfarmer).  
+Make sure that seed-farmer cli is [installed](https://seed-farmer.readthedocs.io/en/latest/installation.html).  
