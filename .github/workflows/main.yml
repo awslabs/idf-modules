@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  modules-optionals-networking:
+  modules-network-basic-cdk:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -26,9 +26,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
-          pip install -r modules/optionals/networking/requirements.txt
+          pip install -r modules/network/basic-cdk/requirements.txt
       - name: Static checks and linting (mypy, flake8, black, isort)
-        run: scripts/validate.sh --language python --path modules/optionals/networking/
+        run: scripts/validate.sh --language python --path modules/network/basic-cdk/
         
   modules-storage-buckets:
     runs-on: ubuntu-latest
