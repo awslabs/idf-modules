@@ -1,0 +1,6 @@
+name: networking
+path: git::https://github.com/awslabs/seedfarmer-modules.git//modules/network/basic-cdk
+targetAccount: primary
+parameters:
+  - name: internet-accessible
+    value: true
