@@ -380,3 +380,6 @@ cdk.json
 # codeseeder
 codeseeder.out
 
+# env files
+.env
+
