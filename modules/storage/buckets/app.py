@@ -17,6 +17,9 @@ buckets_retention = os.getenv("SEEDFARMER_PARAMETER_RETENTION_TYPE", "DESTROY")
 
 app = App()
 
+if len(f"{project_name}-{deployment_name}") > 36:
+    raise Exception("This module cannot support a project+deployment name character length greater than 35")
+
 
 stack = BucketsStack(
     scope=app,
