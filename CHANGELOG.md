@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### **Added**
-- initialization of repo with `modules/optionals/networking` and `modules/storage/buckets`
+- initialization of repo with `modulesptionals/network/basic-cdk` and `modules/storage/buckets`
+- adding `modules/dummy/blank`
 
 ### **Changed**
 

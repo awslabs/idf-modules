@@ -79,3 +79,4 @@ if [[ -f ${VALIDATE_PATH}/modulestack.yaml ]]; then
     echo "Checking cfn-lint on modulestack.yaml"
     cfn-lint -i E1029,E3031 --template ${VALIDATE_PATH}/modulestack.yaml
 fi
+
