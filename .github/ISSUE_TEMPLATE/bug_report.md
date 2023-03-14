@@ -9,7 +9,7 @@ assignees: ''
 
 **Describe the bug**
 A clear and concise description of what the bug is.  Be ABSOLUTELY sure to give the path of the module (ex `modules/optionals/networking`).
-Any bud that does not explicitly refer to a pertinent module will be closed without inspection.
+Any bug that does not explicitly refer to a pertinent module will be closed without inspection.
 
 **To Reproduce**
 Steps to reproduce the behavior:
