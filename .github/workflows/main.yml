@@ -48,3 +48,5 @@ jobs:
           pip install -r modules/storage/buckets/requirements.txt
       - name: Static checks and linting (mypy, flake8, black, isort)
         run: scripts/validate.sh --language python --path modules/storage/buckets/
+      - name: Pytest
+        run: cd modules/storage/buckets/ && pytest

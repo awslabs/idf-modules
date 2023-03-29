@@ -20,6 +20,12 @@ app = App()
 if len(f"{project_name}-{deployment_name}") > 36:
     raise Exception("This module cannot support a project+deployment name character length greater than 35")
 
+if buckets_retention not in ["DESTROY", "RETAIN"]:
+    raise Exception("The only RETENTION_TYPE values accepted are 'DESTROY' and 'RETAIN' ")
+
+
+if buckets_encryption_type not in ["SSE", "KMS"]:
+    raise Exception("The only ENCRYPTION_TYPE values accepted are 'SSE' and 'KMS' ")
 
 stack = BucketsStack(
     scope=app,
