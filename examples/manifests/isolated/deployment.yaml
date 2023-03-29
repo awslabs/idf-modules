@@ -2,7 +2,7 @@ name: examples-iso
 toolchainRegion: us-east-1
 groups:
   - name: simple
-    path: manifests-isolated/example/example-modules.yaml
+    path: manifests/isolated/example-modules.yaml
 targetAccountMappings:
   - alias: primary
     accountId:

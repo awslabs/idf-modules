@@ -18,6 +18,7 @@ from typing import Any, List, cast
 import aws_cdk.aws_ec2 as ec2
 import cdk_nag
 from aws_cdk import Aspects, Stack, Tags
+from cdk_nag import NagPackSuppression, NagSuppressions
 from constructs import Construct, IConstruct
 
 _logger: logging.Logger = logging.getLogger(__name__)
@@ -89,6 +90,25 @@ class NetworkingStack(Stack):  # type: ignore
 
         if not internet_accessible:
             self._create_vpc_endpoints()
+
+        Aspects.of(self).add(cdk_nag.AwsSolutionsChecks())
+
+        suppressions = [
+            NagPackSuppression(
+                **{
+                    "id": "AwsSolutions-VPC7",
+                    "reason": "Flowlogs not enabled for this module",
+                }
+            ),
+            NagPackSuppression(
+                **{
+                    "id": "AwsSolutions-EC23",
+                    "reason": "Intrinsic Function Warning",
+                }
+            ),
+        ]
+
+        NagSuppressions.add_stack_suppressions(self, suppressions)
 
     def _create_vpc(self, internet_accessible: bool) -> ec2.Vpc:
         if internet_accessible:
@@ -221,5 +241,3 @@ class NetworkingStack(Stack):  # type: ignore
             subnet_ids=self.nodes_subnets.subnet_ids,
             private_dns_enabled=True,
         )
-
-        Aspects.of(self).add(cdk_nag.AwsSolutionsChecks())
