@@ -90,6 +90,8 @@ class NetworkingStack(Stack):  # type: ignore
         if not internet_accessible:
             self._create_vpc_endpoints()
 
+        Aspects.of(self).add(cdk_nag.AwsSolutionsChecks())
+
     def _create_vpc(self, internet_accessible: bool) -> ec2.Vpc:
         if internet_accessible:
             subnet_configuration = [
@@ -221,5 +223,3 @@ class NetworkingStack(Stack):  # type: ignore
             subnet_ids=self.nodes_subnets.subnet_ids,
             private_dns_enabled=True,
         )
-
-        Aspects.of(self).add(cdk_nag.AwsSolutionsChecks())
