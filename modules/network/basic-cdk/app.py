@@ -10,7 +10,10 @@ deployment_name = os.getenv("SEEDFARMER_DEPLOYMENT_NAME", "")
 module_name = os.getenv("SEEDFARMER_MODULE_NAME", "")
 hash = os.getenv("SEEDFARMER_HASH", "")
 
-internet_accessible = os.getenv("SEEDFARMER_PARAMETER_INTERNET_ACCESSIBLE", "true").lower() == "true"
+internet_accessible = os.getenv("SEEDFARMER_PARAMETER_INTERNET_ACCESSIBLE", "true")
+
+
+_bool_internet_accessible = False if internet_accessible.lower() in ["false"] else True
 
 app = App()
 
@@ -20,7 +23,7 @@ stack = NetworkingStack(
     project_name=project_name,
     deployment_name=deployment_name,
     module_name=module_name,
-    internet_accessible=internet_accessible,
+    internet_accessible=_bool_internet_accessible,
     env=aws_cdk.Environment(
         account=os.environ["CDK_DEFAULT_ACCOUNT"],
         region=os.environ["CDK_DEFAULT_REGION"],

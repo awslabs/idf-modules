@@ -29,6 +29,8 @@ jobs:
           pip install -r modules/network/basic-cdk/requirements.txt
       - name: Static checks and linting (mypy, flake8, black, isort)
         run: scripts/validate.sh --language python --path modules/network/basic-cdk/
+      - name: Pytest
+        run: cd modules/network/basic-cdk/ && pytest
         
   modules-storage-buckets:
     runs-on: ubuntu-latest

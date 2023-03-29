@@ -13,7 +13,6 @@
 #    limitations under the License.
 
 import os
-import sys
 
 import aws_cdk as cdk
 import pytest
@@ -25,11 +24,6 @@ def stack_defaults():
     os.environ["CDK_DEFAULT_ACCOUNT"] = "111111111111"
     os.environ["CDK_DEFAULT_REGION"] = "us-east-1"
 
-    # Unload the app import so that subsequent tests don't reuse
-
-    if "stack" in sys.modules:
-        del sys.modules["stack"]
-
 
 def test_synthesize_stack(stack_defaults):
     import stack
@@ -37,24 +31,45 @@ def test_synthesize_stack(stack_defaults):
     app = cdk.App()
     project_name = "test-project"
     dep_name = "test-deployment"
-    mod_name = "test-module"
-
-    bucket_stack = stack.BucketsStack(
+    mod_name = "test-module-nointernet"
+    # Create the Stack.
+    network_stack = stack.NetworkingStack(
         scope=app,
         id=f"{project_name}-{dep_name}-{mod_name}",
         project_name=project_name,
         deployment_name=dep_name,
         module_name=mod_name,
-        buckets_encryption_type="SSE",
-        buckets_retention="DESTROY",
-        hash="xxxxxxxx",
+        internet_accessible=True,
         env=cdk.Environment(
             account=os.environ["CDK_DEFAULT_ACCOUNT"],
             region=os.environ["CDK_DEFAULT_REGION"],
         ),
     )
+    template = Template.from_stack(network_stack)
+    endpoints = template.find_resources(type="AWS::EC2::VPCEndpoint")
+    assert len(endpoints) <= 6
 
-    template = Template.from_stack(bucket_stack)
 
-    template.resource_count_is("AWS::S3::Bucket", 2)
-    template.resource_count_is("AWS::S3::BucketPolicy", 2)
+def test_synthesize_stack_no_internet(stack_defaults):
+    import stack
+
+    app = cdk.App()
+    project_name = "test-project"
+    dep_name = "test-deployment"
+    mod_name = "test-module-nointernet"
+    # Create the Stack.
+    network_stack = stack.NetworkingStack(
+        scope=app,
+        id=f"{project_name}-{dep_name}-{mod_name}",
+        project_name=project_name,
+        deployment_name=dep_name,
+        module_name=mod_name,
+        internet_accessible=False,
+        env=cdk.Environment(
+            account=os.environ["CDK_DEFAULT_ACCOUNT"],
+            region=os.environ["CDK_DEFAULT_REGION"],
+        ),
+    )
+    template = Template.from_stack(network_stack)
+    endpoints = template.find_resources(type="AWS::EC2::VPCEndpoint")
+    assert len(endpoints) > 6
