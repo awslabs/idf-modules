@@ -36,11 +36,11 @@ class NetworkingStack(Stack):  # type: ignore
         **kwargs: Any,
     ) -> None:
 
-        super().__init__(scope, id, **kwargs)
+        super().__init__(scope, id, description="This stack creates AWS Networking resources", **kwargs)
         dep_mod = f"{project_name}-{deployment_name}-{module_name}"
         dep_mod = dep_mod[:27]
 
-        Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=f"{dep_mod}")
+        Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=dep_mod)
         self.vpc: ec2.Vpc = self._create_vpc(internet_accessible=internet_accessible)
 
         self.internet_accessible = internet_accessible
