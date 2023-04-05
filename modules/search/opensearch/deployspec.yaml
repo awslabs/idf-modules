@@ -1,0 +1,24 @@
+publishGenericEnvVariables: true
+deploy:
+  phases:
+    install:
+      commands:
+      - npm install -g aws-cdk@2.20.0
+      - apt-get install jq
+      - pip install -r requirements.txt
+    build:
+      commands:
+      - aws iam create-service-linked-role --aws-service-name es.amazonaws.com || true
+      - cdk deploy --require-approval never --progress events --app "python app.py" --outputs-file ./cdk-exports.json
+      - python export_metadata.py
+destroy:
+  phases:
+    install:
+      commands:
+      - npm install -g aws-cdk@2.20.0
+      - pip install -r requirements.txt
+    build:
+      commands:
+      - cdk destroy --force --app "python app.py"
+
+

@@ -61,6 +61,7 @@ def test_invalid_retention_type(stack_defaults):
         import app  # noqa: F401
     assert "The only RETENTION_TYPE values accepted are 'DESTROY' and 'RETAIN'" in str(e)
 
+
 def test_vpc_id(stack_defaults):
     del os.environ["SEEDFARMER_PARAMETER_VPC_ID"]
 

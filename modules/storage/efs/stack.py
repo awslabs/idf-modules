@@ -27,7 +27,7 @@ class EFSFileStorage(Stack):  # type: ignore
         super().__init__(
             scope,
             id,
-            description="This stack creates an EFS filesystem",
+            description="This stack creates an Amazon EFS filesystem",
             **kwargs,
         )
 
