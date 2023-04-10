@@ -1,5 +1,4 @@
 import os
-from typing import cast
 
 import aws_cdk
 from aws_cdk import App, CfnOutput
@@ -32,8 +31,8 @@ efs_stack = EFSFileStorage(
     scope=app,
     id=f"{project_name}-{deployment_name}-{module_name}",
     project_name=project_name,
-    deployment_name=cast(str, deployment_name),
-    module_name=cast(str, module_name),
+    deployment_name=deployment_name,
+    module_name=module_name,
     vpc_id=vpc_id,
     efs_removal_policy=efs_removal_policy,
     env=aws_cdk.Environment(

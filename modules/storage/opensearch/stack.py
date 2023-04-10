@@ -12,11 +12,9 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-import hashlib
 import logging
-from typing import Any, List, Optional, cast
+from typing import Any, List, cast
 
-import aws_cdk
 import aws_cdk.aws_ec2 as ec2
 import aws_cdk.aws_iam as iam
 import aws_cdk.aws_opensearchservice as opensearch
@@ -54,7 +52,7 @@ class OpenSearchStack(Stack):  # type: ignore
         dep_mod = f"{project_name}-{deployment_name}-{module_name}"
         # used to tag AWS resources. Tag Value length cant exceed 256 characters
         full_dep_mod = dep_mod[:256] if len(dep_mod) > 256 else dep_mod
-        # dep_mod is used to name OpenSearch domain and the max length cant exceed 28 characters as per https://docs.aws.amazon.com/opensearch-service/latest/developerguide/createupdatedomains.html
+        # dep_mod is used to name OpenSearch domain and the max length cant exceed 28 characters as per https://docs.aws.amazon.com/opensearch-service/latest/developerguide/createupdatedomains.html # type: ignore
         dep_mod = dep_mod[:19] + "-" + hash
         Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=full_dep_mod)
 

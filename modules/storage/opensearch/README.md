@@ -3,7 +3,7 @@
 
 ## Description
 
-This module creates an OpenSearch cluster for use in ADDF
+This module creates an OpenSearch cluster for use in IDF
 
 
 ## Inputs/Outputs
@@ -32,9 +32,9 @@ This module creates an OpenSearch cluster for use in ADDF
 
 ```json
 {
-  "OpenSearchDashboardUrl": "https://vpc-addf-test-core-opensearch-aaa.us-east-1.es.amazonaws.com/_dashboards/",
-  "OpenSearchDomainName": "vpc-addf-test-core-opensearch-aaa",
-  "OpenSearchDomainEndpoint": "vpc-addf-test-core-opensearch-aaa.us-east-1.es.amazonaws.com",
+  "OpenSearchDashboardUrl": "https://vpc-idf-test-core-opensearch-aaa.us-east-1.es.amazonaws.com/_dashboards/",
+  "OpenSearchDomainName": "vpc-idf-test-core-opensearch-aaa",
+  "OpenSearchDomainEndpoint": "vpc-idf-test-core-opensearch-aaa.us-east-1.es.amazonaws.com",
   "OpenSearchSecurityGroupId": "sg-0475c9e7efba05c0d"
 }
 

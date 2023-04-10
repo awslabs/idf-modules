@@ -14,7 +14,7 @@
 
 import hashlib
 import logging
-from typing import Any, Optional, cast
+from typing import Any, cast
 
 import aws_cdk
 import aws_cdk.aws_iam as aws_iam
@@ -37,7 +37,7 @@ class BucketsStack(Stack):  # type: ignore
         module_name: str,
         hash: str,
         buckets_encryption_type: str,
-        buckets_retention: Optional[str],
+        buckets_retention: str,
         **kwargs: Any,
     ) -> None:
 
@@ -177,7 +177,7 @@ class BucketsStack(Stack):  # type: ignore
             NagPackSuppression(
                 **{
                     "id": "AwsSolutions-IAM5",
-                    "reason": "Resource access restriced to ADDF resources",
+                    "reason": "Resource access restriced to IDF resources",
                 }
             ),
         ]
