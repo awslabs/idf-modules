@@ -32,8 +32,10 @@ class EFSFileStorage(Stack):  # type: ignore
         )
 
         dep_mod = f"{project_name}-{deployment_name}-{module_name}"
-        dep_mod = dep_mod[:30]
-        Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=dep_mod)
+        dep_mod = dep_mod[0:19]
+        # used to tag AWS resources. Tag Value length cant exceed 256 characters
+        full_dep_mod = dep_mod[:256] if len(dep_mod) > 256 else dep_mod
+        Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=full_dep_mod)
 
         self.vpc_id = vpc_id
         self.vpc = ec2.Vpc.from_lookup(

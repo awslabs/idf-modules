@@ -14,7 +14,7 @@
 
 import hashlib
 import logging
-from typing import Any, cast
+from typing import Any, Optional, cast
 
 import aws_cdk
 import aws_cdk.aws_iam as aws_iam
@@ -37,7 +37,7 @@ class BucketsStack(Stack):  # type: ignore
         module_name: str,
         hash: str,
         buckets_encryption_type: str,
-        buckets_retention: str,
+        buckets_retention: Optional[str],
         **kwargs: Any,
     ) -> None:
 
@@ -45,8 +45,12 @@ class BucketsStack(Stack):  # type: ignore
         account: str = aws_cdk.Aws.ACCOUNT_ID
         region: str = aws_cdk.Aws.REGION
 
+        dep_mod = f"{project_name}-{deployment_name}-{module_name}"
+        # used to tag AWS resources. Tag Value length cant exceed 256 characters
+        full_dep_mod = dep_mod[:256] if len(dep_mod) > 256 else dep_mod
+
         super().__init__(scope, id, description="This stack creates AWS S3 Bucket(s)", **kwargs)
-        Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=f"{project_name}-{deployment_name}")
+        Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=full_dep_mod)
 
         artifact_bucket_name = f"{project_name}-{deployment_name}-artifacts-bucket-{hash}"
         unique_ab = (hashlib.sha1(module_name.encode("UTF-8")).hexdigest())[: (60 - len(artifact_bucket_name))]

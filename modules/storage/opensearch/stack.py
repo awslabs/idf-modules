@@ -12,15 +12,16 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
+import hashlib
 import logging
-from typing import Any, List, cast
+from typing import Any, List, Optional, cast
 
 import aws_cdk
 import aws_cdk.aws_ec2 as ec2
 import aws_cdk.aws_iam as iam
 import aws_cdk.aws_opensearchservice as opensearch
 import cdk_nag
-from aws_cdk import Aspects, Stack, Tags
+from aws_cdk import Aspects, RemovalPolicy, Stack, Tags
 from cdk_nag import NagPackSuppression, NagSuppressions
 from constructs import Construct, IConstruct
 
@@ -36,8 +37,10 @@ class OpenSearchStack(Stack):  # type: ignore
         project_name: str,
         deployment_name: str,
         module_name: str,
+        hash: str,
         vpc_id: str,
         private_subnet_ids: List[str],
+        os_domain_retention: str,
         os_data_nodes: int,
         os_data_node_instance_type: str,
         os_master_nodes: int,
@@ -49,8 +52,11 @@ class OpenSearchStack(Stack):  # type: ignore
         super().__init__(scope, id, description="This stack creates Amazon Opensearch cluster resources", **kwargs)
 
         dep_mod = f"{project_name}-{deployment_name}-{module_name}"
-        dep_mod = dep_mod[:30]
-        Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=dep_mod)
+        # used to tag AWS resources. Tag Value length cant exceed 256 characters
+        full_dep_mod = dep_mod[:256] if len(dep_mod) > 256 else dep_mod
+        # dep_mod is used to name OpenSearch domain and the max length cant exceed 28 characters as per https://docs.aws.amazon.com/opensearch-service/latest/developerguide/createupdatedomains.html
+        dep_mod = dep_mod[:19] + "-" + hash
+        Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=full_dep_mod)
 
         # ###  OpenSearch Starts Here!!
         self.vpc_id = vpc_id
@@ -96,7 +102,7 @@ class OpenSearchStack(Stack):  # type: ignore
         os_domain = opensearch.Domain(
             self,
             "OSDomain",
-            removal_policy=aws_cdk.RemovalPolicy.DESTROY,
+            removal_policy=RemovalPolicy.RETAIN if os_domain_retention.upper() == "RETAIN" else RemovalPolicy.DESTROY,
             # https://docs.aws.amazon.com/cdk/api/latest/docs/@aws-cdk_aws-opensearchservice.EngineVersion.html
             version=opensearch.EngineVersion.OPENSEARCH_1_0,
             vpc=self.vpc,

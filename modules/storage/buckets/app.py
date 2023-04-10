@@ -12,7 +12,7 @@ hash = os.getenv("SEEDFARMER_HASH", "")
 
 
 buckets_encryption_type = os.getenv("SEEDFARMER_PARAMETER_ENCRYPTION_TYPE", "SSE")
-buckets_retention = os.getenv("SEEDFARMER_PARAMETER_RETENTION_TYPE", "DESTROY")
+buckets_retention = os.getenv("SEEDFARMER_PARAMETER_RETENTION_TYPE", "RETAIN")
 
 
 app = App()

@@ -15,6 +15,7 @@ def _param(name: str) -> str:
 project_name = os.getenv("SEEDFARMER_PROJECT_NAME", "")
 deployment_name = os.getenv("SEEDFARMER_DEPLOYMENT_NAME", "")
 module_name = os.getenv("SEEDFARMER_MODULE_NAME", "")
+hash = os.getenv("SEEDFARMER_HASH", "")
 
 if len(f"{project_name}-{deployment_name}") > 36:
     raise Exception("This module cannot support a project+deployment name character length greater than 35")
@@ -23,6 +24,7 @@ if len(f"{project_name}-{deployment_name}") > 36:
 
 vpc_id = os.getenv(_param("VPC_ID"))
 private_subnet_ids = json.loads(os.getenv(_param("PRIVATE_SUBNET_IDS")))  # type: ignore
+os_domain_retention = os.getenv(_param("RETENTION_TYPE"), "RETAIN")
 
 
 if not vpc_id:
@@ -30,6 +32,9 @@ if not vpc_id:
 
 if not private_subnet_ids:
     raise Exception("missing input parameter private-subnet-ids")
+
+if os_domain_retention not in ["DESTROY", "RETAIN"]:
+    raise Exception("The only RETENTION_TYPE values accepted are 'DESTROY' and 'RETAIN' ")
 
 os_data_nodes = int(os.getenv(_param("OPENSEARCH_DATA_NODES"), 1))
 os_data_node_instance_type = os.getenv(_param("OPENSEARCH_DATA_NODES_INSTANCE_TYPE"), "r6g.large.search")
@@ -48,8 +53,10 @@ stack = OpenSearchStack(
     project_name=project_name,
     deployment_name=deployment_name,
     module_name=module_name,
+    hash=hash,
     vpc_id=vpc_id,
     private_subnet_ids=private_subnet_ids,
+    os_domain_retention=os_domain_retention,
     os_data_nodes=os_data_nodes,
     os_data_node_instance_type=os_data_node_instance_type,
     os_master_nodes=os_master_nodes,

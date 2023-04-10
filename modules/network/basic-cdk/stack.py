@@ -38,9 +38,11 @@ class NetworkingStack(Stack):  # type: ignore
 
         super().__init__(scope, id, description="This stack creates AWS Networking resources", **kwargs)
         dep_mod = f"{project_name}-{deployment_name}-{module_name}"
-        dep_mod = dep_mod[:27]
-
-        Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=dep_mod)
+        # Stitch the below with `hash` to make it unique
+        dep_mod = dep_mod[:19]
+        # used to tag AWS resources. Tag Value length cant exceed 256 characters
+        full_dep_mod = dep_mod[:256] if len(dep_mod) > 256 else dep_mod
+        Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=full_dep_mod)
         self.vpc: ec2.Vpc = self._create_vpc(internet_accessible=internet_accessible)
 
         self.internet_accessible = internet_accessible
