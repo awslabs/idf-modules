@@ -10,7 +10,7 @@ project_name = os.getenv("SEEDFARMER_PROJECT_NAME", "")
 deployment_name = os.getenv("SEEDFARMER_DEPLOYMENT_NAME", "")
 module_name = os.getenv("SEEDFARMER_MODULE_NAME", "")
 
-internet_accessible = json.loads(os.getenv("SEEDFARMER_PARAMETER_INTERNET_ACCESSIBLE", "false"))
+internet_accessible = json.loads(os.getenv("SEEDFARMER_PARAMETER_INTERNET_ACCESSIBLE", "true"))
 
 app = App()
 

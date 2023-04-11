@@ -10,21 +10,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### **Added**
+
 - adding individual module unit tests, hooked up to workflows
+- added EFS and Opensearch modules, refactored them to be agnostic of a project with unit-tests
+- added `isolated` subnets feature to networking module
+- fixed the way `internet_accessible` bool is referenced
+- added `manifests/local` for local testing and `examples/manifests/example` as a guidance for calling the modules using `git paths`
+- added contributing guidance to `CONTRIBUTING.md`
 
 ### **Changed**
+
+- refactored L1 cdk implementation of networking -> interface endpoints creation with the L2 mode
 
 ### **Removed**
 
 ## v1.0.0 (2023-03-15)
 
 ### **Added**
+
 - initialization of repo with `modulesptionals/network/basic-cdk` and `modules/storage/buckets`
 - adding `modules/dummy/blank`
-
-### **Changed**
-
-### **Removed**
-
-
-

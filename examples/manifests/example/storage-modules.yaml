@@ -9,6 +9,7 @@ parameters:
     value: RETAIN
 ---
 name: opensearch
+#when there is no release branch mentioned post the module directory path, the `main` branch will be fetched
 path: git::https://github.com/awslabs/idf-modules.git//modules/opensearch/
 targetAccount: primary
 targetRegion: us-east-1
@@ -19,6 +20,7 @@ parameters:
     value: RETAIN
 ---
 name: efs
+#when there is no release branch mentioned post the module directory path, the `main` branch will be fetched
 path: git::https://github.com/awslabs/idf-modules.git//modules/efs/
 targetAccount: primary
 targetRegion: us-east-1
