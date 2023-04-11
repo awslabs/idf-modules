@@ -185,6 +185,9 @@ class NetworkingStack(Stack):  # type: ignore
             "sts_endpoint": ec2.InterfaceVpcEndpointAwsService.STS,
             "efs": ec2.InterfaceVpcEndpointAwsService.ELASTIC_FILESYSTEM,
             "elb": ec2.InterfaceVpcEndpointAwsService.ELASTIC_LOAD_BALANCING,
+            "lambda": ec2.InterfaceVpcEndpointAwsService.LAMBDA_,
+            "code_artifact_repo_endpoint": ec2.InterfaceVpcEndpointAwsService("codeartifact.repositories"),
+            "code_artifact_api_endpoint": ec2.InterfaceVpcEndpointAwsService("codeartifact.api"),
             "autoscaling": ec2.InterfaceVpcEndpointAwsService("autoscaling"),
             "cloudformation_endpoint": ec2.InterfaceVpcEndpointAwsService("cloudformation"),
             "codebuild_endpoint": ec2.InterfaceVpcEndpointAwsService("codebuild"),
@@ -200,45 +203,14 @@ class NetworkingStack(Stack):  # type: ignore
                 private_dns_enabled=True,
                 security_groups=[cast(ec2.ISecurityGroup, self._vpc_security_group)],
             )
-        # Adding CodeArtifact VPC endpoints
-        self.vpc.add_interface_endpoint(
-            id="code_artifact_repo_endpoint",
-            service=cast(
-                ec2.IInterfaceVpcEndpointService,
-                ec2.InterfaceVpcEndpointAwsService("codeartifact.repositories"),
-            ),
-            subnets=ec2.SubnetSelection(subnets=self.nodes_subnets.subnets),
-            private_dns_enabled=False,
-            security_groups=[cast(ec2.ISecurityGroup, self._vpc_security_group)],
-        )
-        self.vpc.add_interface_endpoint(
-            id="code_artifact_api_endpoint",
-            service=cast(
-                ec2.IInterfaceVpcEndpointService,
-                ec2.InterfaceVpcEndpointAwsService("codeartifact.api"),
-            ),
-            subnets=ec2.SubnetSelection(subnets=self.nodes_subnets.subnets),
-            private_dns_enabled=False,
-            security_groups=[cast(ec2.ISecurityGroup, self._vpc_security_group)],
-        )
 
-        # Adding Lambda and Redshift endpoints with CDK low level APIs
+        # Adding Redshift endpoints with CDK low level APIs
         endpoint_url_template = "com.amazonaws.{}.{}"
         ec2.CfnVPCEndpoint(
             self,
             "redshift_endpoint",
             vpc_endpoint_type="Interface",
             service_name=endpoint_url_template.format(self.region, "redshift"),
-            vpc_id=self.vpc.vpc_id,
-            security_group_ids=[self._vpc_security_group.security_group_id],
-            subnet_ids=self.nodes_subnets.subnet_ids,
-            private_dns_enabled=True,
-        )
-        ec2.CfnVPCEndpoint(
-            self,
-            "lambda_endpoint",
-            vpc_endpoint_type="Interface",
-            service_name=endpoint_url_template.format(self.region, "lambda"),
             vpc_id=self.vpc.vpc_id,
             security_group_ids=[self._vpc_security_group.security_group_id],
             subnet_ids=self.nodes_subnets.subnet_ids,

@@ -12,6 +12,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
+import json
 import os
 import sys
 
@@ -39,17 +40,18 @@ def test_app(stack_defaults):
 
 def test_internet_default(stack_defaults):
     del os.environ["SEEDFARMER_PARAMETER_INTERNET_ACCESSIBLE"]
+    os.environ["SEEDFARMER_PARAMETER_INTERNET_ACCESSIBLE"] = "true"
     import app  # noqa: F401
 
-    assert app._bool_internet_accessible is True
+    assert app.internet_accessible is True
 
 
 def test_internet_bad_value(stack_defaults):
     del os.environ["SEEDFARMER_PARAMETER_INTERNET_ACCESSIBLE"]
     os.environ["SEEDFARMER_PARAMETER_INTERNET_ACCESSIBLE"] = "fsfadsfasdfsa"
-    import app  # noqa: F401
-
-    assert app._bool_internet_accessible is True
+    with pytest.raises(json.decoder.JSONDecodeError) as e:
+        import app  # noqa: F401
+    assert "JSONDecodeError" in str(e)
 
 
 def test_internet_false(stack_defaults):
@@ -57,4 +59,4 @@ def test_internet_false(stack_defaults):
     os.environ["SEEDFARMER_PARAMETER_INTERNET_ACCESSIBLE"] = "false"
     import app  # noqa: F401
 
-    assert app._bool_internet_accessible is False
+    assert app.internet_accessible is False
