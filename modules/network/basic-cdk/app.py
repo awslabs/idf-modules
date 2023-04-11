@@ -1,3 +1,4 @@
+import json
 import os
 
 import aws_cdk
@@ -8,12 +9,8 @@ from stack import NetworkingStack
 project_name = os.getenv("SEEDFARMER_PROJECT_NAME", "")
 deployment_name = os.getenv("SEEDFARMER_DEPLOYMENT_NAME", "")
 module_name = os.getenv("SEEDFARMER_MODULE_NAME", "")
-hash = os.getenv("SEEDFARMER_HASH", "")
 
-internet_accessible = os.getenv("SEEDFARMER_PARAMETER_INTERNET_ACCESSIBLE", "true")
-
-
-_bool_internet_accessible = False if internet_accessible.lower() in ["false"] else True
+internet_accessible = json.loads(os.getenv("SEEDFARMER_PARAMETER_INTERNET_ACCESSIBLE", "true"))
 
 app = App()
 
@@ -23,42 +20,11 @@ stack = NetworkingStack(
     project_name=project_name,
     deployment_name=deployment_name,
     module_name=module_name,
-    internet_accessible=_bool_internet_accessible,
+    internet_accessible=internet_accessible,
     env=aws_cdk.Environment(
         account=os.environ["CDK_DEFAULT_ACCOUNT"],
         region=os.environ["CDK_DEFAULT_REGION"],
     ),
-)
-
-CfnOutput(
-    scope=stack,
-    id="vpcId",
-    value=stack.vpc.vpc_id,
-)
-
-CfnOutput(
-    scope=stack,
-    id="publicSubnetIds",
-    value=",".join(stack.public_subnets.subnet_ids),
-)
-
-CfnOutput(
-    scope=stack,
-    id="privateSubnetIds",
-    value=",".join(stack.private_subnets.subnet_ids),
-)
-
-if not stack.internet_accessible:
-    CfnOutput(
-        scope=stack,
-        id="isolatedSubnetIds",
-        value=",".join(stack.isolated_subnets.subnet_ids),
-    )
-
-CfnOutput(
-    scope=stack,
-    id="nodeSubnetIds",
-    value=",".join(stack.nodes_subnets.subnet_ids),
 )
 
 CfnOutput(

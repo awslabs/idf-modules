@@ -4,10 +4,10 @@
 
 This Module does NOTHING.....it just echos all params to the CodeBuild Env.
 
-
 ## Inputs/Outputs
 
 ### Input Paramenters
+
 None
 
 #### Required
@@ -15,13 +15,12 @@ None
 None
 
 #### Optional
-None
 
+None
 
 ### Module Metadata Outputs
+
 None
-
-
 
 #### Output Example
 

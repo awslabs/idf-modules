@@ -1,0 +1,21 @@
+nameGenerator:
+  prefix: local-
+  suffix:
+    valueFrom:
+      envVariable: GLOBAL_CUSTOM_DEPLOYMENT_NAME_IDENTIFIER
+toolchainRegion: us-east-1
+groups:
+  - name: networking
+    path: manifests/local/networking-modules.yaml
+  - name: storage
+    path: manifests/local/storage-modules.yaml
+targetAccountMappings:
+  - alias: primary
+    accountId:
+      valueFrom:
+        envVariable: PRIMARY_ACCOUNT
+    default: true
+    regionMappings:
+      - region: us-east-1
+        default: true
+

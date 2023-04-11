@@ -3,20 +3,15 @@ toolchainRegion: us-east-1
 groups:
   - name: networking
     path: manifests/example/networking-modules.yaml
-  - name: simple
-    path: manifests/example/example-modules.yaml
+  - name: storage
+    path: manifests/example/storage-modules.yaml
 targetAccountMappings:
   - alias: primary
     accountId:
       valueFrom:
-        envVariable: PRIMARY_ACCOUNT
+        envVariable: "1234567890"
     default: true
-    parametersGlobal:
-      myTestGlobalParam: HeyHereIAmGlobal
     regionMappings:
       - region: us-east-1
         default: true
-        parametersRegional:
-          myTestRegionParam: HeyHereIAmRegional
-      - region: us-west-2
 

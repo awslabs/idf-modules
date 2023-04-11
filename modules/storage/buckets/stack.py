@@ -45,8 +45,12 @@ class BucketsStack(Stack):  # type: ignore
         account: str = aws_cdk.Aws.ACCOUNT_ID
         region: str = aws_cdk.Aws.REGION
 
-        super().__init__(scope, id, **kwargs)
-        Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=f"{project_name}-{deployment_name}")
+        dep_mod = f"{project_name}-{deployment_name}-{module_name}"
+        # used to tag AWS resources. Tag Value length cant exceed 256 characters
+        full_dep_mod = dep_mod[:256] if len(dep_mod) > 256 else dep_mod
+
+        super().__init__(scope, id, description="This stack creates AWS S3 Bucket(s)", **kwargs)
+        Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=full_dep_mod)
 
         artifact_bucket_name = f"{project_name}-{deployment_name}-artifacts-bucket-{hash}"
         unique_ab = (hashlib.sha1(module_name.encode("UTF-8")).hexdigest())[: (60 - len(artifact_bucket_name))]
@@ -173,7 +177,7 @@ class BucketsStack(Stack):  # type: ignore
             NagPackSuppression(
                 **{
                     "id": "AwsSolutions-IAM5",
-                    "reason": "Resource access restriced to ADDF resources",
+                    "reason": "Resource access restriced to IDF resources",
                 }
             ),
         ]

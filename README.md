@@ -1,3 +1,8 @@
+# Industry Dataframework (IDF) - modules
+
+This is a repository for resuable modules that work with [SeedFarmer CLI](https://github.com/awslabs/idf-modules).
+
+Please see the [DOCS](https://seed-farmer.readthedocs.io/en/latest/) for all things seed-farmer.
 
 # IDF-Modules
 
@@ -16,7 +21,6 @@ All modules in this repository adhere to the module strutucture defined in the t
 - [Project Structure](https://seed-farmer.readthedocs.io/en/latest/project_development.html)
 - [Module Development](https://seed-farmer.readthedocs.io/en/latest/module_development.html)
 - [Module Manifest Guide](https://seed-farmer.readthedocs.io/en/latest/manifests.html)
-
 
 ## Getting started
 
