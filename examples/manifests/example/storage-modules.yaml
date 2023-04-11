@@ -1,5 +1,5 @@
 name: buckets
-path: modules/storage/buckets
+path: git::https://github.com/awslabs/idf-modules.git//modules/storage/buckets?ref=release/1.0.0&depth=1
 targetAccount: primary
 targetRegion: us-east-1
 parameters:
@@ -9,7 +9,7 @@ parameters:
     value: RETAIN
 ---
 name: opensearch
-path: modules/storage/opensearch
+path: git::https://github.com/awslabs/idf-modules.git//modules/opensearch/
 targetAccount: primary
 targetRegion: us-east-1
 parameters:
@@ -19,7 +19,7 @@ parameters:
     value: RETAIN
 ---
 name: efs
-path: modules/storage/efs
+path: git::https://github.com/awslabs/idf-modules.git//modules/efs/
 targetAccount: primary
 targetRegion: us-east-1
 parameters:

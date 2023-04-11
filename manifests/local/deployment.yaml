@@ -7,8 +7,8 @@ toolchainRegion: us-east-1
 groups:
   - name: networking
     path: manifests/local/networking-modules.yaml
-  - name: storage
-    path: manifests/local/storage-modules.yaml
+  # - name: storage
+  #   path: manifests/local/storage-modules.yaml
 targetAccountMappings:
   - alias: primary
     accountId:

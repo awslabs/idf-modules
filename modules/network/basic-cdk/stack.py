@@ -59,7 +59,7 @@ class NetworkingStack(Stack):  # type: ignore
         )
         if not internet_accessible:
             self.isolated_subnets = (
-                self.vpc.select_subnets(subnet_type=ec2.SubnetType.PRIVATE_WITH_NAT)  # type: ignore
+                self.vpc.select_subnets(subnet_type=ec2.SubnetType.PRIVATE_ISOLATED)  # type: ignore
                 if self.vpc.isolated_subnets
                 else self.vpc.select_subnets(subnet_group_name="")
             )
@@ -74,21 +74,6 @@ class NetworkingStack(Stack):  # type: ignore
         self._vpc_security_group.add_ingress_rule(
             peer=ec2.Peer.ipv4(self.vpc.vpc_cidr_block), connection=ec2.Port.all_tcp()
         )
-
-        # Creating Gateway Endpoints
-        vpc_gateway_endpoints = {
-            "s3": ec2.GatewayVpcEndpointAwsService.S3,
-            "dynamodb": ec2.GatewayVpcEndpointAwsService.DYNAMODB,
-        }
-
-        for name, gateway_vpc_endpoint_service in vpc_gateway_endpoints.items():
-            self.vpc.add_gateway_endpoint(
-                id=name,
-                service=gateway_vpc_endpoint_service,
-                subnets=[
-                    ec2.SubnetSelection(subnets=self.nodes_subnets.subnets),
-                ],
-            )
 
         if not internet_accessible:
             self._create_vpc_endpoints()
@@ -117,17 +102,17 @@ class NetworkingStack(Stack):  # type: ignore
             subnet_configuration = [
                 ec2.SubnetConfiguration(name="Public", subnet_type=ec2.SubnetType.PUBLIC, cidr_mask=24),
                 ec2.SubnetConfiguration(
-                    name="Private", subnet_type=ec2.SubnetType.PRIVATE_WITH_NAT, cidr_mask=21  # type: ignore
+                    name="Private", subnet_type=ec2.SubnetType.PRIVATE_WITH_NAT, cidr_mask=24  # type: ignore
                 ),
             ]
         else:
             subnet_configuration = [
                 ec2.SubnetConfiguration(name="Public", subnet_type=ec2.SubnetType.PUBLIC, cidr_mask=24),
                 ec2.SubnetConfiguration(
-                    name="Private", subnet_type=ec2.SubnetType.PRIVATE_WITH_NAT, cidr_mask=21  # type: ignore
+                    name="Private", subnet_type=ec2.SubnetType.PRIVATE_WITH_NAT, cidr_mask=24  # type: ignore
                 ),
                 ec2.SubnetConfiguration(
-                    name="Isolated", subnet_type=ec2.SubnetType.PRIVATE_ISOLATED, cidr_mask=21  # type: ignore
+                    name="Isolated", subnet_type=ec2.SubnetType.PRIVATE_ISOLATED, cidr_mask=24  # type: ignore
                 ),
             ]
 
@@ -138,12 +123,12 @@ class NetworkingStack(Stack):  # type: ignore
             cidr="10.0.0.0/16",
             enable_dns_hostnames=True,
             enable_dns_support=True,
-            max_azs=2,
+            max_azs=3,
             nat_gateways=1,
             subnet_configuration=subnet_configuration,
         )
 
-        # Enabling subnets for deploying Load Balancers via EKS
+        # Enabling subnets for deploying Load Balancers for EKS workloads
         NetworkingStack._tag_subnets(vpc.private_subnets, "kubernetes.io/role/internal-elb")
         NetworkingStack._tag_subnets(vpc.public_subnets, "kubernetes.io/role/elb")
 
@@ -156,6 +141,22 @@ class NetworkingStack(Stack):  # type: ignore
 
     def _create_vpc_endpoints(self) -> None:
 
+        # Creating Gateway Endpoints
+        vpc_gateway_endpoints = {
+            "s3": ec2.GatewayVpcEndpointAwsService.S3,
+            "dynamodb": ec2.GatewayVpcEndpointAwsService.DYNAMODB,
+        }
+
+        for name, gateway_vpc_endpoint_service in vpc_gateway_endpoints.items():
+            self.vpc.add_gateway_endpoint(
+                id=name,
+                service=gateway_vpc_endpoint_service,
+                subnets=[
+                    ec2.SubnetSelection(subnets=self.nodes_subnets.subnets),
+                ],
+            )
+
+        # Creating Interface Endpoints
         vpc_interface_endpoints = {
             "cloudwatch_endpoint": ec2.InterfaceVpcEndpointAwsService.CLOUDWATCH,
             "cloudwatch_logs_endpoint": ec2.InterfaceVpcEndpointAwsService.CLOUDWATCH_LOGS,

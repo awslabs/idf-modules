@@ -1,22 +1,17 @@
-name: examples
+name: demo-idf
 toolchainRegion: us-east-1
 groups:
   - name: networking
-    path: manifests/example/networking-modules.yaml
-  - name: simple
-    path: manifests/example/example-modules.yaml
+    path: manifests/local/networking-modules.yaml
+  - name: storage
+    path: manifests/local/storage-modules.yaml
 targetAccountMappings:
   - alias: primary
     accountId:
       valueFrom:
         envVariable: PRIMARY_ACCOUNT
     default: true
-    parametersGlobal:
-      myTestGlobalParam: HeyHereIAmGlobal
     regionMappings:
       - region: us-east-1
         default: true
-        parametersRegional:
-          myTestRegionParam: HeyHereIAmRegional
-      - region: us-west-2
 
