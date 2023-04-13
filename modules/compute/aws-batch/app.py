@@ -17,6 +17,7 @@ if len(f"{project_name}-{deployment_name}") > 36:
 def _param(name: str) -> str:
     return f"SEEDFARMER_PARAMETER_{name}"
 
+
 # App specific
 vpc_id = os.getenv(_param("VPC_ID"))  # required
 private_subnet_ids = json.loads(os.getenv(_param("PRIVATE_SUBNET_IDS"), ""))  # required

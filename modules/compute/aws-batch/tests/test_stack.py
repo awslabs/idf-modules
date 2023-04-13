@@ -38,7 +38,20 @@ def test_synthesize_stack(stack_defaults):
     project_name = "test-project"
     dep_name = "test-deployment"
     mod_name = "test-module"
-    batch_compute = {"batch_compute_config": [{"env_name": "ng1", "compute_type": "ON_DEMAND", "max_vcpus": 4800, "desired_vcpus": 0, "order": 1, "instance_types": ["m5.xlarge"]}, {"env_name": "ng2", "max_vcpus": 4800, "desired_vcpus": 0, "compute_type": "SPOT", "order": 1}, {"env_name": "ng3", "max_vcpus": 4800, "desired_vcpus": 0, "compute_type": "FARGATE", "order": 1}]}
+    batch_compute = {
+        "batch_compute_config": [
+            {
+                "env_name": "ng1",
+                "compute_type": "ON_DEMAND",
+                "max_vcpus": 4800,
+                "desired_vcpus": 0,
+                "order": 1,
+                "instance_types": ["m5.xlarge"],
+            },
+            {"env_name": "ng2", "max_vcpus": 4800, "desired_vcpus": 0, "compute_type": "SPOT", "order": 1},
+            {"env_name": "ng3", "max_vcpus": 4800, "desired_vcpus": 0, "compute_type": "FARGATE", "order": 1},
+        ]
+    }
     efs_stack = stack.AwsBatch(
         scope=app,
         id=f"{project_name}-{dep_name}-{mod_name}",
@@ -75,7 +88,6 @@ def test_synthesize_stack(stack_defaults):
             },
         },
     )
-    
 
     # Batch Service role
     template.has_resource_properties(
