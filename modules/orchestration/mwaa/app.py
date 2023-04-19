@@ -50,7 +50,7 @@ if environment_class:
     optional_args["environment_class"] = environment_class
 if max_workers and max_workers.isnumeric():
     optional_args["max_workers"] = int(max_workers)  # type: ignore
-optional_args["airflow_version"] = airflow_version if airflow_version else "2.2.2"
+optional_args["airflow_version"] = airflow_version if airflow_version else "2.5.1"
 
 
 stack = MWAAStack(

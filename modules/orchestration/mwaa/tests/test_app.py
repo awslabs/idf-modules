@@ -30,7 +30,7 @@ def stack_defaults():
     os.environ["SEEDFARMER_PARAMETER_PRIVATE_SUBNET_IDS"] = '["subnet-12345", "subnet-54321"]'
     os.environ["SEEDFARMER_PARAMETER_DAG_BUCKET_NAME"] = "test-idf-dag-bucket"
     os.environ["SEEDFARMER_PARAMETER_DAG_PATH"] = "test-dags-path"
-    os.environ["SEEDFARMER_PARAMETER_AIRFLOW_VERSION"] = "2.2.2"
+    os.environ["SEEDFARMER_PARAMETER_AIRFLOW_VERSION"] = "2.5.1"
 
     # Unload the app import so that subsequent tests don't reuse
     if "app" in sys.modules:
