@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - added contributing guidance to `CONTRIBUTING.md`
 - refactored AWS Batch module, to be agnostic of a project with unit-tests
 - refactored Amazon MWAA module, to be agnostic of a project with unit-tests
+- refactored Fsx-Lustre module, to be agnostic of a project with unit-tests
 
 ### **Changed**
 
