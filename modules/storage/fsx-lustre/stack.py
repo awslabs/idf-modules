@@ -48,7 +48,11 @@ class FsxFileSystem(Stack):
         self.module_name = module_name
 
         super().__init__(scope, id, **kwargs)
-        Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=f"{project_name}-{deployment_name}")
+
+        dep_mod = f"{project_name}-{deployment_name}-{module_name}"
+        # used to tag AWS resources. Tag Value length cant exceed 256 characters
+        full_dep_mod = dep_mod[:256] if len(dep_mod) > 256 else dep_mod
+        Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=full_dep_mod)
 
         import_path = f"s3://{data_bucket_name}{import_path}" if import_path else None
         export_path = f"s3://{data_bucket_name}{export_path}" if export_path else None

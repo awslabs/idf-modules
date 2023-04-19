@@ -59,8 +59,5 @@ def test_synthesize_stack(stack_defaults):
     )
 
     template = Template.from_stack(fsx_stack)
-    # import json
-    # print(json.dumps(template.to_json(),indent=4))
-    # template.find_resources("AWS::EC2::SecurityGroup")
     template.resource_count_is("AWS::EC2::SecurityGroup", 1)
     template.resource_count_is("AWS::FSx::FileSystem", 1)
