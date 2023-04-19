@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - added `manifests/local` for local testing and `examples/manifests/example` as a guidance for calling the modules using `git paths`
 - added contributing guidance to `CONTRIBUTING.md`
 - refactored AWS Batch module, to be agnostic of a project with unit-tests
+- refactored Amazon MWAA module, to be agnostic of a project with unit-tests
 
 ### **Changed**
 
