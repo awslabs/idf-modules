@@ -54,7 +54,7 @@ class AwsBatch(Stack):
         # used to tag AWS resources. Tag Value length cant exceed 256 characters
         full_dep_mod = dep_mod[:256] if len(dep_mod) > 256 else dep_mod
         """
-        dep_mod is used to name OpenSearch domain and the max length cant exceed 28 character
+        dep_mod is used to name OpenSearch domain and the max length cant exceed 28 characters
         https://docs.aws.amazon.com/opensearch-service/latest/developerguide/createupdatedomains.html
         """
 
