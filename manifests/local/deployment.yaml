@@ -13,6 +13,8 @@ groups:
     path: manifests/local/compute-modules.yaml
   - name: database
     path: manifests/local/database-modules.yaml
+  - name: orchestration
+    path: manifests/local/orchestration-modules.yaml
 targetAccountMappings:
   - alias: primary
     accountId:
