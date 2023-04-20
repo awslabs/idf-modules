@@ -3,7 +3,7 @@
 
 ## Description
 
-This module creates a Neptune cluster for use in ADDF
+This module creates a Neptune cluster for use in IDF
 
 
 ## Inputs/Outputs
@@ -29,8 +29,8 @@ This module creates a Neptune cluster for use in ADDF
 
 ```json
 {
-    "NeptuneClusterId": "addf-test-core-neptuneCluster",
-    "NeptuneEndpointAddress": "addf-test-core-neptunecluster.cluster-cf6xovvml17s.us-east-1.neptune.amazonaws.com:8182",
-    "NeptuneReadEndpointAddress": "addf-test-core-neptunecluster.cluster-ro-cf6xovvml17s.us-east-1.neptune.amazonaws.com:8182",
+    "NeptuneClusterId": "idf-test-core-neptuneCluster",
+    "NeptuneEndpointAddress": "idf-test-core-neptunecluster.cluster-cf6xovvml17s.us-east-1.neptune.amazonaws.com:8182",
+    "NeptuneReadEndpointAddress": "idf-test-core-neptunecluster.cluster-ro-cf6xovvml17s.us-east-1.neptune.amazonaws.com:8182",
     "NeptuneSecurityGroupId": "sg-0605123720caec685"
 }

@@ -25,5 +25,5 @@ Resources:
             Resource: 
               !Sub arn:aws:iam::${AWS::AccountId}:role/aws-service-role/*
         Version: 2012-10-17
-      PolicyName: addf-modulespecific-policy
+      PolicyName: idf-modulespecific-policy
       Roles: [!Ref RoleName]

@@ -8,8 +8,8 @@ from stack import NeptuneStack
 
 # Project specific
 project_name = os.getenv("SEEDFARMER_PROJECT_NAME", "")
-deployment_name = os.getenv("ADDF_DEPLOYMENT_NAME", "test")
-module_name = os.getenv("ADDF_MODULE_NAME", "core-neptune")
+deployment_name = os.getenv("SEEDFARMER_DEPLOYMENT_NAME", "")
+module_name = os.getenv("SEEDFARMER_MODULE_NAME", "")
 
 if len(f"{project_name}-{deployment_name}") > 36:
     raise Exception("This module cannot support a project+deployment name character length greater than 35")
@@ -21,7 +21,7 @@ def _param(name: str) -> str:
 
 # App specific
 vpc_id = os.getenv(_param("VPC_ID"))  # required
-private_subnet_ids = json.loads(os.getenv("ADDF_PARAMETER_PRIVATE_SUBNET_IDS"))  # type: ignore
+private_subnet_ids = json.loads(os.getenv(_param("PRIVATE_SUBNET_IDS"), ""))  # required
 
 if not vpc_id:
     raise Exception("missing input parameter vpc-id")
@@ -41,8 +41,8 @@ stack = NeptuneStack(
         account=os.environ["CDK_DEFAULT_ACCOUNT"],
         region=os.environ["CDK_DEFAULT_REGION"],
     ),
-    deployment=deployment_name,
-    module=module_name,
+    deployment_name=deployment_name,
+    module_name=module_name,
     vpc_id=vpc_id,
     private_subnet_ids=private_subnet_ids,
     number_instances=num_instances,
