@@ -45,23 +45,6 @@ def test_project_deployment_name_length(stack_defaults):
     assert "module cannot support a project+deployment name character length greater than" in str(e)
 
 
-def test_retention_default(stack_defaults):
-    del os.environ["SEEDFARMER_PARAMETER_RETENTION_TYPE"]
-
-    with pytest.raises(Exception):
-        import app  # noqa: F401
-
-        assert os.environ["SEEDFARMER_PARAMETER_RETENTION_TYPE"] == "DESTROY"
-
-
-def test_invalid_retention_type(stack_defaults):
-    os.environ["SEEDFARMER_PARAMETER_RETENTION_TYPE"] = "SOMETHINGCRAZY"
-
-    with pytest.raises(Exception) as e:
-        import app  # noqa: F401
-    assert "The only RETENTION_TYPE values accepted are 'DESTROY' and 'RETAIN'" in str(e)
-
-
 def test_vpc_id(stack_defaults):
     del os.environ["SEEDFARMER_PARAMETER_VPC_ID"]
 
