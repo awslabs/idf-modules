@@ -9,6 +9,7 @@ deploy:
     build:
       commands:
       - echo "This Dummy Module does nothing"
+      - python export_metadata.py
 destroy:
   phases:
     install:
