@@ -15,7 +15,7 @@ targetAccountMappings:
       - region: us-east-1
         default: true
         parametersRegional:
-          dockerCredentialsSecret: aws-addf-docker-credentials
+          dockerCredentialsSecret: aws-idf-docker-credentials
           vpcId: vpc-XXXXXXXXX
           publicSubnetIds:
             - subnet-XXXXXXXXX
