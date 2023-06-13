@@ -1,5 +1,4 @@
 """Helper utilities"""
-import json
 import logging
 import os
 from copy import deepcopy
@@ -13,7 +12,9 @@ from deepmerge import always_merger
 _logger: logging.Logger = logging.getLogger(__name__)
 
 project_dir = os.path.dirname(os.path.abspath(__file__))
-data_dir = "data/eks_dockerimage-replication/versions/"
+
+data_dir = os.getenv("VERSIONS_DIR", "data/eks_dockerimage-replication/versions/")
+
 workload_versions = {}
 
 
@@ -93,7 +94,7 @@ def _get_chart_version_from_file(eks_version: str, workload_name: str) -> str:
     return workload_versions["default"]["charts"][workload_name]["version"]
 
 
-def _parse_versions_file(eks_version: str) -> dict:
+def _parse_versions_file(eks_version: str) -> None:
     """Parse versions file
 
     Args:
@@ -151,10 +152,16 @@ def get_az_from_subnet(subnets: List[str]) -> Dict[str, str]:
     az_subnet_map = {}
     try:
         response = ec2_client.describe_subnets(SubnetIds=subnets)
-        az_subnet_map = {entry["SubnetId"]: entry["AvailabilityZone"] for entry in response["Subnets"]}
+        az_subnet_map = {
+            entry["SubnetId"]: entry["AvailabilityZone"]
+            for entry in response["Subnets"]
+        }
     except botocore.exceptions.ClientError as ex:
         _logger.error("Error Describing Subnets: %s", ex)
-        if ex.response.get("Error", {}).get("Code", "Unknown") != "InvalidSubnetID.NotFound":
+        if (
+            ex.response.get("Error", {}).get("Code", "Unknown")
+            != "InvalidSubnetID.NotFound"
+        ):
             raise
         else:
             _logger.debug("Exception caught while describing subnets: %s", ex)
@@ -200,7 +207,11 @@ def get_chart_values(data: dict, workload_name: str) -> Dict:
         Dict: Chart additional values
     """
 
-    if "charts" in data and workload_name in data["charts"] and "values" in data["charts"][workload_name]:
+    if (
+        "charts" in data
+        and workload_name in data["charts"]
+        and "values" in data["charts"][workload_name]
+    ):
         return data["charts"][workload_name]["values"]
 
     return {}
