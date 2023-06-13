@@ -29,11 +29,6 @@ custom_subnet_ids = (
 eks_version = os.getenv(_param("EKS_VERSION"))  # required
 eks_compute_config = json.loads(os.getenv(_param("EKS_COMPUTE")))  # required
 eks_addons_config = json.loads(os.getenv(_param("EKS_ADDONS")))  # required
-if os.getenv(_param("CODEBUILD_SG_ID")):
-    codebuild_sg_id = json.loads(os.getenv(_param("CODEBUILD_SG_ID")))[0]
-
-if os.getenv(_param("REPLICATED_ECR_IMAGES_METADATA")):
-    replicated_ecr_images_metadata = json.loads(os.getenv(_param("REPLICATED_ECR_IMAGES_METADATA")))
 
 if not vpc_id:
     raise ValueError("missing input parameter vpc-id")
