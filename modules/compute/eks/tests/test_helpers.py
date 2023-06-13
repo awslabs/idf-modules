@@ -15,8 +15,9 @@
 import unittest
 
 import boto3
-import helpers
 from moto import mock_ec2
+
+import helpers
 
 
 class TestHelperMethods(unittest.TestCase):
@@ -52,9 +53,7 @@ class TestHelperMethods(unittest.TestCase):
         workload = "test_workload"
 
         result = helpers._get_chart_repo_from_file(eks_version, workload)
-        self.assertEqual(
-            result, "https://kubernetes-sigs.github.io/test-workload/charts"
-        )
+        self.assertEqual(result, "https://kubernetes-sigs.github.io/test-workload/charts")
 
     def test__get_chart_version_from_file(self):
         eks_version = "1.25"
@@ -95,12 +94,8 @@ class TestHelperMethods(unittest.TestCase):
         ec2 = boto3.resource("ec2", region_name="us-east-1")
         client = boto3.client("ec2", region_name="us-east-1")
         vpc = ec2.create_vpc(CidrBlock="172.31.0.0/16")
-        subnet1 = ec2.create_subnet(
-            VpcId=vpc.id, CidrBlock="172.31.48.0/20", AvailabilityZone="us-east-1a"
-        )
-        subnet2 = ec2.create_subnet(
-            VpcId=vpc.id, CidrBlock="172.31.64.0/20", AvailabilityZone="us-east-1b"
-        )
+        subnet1 = ec2.create_subnet(VpcId=vpc.id, CidrBlock="172.31.48.0/20", AvailabilityZone="us-east-1a")
+        subnet2 = ec2.create_subnet(VpcId=vpc.id, CidrBlock="172.31.64.0/20", AvailabilityZone="us-east-1b")
         subnet1_result = client.describe_subnets(SubnetIds=[subnet1.id])["Subnets"]
         subnet2_result = client.describe_subnets(SubnetIds=[subnet2.id])["Subnets"]
 
@@ -129,9 +124,7 @@ class TestHelperMethods(unittest.TestCase):
 
     def test_get_chart_values(self):
         workload = "alb_controller"
-        data = {
-            "charts": {"alb_controller": {"values": {"image": {"repository": "test"}}}}
-        }
+        data = {"charts": {"alb_controller": {"values": {"image": {"repository": "test"}}}}}
 
         result = helpers.get_chart_values(data, workload)
         self.assertEqual(result, {"image": {"repository": "test"}})

@@ -152,16 +152,10 @@ def get_az_from_subnet(subnets: List[str]) -> Dict[str, str]:
     az_subnet_map = {}
     try:
         response = ec2_client.describe_subnets(SubnetIds=subnets)
-        az_subnet_map = {
-            entry["SubnetId"]: entry["AvailabilityZone"]
-            for entry in response["Subnets"]
-        }
+        az_subnet_map = {entry["SubnetId"]: entry["AvailabilityZone"] for entry in response["Subnets"]}
     except botocore.exceptions.ClientError as ex:
         _logger.error("Error Describing Subnets: %s", ex)
-        if (
-            ex.response.get("Error", {}).get("Code", "Unknown")
-            != "InvalidSubnetID.NotFound"
-        ):
+        if ex.response.get("Error", {}).get("Code", "Unknown") != "InvalidSubnetID.NotFound":
             raise
         else:
             _logger.debug("Exception caught while describing subnets: %s", ex)
@@ -200,18 +194,14 @@ def get_chart_values(data: dict, workload_name: str) -> Dict:
     """Get chart additional values
 
     Args:
-        eks_version (str): EKS version
+        data (dict): Data structure containing chart values
         workload_name (str): Workload name
 
     Returns:
         Dict: Chart additional values
     """
 
-    if (
-        "charts" in data
-        and workload_name in data["charts"]
-        and "values" in data["charts"][workload_name]
-    ):
+    if "charts" in data and workload_name in data["charts"] and "values" in data["charts"][workload_name]:
         return data["charts"][workload_name]["values"]
 
     return {}
@@ -229,3 +219,29 @@ def get_chart_version(eks_version: str, workload_name: str) -> str:
     """
 
     return _get_chart_version_from_file(eks_version, workload_name)
+
+
+def get_image(eks_version: str, data: dict, workload_name: str) -> str:
+    """Get chart additional values
+
+    Args:
+        eks_version (str): EKS version
+        data (dict): Data structure containing image values
+        workload_name (str): Workload name
+
+    Returns:
+        str: Image name
+    """
+
+    if "additional_images" in data and workload_name in data["additional_images"]:
+        return data["additional_images"][workload_name]
+
+    _parse_versions_file(eks_version)
+    _parse_versions_file("default")
+    if (
+        "additional_images" in workload_versions[eks_version]
+        and workload_name in workload_versions[eks_version]["additional_images"]
+    ):
+        return workload_versions[eks_version]["additional_images"][workload_name]
+
+    return workload_versions["default"]["additional_images"][workload_name]

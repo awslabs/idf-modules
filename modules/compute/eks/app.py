@@ -52,24 +52,6 @@ if not eks_addons_config:
 
 app = App()
 
-config = {
-    # "project_name": project_name,
-    "deployment_name": deployment_name,
-    "module_name": module_name,
-    "vpc_id": vpc_id,
-    "dataplane_subnet_ids": dataplane_subnet_ids,
-    "controlplane_subnet_ids": controlplane_subnet_ids,
-    "eks_version": eks_version,
-    "eks_compute_config": eks_compute_config,
-    "eks_addons_config": eks_addons_config,
-    "custom_subnet_ids": custom_subnet_ids,
-    "codebuild_sg_id": codebuild_sg_id if os.getenv("SEEDFARMER_PARAMETER_CODEBUILD_SG_ID") else None,
-    "replicated_ecr_images_metadata": replicated_ecr_images_metadata
-    if os.getenv("SEEDFARMER_PARAMETER_REPLICATED_ECR_IMAGES_METADATA")
-    else {},
-}
-
-
 stack = Eks(
     scope=app,
     id=f"{project_name}-{deployment_name}-{module_name}",

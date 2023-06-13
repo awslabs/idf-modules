@@ -86,7 +86,7 @@ def test_synthesize_stack(stack_defaults):
         },
     }
 
-    efs_stack = stack.Eks(
+    eks_stack = stack.Eks(
         scope=app,
         id=f"{project_name}-{dep_name}-{mod_name}",
         project_name=project_name,
@@ -107,44 +107,42 @@ def test_synthesize_stack(stack_defaults):
         ),
     )
 
-    # template = Template.from_stack(efs_stack)
-    # template.resource_count_is("AWS::Batch::ComputeEnvironment", 3)
-    # template.resource_count_is("AWS::Batch::JobQueue", 3)
+    template = Template.from_stack(eks_stack)
 
     # EKS Cluster Admin profile
-    # template.has_resource_properties(
-    #     "AWS::IAM::Role",
-    #     {
-    #         "AssumeRolePolicyDocument": {
-    #             "Statement": [
-    #                 {
-    #                     "Action": "sts:AssumeRole",
-    #                     "Effect": "Allow",
-    #                     "Principal": {
-    #                         "Service": "ec2.amazonaws.com",
-    #                     },
-    #                 },
-    #             ],
-    #         },
-    #     },
-    # )
+    template.has_resource_properties(
+        "AWS::IAM::Role",
+        {
+            "AssumeRolePolicyDocument": {
+                "Statement": [
+                    {
+                        "Action": "sts:AssumeRole",
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Service": "ec2.amazonaws.com",
+                        },
+                    },
+                ],
+            },
+        },
+    )
 
     # EKS Cluster role
-    # template.has_resource_properties(
-    #     "AWS::IAM::Role",
-    #     {
-    #         "AssumeRolePolicyDocument": {
-    #             "Statement": [
-    #                 {
-    #                     "Action": "sts:AssumeRole",
-    #                     "Effect": "Allow",
-    #                     "Principal": {
-    #                         "Service": "eks.amazonaws.com",
-    #                     },
-    #                 },
-    #             ],
-    #         },
-    #     },
-    # )
+    template.has_resource_properties(
+        "AWS::IAM::Role",
+        {
+            "AssumeRolePolicyDocument": {
+                "Statement": [
+                    {
+                        "Action": "sts:AssumeRole",
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Service": "eks.amazonaws.com",
+                        },
+                    },
+                ],
+            },
+        },
+    )
 
     # template.has_resource_properties("Custom::AWSCDK-EKS-Cluster")

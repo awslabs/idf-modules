@@ -48,3 +48,6 @@ charts:
     name: test-workload
     repository: "https://kubernetes-sigs.github.io/test-workload/charts"
     version: 1.0.1
+additional_images:
+  cloudwatch_agent: "test-cloudwatch-agent:1.XXX"
+  secrets_store_csi_driver_provider_aws: "test-secrets-store-csi-driver-provider-aws:1.XXXX-linux-amd64"

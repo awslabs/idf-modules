@@ -42,8 +42,9 @@ def stack_defaults():
         del sys.modules["app"]
 
 
-# def test_app(stack_defaults):
-#     import app  # noqa: F401
+def test_app(stack_defaults):
+    import app  # noqa: F401
+
 
 def test_project_deployment_name_length(stack_defaults):
     os.environ["SEEDFARMER_PROJECT_NAME"] = "test-project-incredibly"

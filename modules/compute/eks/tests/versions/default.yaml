@@ -659,3 +659,6 @@ charts:
         tag:
           location: values
           path: linux.registrarImage.tag
+additional_images:
+  cloudwatch_agent: "test-cloudwatch-agent:1.XXX"
+  secrets_store_csi_driver_provider_aws: "test-secrets-store-csi-driver-provider-aws:1.XXXX-linux-amd64"
