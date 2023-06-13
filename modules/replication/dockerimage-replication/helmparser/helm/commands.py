@@ -17,17 +17,17 @@ def _execute_command(command: str) -> str:
         str: Command execution result
     """
     cmd = shlex.split(command)
-    with subprocess.Popen(
+    executed_command = subprocess.Popen(
         cmd,
-        shell=False,
+        shell=False,  # nosec B603
         text=True,
         universal_newlines=True,
         encoding="utf-8",
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
-    ) as executed_command:
-        stdout, _ = executed_command.communicate()
-        return stdout
+    )
+    stdout, _ = executed_command.communicate()
+    return stdout
 
 
 def _unarchive_repo(project_path: str, repo: str, chart: str, version: str) -> None:
