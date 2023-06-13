@@ -1,5 +1,5 @@
 ami:
-  version: 1.25.7-20230406
+  version: 1.25.9-20230607
 charts:
   alb_controller:
     version: 1.4.8
