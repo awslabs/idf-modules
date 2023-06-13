@@ -81,12 +81,13 @@ CfnOutput(
     value=stack.to_json_string(
         {
             "EksClusterName": stack.eks_cluster.cluster_name,
+            # Cluster Creator role automatically gets added to RBAC system:masters group
             "EksClusterAdminRoleArn": stack.eks_cluster.admin_role.role_arn,
-            "EksClusterKubectlRoleArn": stack.eks_cluster.kubectl_role.role_arn,
             "EksClusterSecurityGroupId": stack.eks_cluster.cluster_security_group.security_group_id,
             "EksOidcArn": stack.eks_cluster.open_id_connect_provider.open_id_connect_provider_arn,
             "EksClusterOpenIdConnectIssuer": stack.eks_cluster.cluster_open_id_connect_issuer,
             "CNIMetricsHelperRoleName": stack.cni_metrics_role_name,
+            # Cluster Master role created as a part of this stack gets added to RBAC system:masters group
             "EksClusterMasterRoleArn": stack.eks_cluster_masterrole.role_arn,
         }
     ),
