@@ -22,11 +22,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - refactored Fsx-Lustre module, to be agnostic of a project with unit-tests
 - refactored Neptune module, to be agnostic of a project with unit-tests
 - added module output example for `dummy/blank` module
+- added EKS module, refactored it to be agnostic of a project with unit-tests
 
 ### **Changed**
 
 - refactored L1 cdk implementation of networking -> interface endpoints creation with the L2 mode
 - added `version locking to neptune engine` to avoid cdk deployment errors
+- bumped CDK versions to avoid the issue of nodejs12.x deprecation
 
 ### **Removed**
 
