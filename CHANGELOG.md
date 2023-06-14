@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - refactored L1 cdk implementation of networking -> interface endpoints creation with the L2 mode
 - added `version locking to neptune engine` to avoid cdk deployment errors
 - bumped CDK versions to avoid the issue of nodejs12.x deprecation
+- removed `jq` from OS module
 
 ### **Removed**
 
