@@ -4,7 +4,6 @@ deploy:
     install:
       commands:
       - npm install -g aws-cdk@2.82.0
-      - apt-get install jq
       - pip install -r requirements.txt
     build:
       commands:
