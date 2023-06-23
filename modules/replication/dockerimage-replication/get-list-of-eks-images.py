@@ -1,33 +1,21 @@
 """Main application"""
 import json
 import os
-from copy import deepcopy
-
-from deepmerge import always_merger
+import sys
 
 import helmparser.helm.commands as helm
-from helmparser.arguments import args
+from helmparser.arguments import parse_args
 from helmparser.logging import logger
 from helmparser.parser import parser
+from helmparser.utils.utils import deep_merge
 
 project_path = os.path.realpath(os.path.dirname(__file__))
 
 
-def deep_merge(*dicts: dict) -> dict:
-    """Merges two dictionaries
-
-    Returns:
-        dict: Merged dictionary
-    """
-    merged = {}
-    for d in dicts:
-        tmp = deepcopy(d)
-        merged = always_merger.merge(merged, tmp)
-    return merged
-
-
 def main() -> None:
     """Main handler"""
+    args = parse_args(sys.argv[1:])
+
     logger.info("EKS version: %s", args.eks_version)
 
     logger.info(
