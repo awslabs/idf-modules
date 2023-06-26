@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - refactored Neptune module, to be agnostic of a project with unit-tests
 - added module output example for `dummy/blank` module
 - added EKS module, refactored it to be agnostic of a project with unit-tests
+- added Docker images replication module, refactored it to be agnostic of a project with unit-tests
 
 ### **Changed**
 
