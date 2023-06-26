@@ -43,12 +43,12 @@ dataFiles:
   - filePath: data/eks_dockerimage-replication/versions/default.yaml
 parameters:
   # Use the below parameter if you want to use replicated container images from account's specific ECR repo(s)
-  - name: replicated-ecr-images-metadata-s3-path
-    valueFrom:
-      moduleMetadata:
-        group: replication
-        name: replication
-        key: s3_full_path
+  # - name: replicated-ecr-images-metadata-s3-path
+  #   valueFrom:
+  #     moduleMetadata:
+  #       group: replication
+  #       name: replication
+  #       key: s3_full_path
   - name: vpc-id
     valueFrom:
       moduleMetadata:
