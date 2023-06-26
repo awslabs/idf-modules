@@ -6,15 +6,13 @@ nameGenerator:
 toolchainRegion: us-east-1
 groups:
   - name: networking
-    path: manifests/local/networking-modules.yaml
+    path: manifests/local-isolated/networking-modules.yaml
   - name: storage
-    path: manifests/local/storage-modules.yaml
+    path: manifests/local-isolated/storage-modules.yaml
+  - name: replication
+    path: manifests/local-isolated/replicator-modules.yaml
   - name: compute
-    path: manifests/local/compute-modules.yaml
-  - name: database
-    path: manifests/local/database-modules.yaml
-  - name: orchestration
-    path: manifests/local/orchestration-modules.yaml
+    path: manifests/local-isolated/compute-modules.yaml
 targetAccountMappings:
   - alias: primary
     accountId:

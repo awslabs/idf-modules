@@ -27,7 +27,7 @@ targetAccountMappings:
       - region: eu-west-2
         default: true
         parametersRegional:
-          dockerCredentialsSecret: aws-addf-docker-credentials
+          dockerCredentialsSecret: aws-idf-docker-credentials
           # replace the below networking details with customer specific values
           vpcId: vpc-XXXXXXXX
           publicSubnetIds:
@@ -48,19 +48,19 @@ targetAccountMappings:
               parameterValue: vpcId
             # Alternatively you can grab the networking values from SSM parameter store
             # valueFrom:
-            #   parameterStore: /addf/vpc-id
+            #   parameterStore: /idf/vpc-id
           privateSubnetIds:
             valueFrom:
               parameterValue: privateSubnetIds
             # Alternatively you can grab the networking values from SSM parameter store
             # valueFrom:
-            #   parameterStore: /addf/private-ids
+            #   parameterStore: /idf/private-ids
           securityGroupIds:
             valueFrom:
               parameterValue: securityGroupIds
             # Alternatively you can grab the codebuild security group from SSM parameter store
             # valueFrom:
-            #   parameterStore: /addf/sg-ids
+            #   parameterStore: /idf/sg-ids
 ```
 
 ```observation
