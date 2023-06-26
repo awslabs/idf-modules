@@ -14,8 +14,8 @@
 
 import unittest
 
+from helmparser.logging import boto3_logger, logger
 from helmparser.utils.utils import deep_merge
-from helmparser.logging import logger, boto3_logger
 
 
 class TestMain(unittest.TestCase):

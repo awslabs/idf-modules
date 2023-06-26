@@ -35,6 +35,6 @@ path: modules/replication/dockerimage-replication/
 
 ```json
 {
-    "aws-efs-csi-driver": "1234567890.dkr.ecr.eu-central-1.amazonaws.com/addf-amazon/aws-efs-csi-driver:v1.3.6"
+    "aws-efs-csi-driver": "1234567890.dkr.ecr.eu-central-1.amazonaws.com/idf-amazon/aws-efs-csi-driver:v1.3.6"
 }
 ```

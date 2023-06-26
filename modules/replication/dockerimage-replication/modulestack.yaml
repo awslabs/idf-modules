@@ -8,6 +8,9 @@ Parameters:
   # ModuleName:
   #   Type: String
   #   Description: The name of the Module
+  ProjectName:
+    Type: String
+    Description: The name of the project
   RoleName:
     Type: String
     Description: The name of the IAM Role
@@ -33,7 +36,7 @@ Resources:
               - "ecr:Put*"
             Effect: Allow
             Resource:
-              - !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/addf-*"
+              - !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${ProjectName}-*"
           - Action:
               - "s3:CreateBucket"
             Effect: Allow
@@ -50,5 +53,5 @@ Resources:
             Effect: Allow
             Resource: "arn:aws:s3:::*-dockerimages-replications-*/*"
         Version: 2012-10-17
-      PolicyName: "addf-modulespecific-policy"
+      PolicyName: "idf-modulespecific-policy"
       Roles: [!Ref RoleName]

@@ -35,3 +35,139 @@ parameters:
           desired_vcpus: 0
           compute_type: FARGATE
           order: 1
+---
+name: eks
+path: modules/compute/eks/
+dataFiles:
+  - filePath: data/eks_dockerimage-replication/versions/1.25.yaml
+  - filePath: data/eks_dockerimage-replication/versions/default.yaml
+parameters:
+  - name: replicated-ecr-images-metadata-s3-path
+    valueFrom:
+      moduleMetadata:
+        group: replication
+        name: replication
+        key: s3_full_path
+  - name: vpc-id
+    valueFrom:
+      moduleMetadata:
+        group: networking
+        name: basic-networking
+        key: VpcId
+  - name: controlplane-subnet-ids
+    valueFrom:
+      moduleMetadata:
+        group: networking
+        name: basic-networking
+        key: PrivateSubnetIds
+  - name: dataplane-subnet-ids
+    valueFrom:
+      moduleMetadata:
+        group: networking
+        name: basic-networking
+        key: PrivateSubnetIds
+  # - name: custom-subnet-ids
+  #   value: ["subnet-0132ecb9b627b1c57", "subnet-0f2c81d12cba7ca69"]
+  - name: eks-admin-role-name
+    value: Admin
+  - name: eks-poweruser-role-name
+    value: PowerUser
+  - name: eks-read-only-role-name
+    value: ReadOnly
+  - name: eks-version
+    # value: 1.25
+    valueFrom:
+      envVariable: GLOBAL_EKS_VERSION
+  - name: eks-compute
+    value:
+      eks_nodegroup_config:
+        - eks_ng_name: ng1
+          eks_node_quantity: 2
+          eks_node_max_quantity: 5
+          eks_node_min_quantity: 1
+          eks_node_disk_size: 20
+          eks_node_instance_type: "m5.large"
+        - eks_ng_name: ng2
+          eks_node_quantity: 2
+          eks_node_max_quantity: 5
+          eks_node_min_quantity: 1
+          eks_node_disk_size: 20
+          eks_node_instance_type: "m5.xlarge"
+      eks_node_spot: False
+      eks_api_endpoint_private: False
+      eks_secrets_envelope_encryption: True
+  - name: eks-addons
+    value:
+      # Load balancing
+      deploy_aws_lb_controller: True 
+      deploy_nginx_controller:
+        value: False
+        nginx_additional_annotations:
+          nginx.ingress.kubernetes.io/whitelist-source-range: "100.64.0.0/10,10.0.0.0/8"
+      # DNS Component
+      deploy_external_dns: True 
+      # Storage drivers
+      deploy_aws_ebs_csi: True 
+      deploy_aws_efs_csi: True 
+      # Autoscaling
+      deploy_cluster_autoscaler: True 
+      deploy_metrics_server: True 
+      # Secrets management
+      deploy_secretsmanager_csi: True 
+      deploy_external_secrets: False
+      # Monitoring/Logging/Tracing
+      deploy_adot: True
+      deploy_cloudwatch_container_insights_metrics: True 
+      deploy_cloudwatch_container_insights_logs: True
+      cloudwatch_container_insights_logs_retention_days: 7
+      deploy_amp: True
+      deploy_grafana_for_amp: True
+      # Reboot agent
+      deploy_kured: True
+      # Network level segmentation
+      deploy_calico: False
+      # Security policies
+      deploy_kyverno:
+        value: False
+        kyverno_policies:
+          validate:
+            - block-ephemeral-containers
+            - block-stale-images
+            - block-updates-deletes
+            - check-deprecated-apis
+            - disallow-cri-sock-mount
+            - disallow-custom-snippets
+            - disallow-empty-ingress-host
+            - disallow-helm-tiller
+            - disallow-latest-tag
+            - disallow-localhost-services
+            - disallow-secrets-from-env-vars
+            - ensure-probes-different
+            - ingress-host-match-tls
+            - limit-hostpath-vols
+            - prevent-naked-pods
+            - require-drop-cap-net-raw
+            - require-emptydir-requests-limits
+            - require-labels
+            - require-pod-requests-limits
+            - require-probes
+            - restrict-annotations
+            - restrict-automount-sa-token
+            - restrict-binding-clusteradmin
+            - restrict-clusterrole-nodesproxy
+            - restrict-escalation-verbs-roles
+            - restrict-ingress-classes
+            - restrict-ingress-defaultbackend
+            - restrict-node-selection
+            - restrict-path
+            - restrict-service-external-ips
+            - restrict-wildcard-resources
+            - restrict-wildcard-verbs
+            - unique-ingress-host-and-path
+          # mutate:
+          #   - add-networkpolicy-dns
+          #   - add-pod-priorityclassname
+          #   - add-ttl-jobs
+          #   - always-pull-images
+          #   - mitigate-log4shell
+  

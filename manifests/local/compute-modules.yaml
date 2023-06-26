@@ -42,12 +42,13 @@ dataFiles:
   - filePath: data/eks_dockerimage-replication/versions/1.25.yaml
   - filePath: data/eks_dockerimage-replication/versions/default.yaml
 parameters:
-  # - name: replicated-ecr-images-metadata-s3-path
-  #   valueFrom:
-  #     moduleMetadata:
-  #       group: replication
-  #       name: replication
-  #       key: s3_full_path
+  # Use the below parameter if you want to use replicated container images from account's specific ECR repo(s)
+  - name: replicated-ecr-images-metadata-s3-path
+    valueFrom:
+      moduleMetadata:
+        group: replication
+        name: replication
+        key: s3_full_path
   - name: vpc-id
     valueFrom:
       moduleMetadata:
@@ -101,7 +102,7 @@ parameters:
       # Load balancing
       deploy_aws_lb_controller: True 
       deploy_nginx_controller:
-        value: False
+        value: True
         nginx_additional_annotations:
           nginx.ingress.kubernetes.io/whitelist-source-range: "100.64.0.0/10,10.0.0.0/8"
       # DNS Component
@@ -125,10 +126,10 @@ parameters:
       # Reboot agent
       deploy_kured: True
       # Network level segmentation
-      deploy_calico: False
+      deploy_calico: True
       # Security policies
       deploy_kyverno:
-        value: False
+        value: True
         kyverno_policies:
           validate:
             - block-ephemeral-containers

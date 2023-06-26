@@ -4,16 +4,18 @@ deploy:
     install:
       commands:
         - pip install -r requirements.txt
-        - wget https://get.helm.sh/helm-v3.11.3-linux-amd64.tar.gz
-        - tar zxf helm-v3.11.3-linux-amd64.tar.gz
-        - mv linux-amd64/helm /usr/local/bin/helm
+        - wget https://get.helm.sh/helm-v3.11.3-linux-amd64.tar.gz && tar zxf helm-v3.11.3-linux-amd64.tar.gz && mv linux-amd64/helm /usr/local/bin/helm
     build:
       commands:
         - S3_BUCKET_NAME="${SEEDFARMER_PROJECT_NAME}-dockerimages-replications-metadata-${AWS_DEFAULT_REGION}-${AWS_ACCOUNT_ID}"
         - S3_OBJECT_NAME="${SEEDFARMER_DEPLOYMENT_NAME}-${SEEDFARMER_MODULE_NAME}-metadata.json"
         - |
           if ! aws s3api head-bucket --bucket "${S3_BUCKET_NAME}"; then
-            aws s3api create-bucket --bucket "${S3_BUCKET_NAME}" --region "${AWS_DEFAULT_REGION}" --create-bucket-configuration LocationConstraint=${AWS_DEFAULT_REGION}
+            if [ ${AWS_DEFAULT_REGION} == "us-east-1" ]; then
+              aws s3api create-bucket --bucket "${S3_BUCKET_NAME}" --region "${AWS_DEFAULT_REGION}"
+            else
+              aws s3api create-bucket --bucket "${S3_BUCKET_NAME}" --region "${AWS_DEFAULT_REGION}" --create-bucket-configuration LocationConstraint=${AWS_DEFAULT_REGION}
+            fi
           fi
         - python3 get-list-of-eks-images.py --eks-version ${SEEDFARMER_PARAMETER_EKS_VERSION} --versions-directory data/eks_dockerimage-replication/versions --update-helm-repos --registry-prefix "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${AWS_CODESEEDER_NAME}-"
         - chmod +x replication.sh
@@ -33,5 +35,6 @@ destroy:
     build:
       commands:
         - chmod +x replication.sh
-        - bash replication.sh destroy
+        # The below command removes the ECR repos with `idf` as prefix which has the replicated images. PLEASE USE IT AT YOUR OWN RISK
+        # - bash replication.sh destroy
 build_type: BUILD_GENERAL1_LARGE
