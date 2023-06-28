@@ -43,9 +43,9 @@ This module will create a new EFS service endpoint and security group tied to th
 
 ```json
 {
-  "EFSFileSystemArn": "arn:aws:elasticfilesystem:us-east-1:12346789012:file-system/fs-0e8893424acfa4722",
-  "EFSFileSystemId": "fs-0e8893424acfa4722",
-  "EFSSecurityGroupId": "sg-022ccfda45c636da2",
-  "VPCId": "vpc-0457f3e6ac3e648c0"
+  "EFSFileSystemArn": "arn:aws:elasticfilesystem:us-east-1:12346789012:file-system/fs-XXXXXXX",
+  "EFSFileSystemId": "fs-XXXXXXX",
+  "EFSSecurityGroupId": "sg-XXXXXXX",
+  "VPCId": "vpc-XXXXXXX"
 }
 ```

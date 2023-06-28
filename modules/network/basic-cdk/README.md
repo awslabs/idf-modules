@@ -2,40 +2,34 @@
 
 ## Description
 
-This module creates netowrking resources.  It is not required as 
-modules can leverage existing VPC networks.
+This module creates the below AWS netowrking resources. It may not be required if an end-user already has networking setup in their AWS account(s).
 
-This module:
-- creates networking resources
-  - VPC and Subnets
-  - VPC Endpoints
-  - module-specific role with least privileges policy
-- exports module metadata
+Networking resources are:
 
-
+  - VPC
+  - Public/Private/Isolated Subnets as per the use-case
+  - Interface/Gateway Endpoints
 
 ## Inputs/Outputs
 
 ### Input Paramenters
-None
 
-#### Required
+#### Required Paramenters
 
 None
 
 #### Optional
 
-- `internet-accessible`: a boolean flag indicating whether or not the subnets have internet access.
-  - `True` or `False` 
+- `internet-accessible`: a boolean flag indicating whether or not the subnets have internet access. It decides if the module should deploy just the public/private or public/private/isolated subnets with the necessary wiring in place.
+  - `true` or `false`
   - Assumed to be True
 
 ### Module Metadata Outputs
 
 - `VpcId`: The VPC ID created
-- `PublicSubnetIds`: An array of the public subnets 
-- `PrivateSubnetIds`: An array of the private subnets 
-- `IsolatedSubnetIds`: An array of the isolated subnets  (only if `internet-accessible` is `False`)
-
+- `PublicSubnetIds`: An array of the public subnets
+- `PrivateSubnetIds`: An array of the private subnets
+- `IsolatedSubnetIds`: An array of the isolated subnets  (only if `internet-accessible` is `false`)
 
 #### Output Example
 

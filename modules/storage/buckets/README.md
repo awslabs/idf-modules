@@ -2,20 +2,18 @@
 
 ## Description
 
-This module creates buckets and policies . 
+This module creates the below AWS S3 buckets and policies:
 
-This module:
-- creates buckets
   - Logs Data Bucket
   - Artifact Data Bucket
-- creates access policies for the buckets
-  - READ-ONLY
-  - FULL ACCESS 
-
+  - creates access policies for the buckets
+    - READ-ONLY
+    - FULL ACCESS
 
 ## Inputs/Outputs
 
 ### Input Paramenters
+
 None
 
 #### Required
@@ -23,6 +21,7 @@ None
 None
 
 #### Optional
+
 - `encryption-type`: the type of encryption on data stored in the buckets
   - `SSE` or `KMS` 
   - Assumed to be `SSE`
@@ -30,14 +29,12 @@ None
   - `DESTROY` or `RETAIN`
   - Assumed to be `DESTROY`
 
-
 ### Module Metadata Outputs
+
 - `ArtifactsBucketName`: name of the bucket housing artifacts used for processing
 - `LogsBucketName`: name of the bucket housing logs
 - `ReadOnlyPolicyArn`: ARN of the policy generated giving read-only access to content
 - `FullAccessPolicyArn`: ARN of the policy generated giving full access to content
-
-
 
 #### Output Example
 
