@@ -59,6 +59,7 @@ parameters:
 ```
 
 Module manifest leveraging the `networking` module:
+
 ```yaml
 name: storage
 path: modules/core/fsx-lustre/
@@ -86,7 +87,7 @@ parameters:
 
 ```json
 {
-    "FSxLustreAttrDnsName":"fs-00abc1234efdcg567.fsx.us-east-2.amazonaws.com",
+    "FSxLustreAttrDnsName":"fs-XXXXXXX.fsx.us-east-2.amazonaws.com",
     "FSxLustreFileSystemId":"fs-00a12bc345defg78",
     "FSxLustreSecurityGroup":"sg-0a1b2c3e4d5e6g7j7h",
     "FSxLustreMountName":"123abc45",

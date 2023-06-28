@@ -13,8 +13,10 @@ This module creates an OpenSearch cluster for use in IDF
 #### Required
 
 - `vpc-id`: The VPC-ID that the cluster will be created in
+- `private-subnet-ids`: The private subnets that the cluster will be created in
 
 #### Optional
+
 - `opensearch_data_nodes`: The number of data nodes, defaults to `1`
 - `opensearch_data_nodes_instance_type`: The data node type, defaults to `r6g.large.search`
 - `opensearch_master_nodes`: The number of master nodes, defaults to `0`
@@ -35,7 +37,7 @@ This module creates an OpenSearch cluster for use in IDF
   "OpenSearchDashboardUrl": "https://vpc-idf-test-core-opensearch-aaa.us-east-1.es.amazonaws.com/_dashboards/",
   "OpenSearchDomainName": "vpc-idf-test-core-opensearch-aaa",
   "OpenSearchDomainEndpoint": "vpc-idf-test-core-opensearch-aaa.us-east-1.es.amazonaws.com",
-  "OpenSearchSecurityGroupId": "sg-0475c9e7efba05c0d"
+  "OpenSearchSecurityGroupId": "sg-XXXXXXX"
 }
 
 ```
