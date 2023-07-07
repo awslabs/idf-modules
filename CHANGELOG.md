@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### **Added**
 
+- enforced TLS version 1.2, node-node encryption and encryption at rest on OS module
+ 
 ### **Changed**
 
 ### **Removed**

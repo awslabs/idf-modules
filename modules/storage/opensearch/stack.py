@@ -115,6 +115,9 @@ class OpenSearchStack(Stack):  # type: ignore
             access_policies=[iam.PolicyStatement.from_json(os_access_policy)],
             domain_name=dep_mod,
             enforce_https=True,
+            node_to_node_encryption=True,
+            encryption_at_rest=opensearch.EncryptionAtRestOptions(enabled=True),
+            tls_security_policy=opensearch.TLSSecurityPolicy.TLS_1_2,
         )
 
         url = f"https://{os_domain.domain_endpoint}/_dashboards/"
