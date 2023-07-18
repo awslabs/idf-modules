@@ -73,48 +73,6 @@ jobs:
         run: scripts/validate.sh --language python --path modules/storage/efs/
       - name: Pytest
         run: cd modules/storage/efs/ && pytest
-  
-  modules-storage-opensearch:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.9]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install Requirements
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements-dev.txt
-          pip install -r modules/storage/opensearch/requirements.txt
-      - name: Static checks and linting (mypy, flake8, black, isort)
-        run: scripts/validate.sh --language python --path modules/storage/opensearch/
-      - name: Pytest
-        run: cd modules/storage/opensearch/ && pytest
-
-  modules-storage-aws-batch:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.9]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install Requirements
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements-dev.txt
-          pip install -r modules/compute/aws-batch/requirements.txt
-      - name: Static checks and linting (mypy, flake8, black, isort)
-        run: scripts/validate.sh --language python --path modules/compute/aws-batch/
-      - name: Pytest
-        run: cd modules/compute/aws-batch/ && pytest
 
   modules-storage-fsx-lustre:
     runs-on: ubuntu-latest
@@ -136,6 +94,90 @@ jobs:
         run: scripts/validate.sh --language python --path modules/storage/fsx-lustre
       - name: Pytest
         run: cd modules/storage/fsx-lustre && pytest
+
+  modules-storage-opensearch:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.9]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Requirements
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+          pip install -r modules/storage/opensearch/requirements.txt
+      - name: Static checks and linting (mypy, flake8, black, isort)
+        run: scripts/validate.sh --language python --path modules/storage/opensearch/
+      - name: Pytest
+        run: cd modules/storage/opensearch/ && pytest
+
+  modules-compute-aws-batch:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.9]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Requirements
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+          pip install -r modules/compute/aws-batch/requirements.txt
+      - name: Static checks and linting (mypy, flake8, black, isort)
+        run: scripts/validate.sh --language python --path modules/compute/aws-batch/
+      - name: Pytest
+        run: cd modules/compute/aws-batch/ && pytest
+
+  modules-compute-eks:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.9]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Requirements
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+          pip install -r modules/compute/eks/requirements.txt
+      # - name: Static checks and linting (mypy, flake8, black, isort)
+      #   run: scripts/validate.sh --language python --path modules/compute/eks/
+      - name: Pytest
+        run: cd modules/compute/eks/ && pytest
+  
+  modules-compute-emr-serverless:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.9]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Requirements
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+          pip install -r modules/compute/emr-serverless/requirements.txt
+      - name: Static checks and linting (mypy, flake8, black, isort)
+        run: scripts/validate.sh --language python --path modules/compute/emr-serverless/
+      - name: Pytest
+        run: cd modules/compute/emr-serverless/ && pytest
 
   modules-orchestration-mwaa:
     runs-on: ubuntu-latest
