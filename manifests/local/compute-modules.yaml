@@ -171,4 +171,19 @@ parameters:
           #   - add-ttl-jobs
           #   - always-pull-images
           #   - mitigate-log4shell
-  
+---
+name: emr-serverless
+path: modules/compute/emr-serverless
+parameters:
+  - name: vpc-id
+    valueFrom:
+      moduleMetadata:
+        group: networking
+        name: basic-networking
+        key: VpcId
+  - name: private-subnet-ids
+    valueFrom:
+      moduleMetadata:
+        group: networking
+        name: basic-networking
+        key: PrivateSubnetIds

@@ -947,7 +947,11 @@ class Eks(Stack):  # type: ignore
                 iam.ManagedPolicy.from_aws_managed_policy_name("CloudWatchAgentServerPolicy")
             )
 
-            # It opens cwagentconfig.json file in read mode ("r") and reads its content using the read() method. The content is stored in the cwagentconfig_content variable.
+            """
+            It opens cwagentconfig.json file in read mode ("r").
+            The content is stored in the cwagentconfig_content variable.
+            """
+
             with open(os.path.join(project_dir, "monitoring-config/cwagentconfig.json"), "r", encoding="utf-8") as f:
                 cwagentconfig_content = f.read()
 
@@ -1449,7 +1453,7 @@ class Eks(Stack):  # type: ignore
 
         if eks_addons_config.get("deploy_kured"):
             # https://kubereboot.github.io/charts/
-            kured_chart = eks_cluster.add_helm_chart(
+            eks_cluster.add_helm_chart(
                 "kured",
                 chart=get_chart_release(str(eks_version), KURED),
                 version=get_chart_version(str(eks_version), KURED),
@@ -1553,7 +1557,7 @@ class Eks(Stack):  # type: ignore
                         for value in manifest_yaml:
                             manifest_name = value["metadata"]["name"]
                             manifest = eks_cluster.add_manifest(manifest_name, value)
-                            if previous_manifest == None:
+                            if previous_manifest is None:
                                 manifest.node.add_dependency(kyverno_chart)
                             else:
                                 manifest.node.add_dependency(previous_manifest)
