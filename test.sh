@@ -34,4 +34,3 @@ npm install -g aws-cdk@${CDK_VERSION}
 pip install -r requirements-dev.txt
 pip install -r $CODEBUILD_SRC_DIR/modules/$MODULE_PATH/requirements.txt
 pytest $CODEBUILD_SRC_DIR/modules/$MODULE_PATH --cov-config=modules/$MODULE_PATH/coverage.ini --cov --cov-report=html:$CODEBUILD_SRC_DIR/reports/$MODULE_PATH/html_dir --cov-report=xml:$CODEBUILD_SRC_DIR/reports/$MODULE_PATH/coverage.xml
-
