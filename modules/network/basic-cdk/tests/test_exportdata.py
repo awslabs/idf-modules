@@ -27,6 +27,7 @@ def stack_defaults(request):
 
     rootdir = request.config.rootdir
     outpath = Path(rootdir, "cdk-exports.json")
+    print(outpath)
     project_name = os.environ["SEEDFARMER_PROJECT_NAME"]
     dep_name = os.environ["SEEDFARMER_DEPLOYMENT_NAME"]
     mod_name = os.environ["SEEDFARMER_MODULE_NAME"]
