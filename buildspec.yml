@@ -19,7 +19,7 @@ phases:
       # - bash gen-reports.sh -m compute/eks -c 2.51.0 # Failing currently
       - bash gen-reports.sh -m compute/emr-serverless -c 2.83.1 # needed for solutions
       # Replications
-      - bash gen-reports.sh -m replication/dockerimage-replication
+      # - bash gen-reports.sh -m replication/dockerimage-replication
   post_build:
     commands:
       - echo Build completed on `date`
