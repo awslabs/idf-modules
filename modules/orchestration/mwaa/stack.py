@@ -252,7 +252,7 @@ class MWAAStack(Stack):  # type: ignore
             webserver_logs=aws_mwaa.CfnEnvironment.ModuleLoggingConfigurationProperty(enabled=True, log_level="INFO"),
         )
 
-        mwaa_security_group = ec2.SecurityGroup(self, id="mwaa-sg", vpc=self.vpc)
+        mwaa_security_group = ec2.SecurityGroup(self, id="mwaa-sg", vpc=self.vpc, allow_all_outbound=True)
         mwaa_security_group.connections.allow_internally(ec2.Port.all_traffic(), "MWAA")
 
         mwaa_network_configuration = aws_mwaa.CfnEnvironment.NetworkConfigurationProperty(
