@@ -19,6 +19,9 @@ set -euo pipefail
 # done
 
 ####
+
+CDK_VERSION="2.82.0"
+
 while getopts c:m: flag
 do
     case "${flag}" in
