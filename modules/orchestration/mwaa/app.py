@@ -13,7 +13,7 @@ deployment_name = os.getenv("SEEDFARMER_DEPLOYMENT_NAME", "")
 module_name = os.getenv("SEEDFARMER_MODULE_NAME", "")
 
 if len(f"{project_name}-{deployment_name}") > 36:
-    raise Exception("This module cannot support a project+deployment name character length greater than 35")
+    raise ValueError("This module cannot support a project+deployment name character length greater than 35")
 
 
 def _param(name: str) -> str:
@@ -31,10 +31,10 @@ max_workers = os.getenv(_param("MAX_WORKERS"), "1")
 unique_requirements_file = os.getenv("UNIQUE_REQUIREMENTS_FILE")
 
 if not vpc_id:
-    raise Exception("missing input parameter vpc-id")
+    raise ValueError("missing input parameter vpc-id")
 
 if not private_subnet_ids:
-    raise Exception("missing input parameter private-subnet-ids")
+    raise ValueError("missing input parameter private-subnet-ids")
 
 app = App()
 
