@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - enforced TLS version 1.2, node-node encryption and encryption at rest on OS module
 - added `emr-serverless` module with unit-tests
 - added workflow entries to all IDF modules
+- made `requirements.txt` file of MWAA configurable via a user defined entry from module manifest file
 
 ### **Changed**
 
