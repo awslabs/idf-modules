@@ -9,7 +9,8 @@ deploy:
       commands:
       - aws iam create-service-linked-role --aws-service-name ops.emr-serverless.amazonaws.com || true
       - cdk deploy --require-approval never --progress events --app "python app.py" --outputs-file ./cdk-exports.json
-      - python export_metadata.py
+      # Export metadata
+      - seedfarmer metadata convert -f cdk-exports.json || true
 destroy:
   phases:
     install:

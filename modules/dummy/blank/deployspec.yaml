@@ -9,7 +9,8 @@ deploy:
     build:
       commands:
       - echo "This Dummy Module does nothing"
-      - python export_metadata.py
+      # Export metadata
+      # - seedfarmer metadata convert -f cdk-exports.json || true
 destroy:
   phases:
     install:
