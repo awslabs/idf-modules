@@ -84,6 +84,7 @@ class MWAAStack(Stack):  # type: ignore
             dag_bucket = aws_s3.Bucket(
                 self,
                 id="airflow-dag-bucket",
+                versioned=True,
                 bucket_name=f"{dep_mod}-{account}-{region}",
                 removal_policy=aws_cdk.RemovalPolicy.DESTROY,
                 encryption=aws_s3.BucketEncryption.KMS_MANAGED,
