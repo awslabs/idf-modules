@@ -34,7 +34,7 @@ cattrs==22.1.0
     # via jsii
 cdk-nag==2.12.29
     # via -r requirements.in
-certifi==2023.5.7
+certifi==2023.7.22
     # via requests
 cffi==1.15.1
     # via cryptography
