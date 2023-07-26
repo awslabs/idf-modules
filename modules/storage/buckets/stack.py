@@ -53,9 +53,9 @@ class BucketsStack(Stack):  # type: ignore
         Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=full_dep_mod)
 
         artifact_bucket_name = f"{project_name}-{deployment_name}-artifacts-bucket-{hash}"
-        unique_ab = (hashlib.sha1(module_name.encode("UTF-8"), usedforsecurity=False).hexdigest())[
-            : (60 - len(artifact_bucket_name))
-        ]
+        unique_ab = (
+            hashlib.sha1(module_name.encode("UTF-8"), usedforsecurity=False).hexdigest()  # type: ignore[call-arg]
+        )[: (60 - len(artifact_bucket_name))]
 
         artifacts_bucket = aws_s3.Bucket(
             self,
@@ -74,9 +74,9 @@ class BucketsStack(Stack):  # type: ignore
         )
 
         log_bucket_name = f"{project_name}-{deployment_name}-logs-bucket-{hash}"
-        unique_log = (hashlib.sha1(module_name.encode("UTF-8"), usedforsecurity=False).hexdigest())[
-            : (60 - len(log_bucket_name))
-        ]
+        unique_log = (
+            hashlib.sha1(module_name.encode("UTF-8"), usedforsecurity=False).hexdigest()  # type: ignore[call-arg]
+        )[: (60 - len(log_bucket_name))]
 
         logs_bucket = aws_s3.Bucket(
             self,
