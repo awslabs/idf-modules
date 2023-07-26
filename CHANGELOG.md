@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### **Changed**
 
 - replaced exporting metadata with seedfarmer command
+- storage/buckets - added `usedforsecurity=False` to the sha1 creation of bucket names
 
 ### **Removed**
 
