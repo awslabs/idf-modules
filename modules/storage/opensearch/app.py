@@ -18,7 +18,7 @@ module_name = os.getenv("SEEDFARMER_MODULE_NAME", "")
 hash = os.getenv("SEEDFARMER_HASH", "")
 
 if len(f"{project_name}-{deployment_name}") > 36:
-    raise Exception("This module cannot support a project+deployment name character length greater than 35")
+    raise ValueError("This module cannot support a project+deployment name character length greater than 35")
 
 # App specific
 
@@ -28,13 +28,13 @@ os_domain_retention = os.getenv(_param("RETENTION_TYPE"), "RETAIN")
 
 
 if not vpc_id:
-    raise Exception("missing input parameter vpc-id")
+    raise ValueError("missing input parameter vpc-id")
 
 if not private_subnet_ids:
-    raise Exception("missing input parameter private-subnet-ids")
+    raise ValueError("missing input parameter private-subnet-ids")
 
 if os_domain_retention not in ["DESTROY", "RETAIN"]:
-    raise Exception("The only RETENTION_TYPE values accepted are 'DESTROY' and 'RETAIN' ")
+    raise ValueError("The only RETENTION_TYPE values accepted are 'DESTROY' and 'RETAIN' ")
 
 os_data_nodes = int(os.getenv(_param("OPENSEARCH_DATA_NODES"), 1))
 os_data_node_instance_type = os.getenv(_param("OPENSEARCH_DATA_NODES_INSTANCE_TYPE"), "r6g.large.search")

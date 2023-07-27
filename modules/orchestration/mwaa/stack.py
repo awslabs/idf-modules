@@ -217,6 +217,21 @@ class MWAAStack(Stack):  # type: ignore
                         f"arn:aws:sagemaker:{self.region}:{self.account}:processing-job/*",
                     ],
                 ),
+                aws_iam.PolicyStatement(
+                    actions=[
+                        "emr-serverless:CreateApplication",
+                        "emr-serverless:GetApplication",
+                        "emr-serverless:StartApplication",
+                        "emr-serverless:StopApplication",
+                        "emr-serverless:DeleteApplication",
+                        "emr-serverless:StartJobRun",
+                        "emr-serverless:GetJobRun",
+                    ],
+                    effect=aws_iam.Effect.ALLOW,
+                    resources=[
+                        f"arn:aws:emr-serverless:{self.region}:{self.account}:/applications/*",
+                    ],
+                ),
             ]
         )
 
@@ -243,6 +258,14 @@ class MWAAStack(Stack):  # type: ignore
             )
         )
 
+        mwaa_service_role.add_to_policy(
+            aws_iam.PolicyStatement(
+                resources=["*"],
+                actions=["iam:PassRole"],
+                conditions={"StringLike": {"iam:PassedToService": "emr-serverless.amazonaws.com"}},
+            )
+        )
+
         mwaa_logging_conf = aws_mwaa.CfnEnvironment.LoggingConfigurationProperty(
             task_logs=aws_mwaa.CfnEnvironment.ModuleLoggingConfigurationProperty(enabled=True, log_level="INFO"),
             worker_logs=aws_mwaa.CfnEnvironment.ModuleLoggingConfigurationProperty(enabled=True, log_level="INFO"),
@@ -253,7 +276,7 @@ class MWAAStack(Stack):  # type: ignore
             webserver_logs=aws_mwaa.CfnEnvironment.ModuleLoggingConfigurationProperty(enabled=True, log_level="INFO"),
         )
 
-        mwaa_security_group = ec2.SecurityGroup(self, id="mwaa-sg", vpc=self.vpc)
+        mwaa_security_group = ec2.SecurityGroup(self, id="mwaa-sg", vpc=self.vpc, allow_all_outbound=True)
         mwaa_security_group.connections.allow_internally(ec2.Port.all_traffic(), "MWAA")
 
         mwaa_network_configuration = aws_mwaa.CfnEnvironment.NetworkConfigurationProperty(

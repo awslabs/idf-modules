@@ -111,9 +111,9 @@ class AwsBatch(Stack):
         ]
         policy_document = iam.PolicyDocument(statements=policy_statements).to_string()
 
-        batchSG = ec2.SecurityGroup(self, "BatchSG", vpc=self.vpc, allow_all_outbound=True, description="Batch SG")
+        batch_sg = ec2.SecurityGroup(self, "BatchSG", vpc=self.vpc, allow_all_outbound=True, description="Batch SG")
 
-        batchSG.add_egress_rule(ec2.Peer.ipv4(self.vpc.vpc_cidr_block), ec2.Port.all_tcp())
+        batch_sg.add_egress_rule(ec2.Peer.ipv4(self.vpc.vpc_cidr_block), ec2.Port.all_tcp())
 
         # Creates Compute Env conditionally
         batch_compute_config = batch_compute.get("batch_compute_config")
@@ -174,7 +174,7 @@ class AwsBatch(Stack):
                             launch_template=launch_template_spec,
                             type=batch.ComputeResourceType.ON_DEMAND,
                             vpc_subnets=ec2.SubnetSelection(subnets=self.private_subnets),
-                            security_groups=[batchSG],
+                            security_groups=[batch_sg],
                         ),
                     )
                     on_demand_compute_env_list.append(
@@ -200,7 +200,7 @@ class AwsBatch(Stack):
                             minv_cpus=0,
                             type=batch.ComputeResourceType.SPOT,
                             vpc_subnets=ec2.SubnetSelection(subnets=self.private_subnets),
-                            security_groups=[batchSG],
+                            security_groups=[batch_sg],
                             allocation_strategy=batch.AllocationStrategy("SPOT_CAPACITY_OPTIMIZED"),
                         ),
                     )
@@ -219,7 +219,7 @@ class AwsBatch(Stack):
                             maxv_cpus=batchenv.get("max_vcpus", DEFAULT_MAX_VCPUS_PER_QUEUE),
                             type=batch.ComputeResourceType.FARGATE,
                             vpc_subnets=ec2.SubnetSelection(subnets=self.private_subnets),
-                            security_groups=[batchSG],
+                            security_groups=[batch_sg],
                         ),
                     )
 
@@ -260,7 +260,7 @@ class AwsBatch(Stack):
                 priority=1,
             )
 
-        self.batch_sg = batchSG.security_group_id
+        self.batch_sg = batch_sg.security_group_id
         self.batch_policy_document = policy_document
 
         Aspects.of(self).add(cdk_nag.AwsSolutionsChecks())
