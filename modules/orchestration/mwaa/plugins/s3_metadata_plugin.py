@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT-0
 
 from airflow.plugins_manager import AirflowPlugin
-from sensors.s3_metadata_sensor import *
+from sensors.s3_metadata_sensor import S3MetadataSensor
 
 
 class S3MetadataPlugin(AirflowPlugin):

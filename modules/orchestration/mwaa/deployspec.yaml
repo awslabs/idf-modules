@@ -35,5 +35,3 @@ destroy:
     build:
       commands:
       - cdk destroy --force --app "python app.py"
-
-

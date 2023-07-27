@@ -4,38 +4,18 @@
 
 This module:
 
-- creates an Amazon Managed Airflow Environment to execute DAGs created by other modules
+- creates an MWAA Environment to execute DAGs created by other modules
 - creates an IAM Role (the MWAA Execution Role) with least privilege permissions
 - *Optionally* creates an S3 Bucket to store DAG artifacts
 
 ## Limitations
-
 When deploying an MWAA environemnt, an S3 bucket is used to store supporting files such as `requirements`, `plugins` and `dags`.  This module will create a bucket if not one provided in the parameter `dag-bucket-name`.  IDF does support multiple MWAA modules in a single deployment, but due to the nature of how MWAA is managed at AWS, MWAA modules CANNOT SHARE the buckets that store the `requirements`, `plugins` or `dags`.  EACH MWAA module deployed requires a separate bucket for these artifacts.
 
-In other words, if the `dag-bucket-name` is `MY_AWESOME_BUCKET_NAME` then ONLY ONE MWAA module can refer to that bucket to store `dags` (as well as `plugins` and `requirements`).  So, pick a unique bucket per MWAA module deployment.  
+In other words, if the `dag-bucket-name` is `MY_AWESOME_BUCKET_NAME` then ONLY ONE MWAA module can refer to that bucket to store `dags` (as well as `plugins` and ` requirements`).  So, pick a unique bucket per MWAA module deployment.  
+
+
 
 ## Inputs/Outputs
-
-### Input DataFiles
-
-#### Required
-
-NA
-
-#### Optional
-
-dataFiles: User can optionally provide `filePath` reference to a custom airflow requirements.txt file(available locally/remote) and should make sure to provide the value of the filepath as an environment variable under `Parameters`. Following is the reference implementation using dataFiles:
-
-```yaml
-name: mwaa
-path: modules/orchestration/mwaa/
-dataFiles:
-  - filePath: data/mwaa/requirements/requirements-emr-serverless.txt
-parameters:
-  - name: custom-requirements-path
-    value: data/mwaa/requirements/requirements-emr-serverless.txt
-
-```
 
 ### Input Paramenters
 
@@ -54,7 +34,6 @@ parameters:
 - `mwaa-requirements-file` - Support for customized requiremements file installed on MWAA
   - ANY file referenced MUST be located `modules/core/mwaa/requirements/*.txt` and be python requirements compliant
   - in if not provided, default is `requirements.txt`
-
 ### Module Metadata Outputs
 
 - `DagBucketName`: name of the S3 Bucket configured to store MWAA Environment DAG artifacts
