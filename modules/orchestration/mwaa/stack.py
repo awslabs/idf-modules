@@ -217,6 +217,21 @@ class MWAAStack(Stack):  # type: ignore
                         f"arn:aws:sagemaker:{self.region}:{self.account}:processing-job/*",
                     ],
                 ),
+                aws_iam.PolicyStatement(
+                    actions=[
+                        "emr-serverless:CreateApplication",
+                        "emr-serverless:GetApplication",
+                        "emr-serverless:StartApplication",
+                        "emr-serverless:StopApplication",
+                        "emr-serverless:DeleteApplication",
+                        "emr-serverless:StartJobRun",
+                        "emr-serverless:GetJobRun"
+                    ],
+                    effect=aws_iam.Effect.ALLOW,
+                    resources=[
+                        f"arn:aws:emr-serverless:{self.region}:{self.account}:/applications/*",
+                    ],
+                )
             ]
         )
 
@@ -240,6 +255,14 @@ class MWAAStack(Stack):  # type: ignore
                 resources=["*"],
                 actions=["iam:PassRole"],
                 conditions={"StringEquals": {"iam:PassedToService": "sagemaker.amazonaws.com"}},
+            )
+        )
+
+        mwaa_service_role.add_to_policy(
+            aws_iam.PolicyStatement(
+                resources=["*"],
+                actions=["iam:PassRole"],
+                conditions={"StringLike": {"iam:PassedToService": "emr-serverless.amazonaws.com"}},
             )
         )
 
