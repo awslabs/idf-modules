@@ -13,8 +13,8 @@ groups:
     path: manifests/local-isolated/replicator-modules.yaml
   - name: compute
     path: manifests/local-isolated/compute-modules.yaml
-  - name: sagemaker
-    path: manifests/local-isolated/sagemaker-modules.yaml
+  - name: ml
+    path: manifests/local-isolated/ml-modules.yaml
 targetAccountMappings:
   - alias: primary
     accountId:

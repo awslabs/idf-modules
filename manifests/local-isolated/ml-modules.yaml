@@ -1,5 +1,5 @@
 name: sagemaker-studio
-path: modules/sagemaker/sagemaker-studio
+path: modules/ml/sagemaker-studio
 parameters:
   - name: vpc_id
     valueFrom:

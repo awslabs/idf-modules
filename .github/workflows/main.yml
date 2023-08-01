@@ -221,7 +221,7 @@ jobs:
       - name: Pytest
         run: cd modules/database/neptune && pytest
 
-  modules-sagemaker-sagemaker-studio:
+  modules-ml-sagemaker-studio:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -236,8 +236,8 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
-          pip install -r modules/sagemaker/sagemaker-studio/requirements.txt
+          pip install -r modules/ml/sagemaker-studio/requirements.txt
       - name: Static checks and linting (mypy, flake8, black, isort)
-        run: scripts/validate.sh --language python --path modules/sagemaker/sagemaker-studio/
+        run: scripts/validate.sh --language python --path modules/ml/sagemaker-studio/
       - name: Pytest
-        run: cd modules/sagemaker/sagemaker-studio/ && pytest
+        run: cd modules/ml/sagemaker-studio/ && pytest
