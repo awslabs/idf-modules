@@ -84,22 +84,26 @@ This is an AWS CDK project written in Python 3.8. Here's what you need to have o
 ### Module Structure
 
 ```
-.
-├── LICENSE.txt
-├── README.md
-├── app.py
-├── cdk.context.json
-├── cdk.json
 ├── functions                                   <--- lambda functions and layers
 │   └── sm_studio                               <--- sagemaker studio stack related lambda function
 │       └── enable_sm_projects                  <--- lambda function to enable sagemaker projects on the account and links the IAM roles of the domain users (used as a custom resource)
-├── sagemaker_studio
-│   ├── constructs
-│   │   └── sm_roles.py                         <--- construct containing IAM roles for sagemaker studio users
-│   │   └── networking.py                         <--- construct for networking
-│   └── sagemaker_studio_stack.py               <--- stack to create sagemaker studio domain along with related IAM roles and the domain users
-├── requirements-dev.txt
+├── helper constructs                           <--- helper CDK constructs
+│   └── sm_roles.py                             <--- helper construct containing IAM roles for sagemaker studio users
+├── scripts                                     <--- helper scripts
+│   └── check_lcc_state.sh                      <--- script to check if sagemaker studio lifecycle config needs an update
+│   └── delete-domains.py                       <--- python helper script to delete sagemaker domains
+│   └── delete_efs.py                           <--- python helper script to delete efs mounts
+│   └── on-jupyter-server-start.sh              <--- script that installs the idle notebook auto-checker jupyter server extension
+├── tests                                       <--- module unit tests
+├── app.py                                      <--- cdk application entrypoint
+├── coverage.ini                                <--- test coverage tool parameters file
+├── deployspec.yaml                             <--- file that defines deployment instructions
+├── modulestack.yaml                            <--- cloudformation stack that contains permissions needed to deploy the module
+├── pyproject.toml                              <--- build system requirements and settings file
+├── README.md                                   <--- module documentation markdown file
 ├── requirements.txt                            <--- cdk packages used in the stacks (must be installed)
+├── stack.py                                    <--- stack to create sagemaker studio domain along with related IAM roles and the domain users
+├── update-domain-input.template.json           <--- json template to update sagemaker domain lifecycle configs
 ```
 ## Troubleshooting
 
