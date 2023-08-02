@@ -70,3 +70,6 @@ def test_synthesize_stack(stack_defaults):
     template = Template.from_stack(stack)
 
     template.resource_count_is("AWS::SageMaker::Domain", 1)
+    template.resource_count_is("AWS::SageMaker::UserProfile", 2)
+    template.resource_count_is("AWS::EC2::SecurityGroup", 1)
+    template.resource_count_is("AWS::IAM::Role", 3)
