@@ -149,6 +149,9 @@ class AwsBatch(Stack):
                                         ),
                                     )
                                 ],
+                                metadata_options=ec2.CfnLaunchTemplate.MetadataOptionsProperty(
+                                    http_endpoint="enabled", http_tokens="required", http_put_response_hop_limit=3
+                                ),
                                 ebs_optimized=True,
                                 monitoring=ec2.CfnLaunchTemplate.MonitoringProperty(enabled=True),
                             ),
