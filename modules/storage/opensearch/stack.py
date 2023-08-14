@@ -118,6 +118,9 @@ class OpenSearchStack(Stack):  # type: ignore
             node_to_node_encryption=True,
             encryption_at_rest=opensearch.EncryptionAtRestOptions(enabled=True),
             tls_security_policy=opensearch.TLSSecurityPolicy.TLS_1_2,
+            logging=opensearch.LoggingOptions(
+                slow_search_log_enabled=True, app_log_enabled=True, slow_index_log_enabled=True
+            ),
         )
 
         url = f"https://{os_domain.domain_endpoint}/_dashboards/"
