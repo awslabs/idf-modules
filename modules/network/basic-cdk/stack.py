@@ -126,10 +126,13 @@ class NetworkingStack(Stack):  # type: ignore
             max_azs=3,
             nat_gateways=1,
             subnet_configuration=subnet_configuration,
-            flow_logs=ec2.FlowLogOptions(
-                destination=ec2.FlowLogDestination.to_cloud_watch_logs(),
-                traffic_type=ec2.FlowLogTrafficType.ALL,
-            ),
+        )
+
+        # Enabling VPC Flow logs
+        vpc.add_flow_log(
+            "FlowLogCloudWatch",
+            traffic_type=ec2.FlowLogTrafficType.ALL,
+            destination=ec2.FlowLogDestination.to_cloud_watch_logs(),
         )
 
         # Enabling subnets for deploying Load Balancers for EKS workloads
