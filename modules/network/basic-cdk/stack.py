@@ -126,6 +126,10 @@ class NetworkingStack(Stack):  # type: ignore
             max_azs=3,
             nat_gateways=1,
             subnet_configuration=subnet_configuration,
+            flow_logs=ec2.FlowLogOptions(
+                destination=ec2.FlowLogDestination.to_cloud_watch_logs(),
+                traffic_type=ec2.FlowLogTrafficType.ALL,
+            ),
         )
 
         # Enabling subnets for deploying Load Balancers for EKS workloads
