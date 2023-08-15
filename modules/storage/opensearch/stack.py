@@ -182,5 +182,11 @@ class OpenSearchStack(Stack):  # type: ignore
                         "reason": "Managed policies used by service accout roles and managed service",
                     }
                 ),
+                NagPackSuppression(
+                    **{
+                        "id": "AwsSolutions-IAM5",
+                        "reason": "Policies applied for Custom Resources",
+                    }
+                ),
             ],
         )
