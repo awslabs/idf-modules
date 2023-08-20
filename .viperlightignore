@@ -5,3 +5,4 @@ cdk.out
 coverage
 Config
 ^dist/
+modules/compute/eks/
