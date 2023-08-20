@@ -1,3 +1,4 @@
 {
-  "all": true
+  "all": true,
+  "failOn": "medium"
 }
