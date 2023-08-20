@@ -1,0 +1,7 @@
+# ignore the following
+
+.venv
+cdk.out
+coverage
+Config
+^dist/
