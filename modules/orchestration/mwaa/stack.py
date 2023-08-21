@@ -225,13 +225,13 @@ class MWAAStack(Stack):  # type: ignore
                         "emr-serverless:StopApplication",
                         "emr-serverless:DeleteApplication",
                         "emr-serverless:StartJobRun",
-                        "emr-serverless:GetJobRun"
+                        "emr-serverless:GetJobRun",
                     ],
                     effect=aws_iam.Effect.ALLOW,
                     resources=[
                         f"arn:aws:emr-serverless:{self.region}:{self.account}:/applications/*",
                     ],
-                )
+                ),
             ]
         )
 
