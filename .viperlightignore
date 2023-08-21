@@ -6,4 +6,6 @@ coverage
 Config
 ^dist/
 modules/compute/eks/
-modules/orchestration/mwaa/plugins/
+^plugins/
+^html_dir/
+
