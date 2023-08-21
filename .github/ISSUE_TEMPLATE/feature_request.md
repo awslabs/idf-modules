@@ -11,7 +11,7 @@ assignees: ''
 A clear and concise description of what the problem is.  If the feature is related to an existing module,
 be ABSOLUTELY sure to give the path of the module (ex `modules/optionals/networking`).
 
-**Describe the solution you'd like**
+**Describe the feature you'd like**
 A clear and concise description of what you want to happen.
 
 **Describe alternatives you've considered**
