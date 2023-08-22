@@ -1,3 +1,6 @@
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 import json
 import logging
 import os
@@ -29,13 +32,13 @@ storage_throughput = int(storage_throughput) if storage_throughput else None  # 
 
 
 if not vpc_id:
-    raise Exception("missing input parameter vpc-id")
+    raise ValueError("missing input parameter vpc-id")
 
 if fs_deployment_type == "PERSISTENT_2" and data_bucket_name is not None and import_path is not None:
-    raise Exception("File system deployment type `PERSISTENT_2` does not support an S3 import path")
+    raise ValueError("File system deployment type `PERSISTENT_2` does not support an S3 import path")
 
 if fs_deployment_type == "PERSISTENT_2" and data_bucket_name is not None and export_path is not None:
-    raise Exception("File system deployment type `PERSISTENT_2` does not support an S3 export path")
+    raise ValueError("File system deployment type `PERSISTENT_2` does not support an S3 export path")
 
 if "SCRATCH" in fs_deployment_type and storage_throughput is not None:
     _logger.warning(
@@ -44,7 +47,7 @@ if "SCRATCH" in fs_deployment_type and storage_throughput is not None:
     storage_throughput = None
 
 if "PERSISTENT" in fs_deployment_type and storage_throughput is None:
-    raise Exception(f"The storage throughput must be specified for Lustre fs_deployment_type={fs_deployment_type}")
+    raise ValueError(f"The storage throughput must be specified for Lustre fs_deployment_type={fs_deployment_type}")
 
 app = App()
 
