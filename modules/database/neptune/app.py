@@ -1,3 +1,6 @@
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 import json
 import os
 
@@ -12,7 +15,7 @@ deployment_name = os.getenv("SEEDFARMER_DEPLOYMENT_NAME", "")
 module_name = os.getenv("SEEDFARMER_MODULE_NAME", "")
 
 if len(f"{project_name}-{deployment_name}") > 36:
-    raise Exception("This module cannot support a project+deployment name character length greater than 35")
+    raise ValueError("This module cannot support a project+deployment name character length greater than 35")
 
 
 def _param(name: str) -> str:
@@ -24,10 +27,10 @@ vpc_id = os.getenv(_param("VPC_ID"))  # required
 private_subnet_ids = json.loads(os.getenv(_param("PRIVATE_SUBNET_IDS"), ""))  # required
 
 if not vpc_id:
-    raise Exception("missing input parameter vpc-id")
+    raise ValueError("missing input parameter vpc-id")
 
 if not private_subnet_ids:
-    raise Exception("missing input parameter private-subnet-ids")
+    raise ValueError("missing input parameter private-subnet-ids")
 
 num_instances = int(os.getenv(_param("NUMBER_INSTANCES"), "1"))
 
