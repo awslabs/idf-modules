@@ -1,3 +1,6 @@
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 import os
 
 import aws_cdk
@@ -16,13 +19,13 @@ vpc_id = os.getenv("SEEDFARMER_PARAMETER_VPC_ID")
 efs_removal_policy = os.getenv("SEEDFARMER_PARAMETER_RETENTION_TYPE", "DESTROY")
 
 if len(f"{project_name}-{deployment_name}") > 36:
-    raise Exception("This module cannot support a project+deployment name character length greater than 35")
+    raise ValueError("This module cannot support a project+deployment name character length greater than 35")
 
 if not vpc_id:
-    raise Exception("missing input parameter vpc-id")
+    raise ValueError("missing input parameter vpc-id")
 
 if efs_removal_policy not in ["DESTROY", "RETAIN"]:
-    raise Exception("The only RETENTION_TYPE values accepted are 'DESTROY' and 'RETAIN' ")
+    raise ValueError("The only RETENTION_TYPE values accepted are 'DESTROY' and 'RETAIN' ")
 
 app = App()
 
