@@ -1,16 +1,5 @@
-#  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-#
-#    Licensed under the Apache License, Version 2.0 (the "License").
-#    You may not use this file except in compliance with the License.
-#    You may obtain a copy of the License at
-#
-#        http://www.apache.org/licenses/LICENSE-2.0
-#
-#    Unless required by applicable law or agreed to in writing, software
-#    distributed under the License is distributed on an "AS IS" BASIS,
-#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#    See the License for the specific language governing permissions and
-#    limitations under the License.
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: Apache-2.0
 
 import logging
 from typing import Any, List, cast
@@ -118,6 +107,9 @@ class OpenSearchStack(Stack):  # type: ignore
             node_to_node_encryption=True,
             encryption_at_rest=opensearch.EncryptionAtRestOptions(enabled=True),
             tls_security_policy=opensearch.TLSSecurityPolicy.TLS_1_2,
+            logging=opensearch.LoggingOptions(
+                slow_search_log_enabled=True, app_log_enabled=True, slow_index_log_enabled=True
+            ),
         )
 
         url = f"https://{os_domain.domain_endpoint}/_dashboards/"
@@ -177,6 +169,12 @@ class OpenSearchStack(Stack):  # type: ignore
                     **{
                         "id": "AwsSolutions-IAM4",
                         "reason": "Managed policies used by service accout roles and managed service",
+                    }
+                ),
+                NagPackSuppression(
+                    **{
+                        "id": "AwsSolutions-IAM5",
+                        "reason": "Policies applied for Custom Resources",
                     }
                 ),
             ],
