@@ -1,3 +1,6 @@
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 from typing import Any, List, cast
 
 from aws_cdk import Aspects, Duration, Stack, Tags
