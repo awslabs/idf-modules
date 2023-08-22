@@ -1,3 +1,6 @@
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 import os
 
 import aws_cdk
@@ -18,14 +21,14 @@ buckets_retention = os.getenv("SEEDFARMER_PARAMETER_RETENTION_TYPE", "RETAIN")
 app = App()
 
 if len(f"{project_name}-{deployment_name}") > 36:
-    raise Exception("This module cannot support a project+deployment name character length greater than 35")
+    raise ValueError("This module cannot support a project+deployment name character length greater than 35")
 
 if buckets_retention not in ["DESTROY", "RETAIN"]:
-    raise Exception("The only RETENTION_TYPE values accepted are 'DESTROY' and 'RETAIN' ")
+    raise ValueError("The only RETENTION_TYPE values accepted are 'DESTROY' and 'RETAIN' ")
 
 
 if buckets_encryption_type not in ["SSE", "KMS"]:
-    raise Exception("The only ENCRYPTION_TYPE values accepted are 'SSE' and 'KMS' ")
+    raise ValueError("The only ENCRYPTION_TYPE values accepted are 'SSE' and 'KMS' ")
 
 stack = BucketsStack(
     scope=app,
