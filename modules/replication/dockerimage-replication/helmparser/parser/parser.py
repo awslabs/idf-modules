@@ -1,4 +1,9 @@
+
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Parsing utilities"""
+
 import os
 from functools import reduce
 
