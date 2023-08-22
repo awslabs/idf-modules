@@ -1,16 +1,5 @@
-#  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-#
-#    Licensed under the Apache License, Version 2.0 (the "License").
-#    You may not use this file except in compliance with the License.
-#    You may obtain a copy of the License at
-#
-#        http://www.apache.org/licenses/LICENSE-2.0
-#
-#    Unless required by applicable law or agreed to in writing, software
-#    distributed under the License is distributed on an "AS IS" BASIS,
-#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#    See the License for the specific language governing permissions and
-#    limitations under the License.
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: Apache-2.0
 
 import logging
 from typing import Any, Dict, List, cast
@@ -149,6 +138,9 @@ class AwsBatch(Stack):
                                         ),
                                     )
                                 ],
+                                metadata_options=ec2.CfnLaunchTemplate.MetadataOptionsProperty(
+                                    http_endpoint="enabled", http_tokens="required", http_put_response_hop_limit=3
+                                ),
                                 ebs_optimized=True,
                                 monitoring=ec2.CfnLaunchTemplate.MonitoringProperty(enabled=True),
                             ),
