@@ -129,7 +129,7 @@ After running the command, you can deploy the template:
 ## Collection of operational metrics
 
 This solution collects anonymous operational metrics to help AWS improve the quality of features of the solution.
-For more information, including how to disable this capability, please see the [implementation guide](REPLACE-ME).
+For more information, including how to disable this capability, please see the [implementation guide](https://docs.aws.amazon.com/prescriptive-guidance/latest/addf-security-and-operations/welcome.html).
 
 ***
 

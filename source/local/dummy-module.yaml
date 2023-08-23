@@ -1,0 +1,11 @@
+name: dummy
+path: modules/dummy/blank
+targetAccount: primary
+targetRegion: us-east-1
+parameters:
+  - name: testingRegionParams
+    valueFrom:
+      parameterValue: myTestRegionParam
+  - name: testingGlobalParams
+    valueFrom:
+      parameterValue: myTestGlobalParam
