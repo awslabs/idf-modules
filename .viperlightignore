@@ -4,8 +4,7 @@
 cdk.out
 coverage
 Config
-^dist/
 modules/compute/eks/
-^plugins/
-^html_dir/
-
+^dist/
+.*/plugins/
+.*/html_dir/
