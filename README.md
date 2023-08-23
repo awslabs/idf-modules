@@ -127,7 +127,6 @@ After running the command, you can deploy the template:
 > **Note:** You can drop `--sync` from the command to only perform the build and synthesis of the template without uploading to a remote location. This is helpful when testing new changes to the code.
 
 ## Collection of operational metrics
-
 This solution collects anonymous operational metrics to help AWS improve the quality of features of the solution.
 For more information, including how to disable this capability, please see the [implementation guide](https://docs.aws.amazon.com/prescriptive-guidance/latest/addf-security-and-operations/welcome.html).
 
