@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - replaced exporting metadata with seedfarmer command
 - storage/buckets - added `usedforsecurity=False` to the sha1 creation of bucket names
 - applying changes based off security scans and code standards recommendations
-- `data/mwaa/requirements/requirements-emr-serverless.txt` updated `Pillow~=9.2.0` as per bot
+- `data/mwaa/requirements/requirements-emr-serverless.txt` updated `Pillow~=9.3.0` as per bot
 
 ### **Removed**
 
