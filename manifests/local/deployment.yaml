@@ -17,6 +17,8 @@ groups:
     path: manifests/local/database-modules.yaml
   - name: orchestration
     path: manifests/local/orchestration-modules.yaml
+  - name: catalog
+    path: manifests/local/catalog-modules.yaml
 targetAccountMappings:
   - alias: primary
     parametersGlobal:

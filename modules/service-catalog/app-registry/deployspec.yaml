@@ -1,0 +1,25 @@
+publishGenericEnvVariables: true
+deploy:
+  phases:
+    install:
+      commands:
+      - npm install -g aws-cdk@2.70.0
+      - pip install -r requirements.txt
+    build:
+      commands:
+      - cdk deploy --require-approval never --progress events --app "python app.py" --outputs-file ./cdk-exports.json
+      # Export metadata
+      - export SEEDFARMER_MODULE_METADATA=$(python -c "import json; file=open('cdk-exports.json'); print(json.load(file)['addf-${ADDF_DEPLOYMENT_NAME}-${ADDF_MODULE_NAME}']['metadata'])")
+      # Associate Solution CFN stacks to AppRegistry
+      - python register-stacks.py associate
+destroy:
+  phases:
+    install:
+      commands:
+      - npm install -g aws-cdk@2.70.0
+      - pip install -r requirements.txt
+    build:
+      commands:
+      # Dissociate Solution CFN stacks to AppRegistry
+      - python register-stacks.py dissociate
+      - cdk destroy --force --app "python app.py"
