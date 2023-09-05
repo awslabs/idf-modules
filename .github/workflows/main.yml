@@ -241,3 +241,24 @@ jobs:
         run: scripts/validate.sh --language python --path modules/ml/sagemaker-studio/
       - name: Pytest
         run: cd modules/ml/sagemaker-studio/ && pytest
+  
+  modules-service-catalog-app-registry:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.9]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Requirements
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+          pip install -r modules/service-catalog/app-registry/requirements.txt
+      - name: Static checks and linting (mypy, flake8, black, isort)
+        run: scripts/validate.sh --language python --path modules/service-catalog/app-registry/
+      - name: Pytest
+        run: cd modules/service-catalog/app-registry/ && pytest
