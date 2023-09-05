@@ -16,8 +16,9 @@ phases:
       - bash gen-reports.sh -m orchestration/mwaa # needed for solutions
       # Compute
       - bash gen-reports.sh -m compute/aws-batch -c 2.70.0 # needed for solutions
-      # - bash gen-reports.sh -m compute/eks -c 2.51.0 # Failing currently
       - bash gen-reports.sh -m compute/emr-serverless -c 2.83.1 # needed for solutions
+      # Compute
+      - bash gen-reports.sh -m service-catalog/app-registry -c 2.70.0 # needed for solutions
       # Replications
       # - bash gen-reports.sh -m replication/dockerimage-replication
   post_build:
