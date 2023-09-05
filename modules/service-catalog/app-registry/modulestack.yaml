@@ -2,9 +2,9 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: This template deploys a Module specific IAM permissions
 
 Parameters:
-  ProjectName:
-    Type: String
-    Description: The name of the project
+  # ProjectName:
+  #   Type: String
+  #   Description: The name of the project
   # DeploymentName:
   #   Type: String
   #   Description: The name of the deployment
