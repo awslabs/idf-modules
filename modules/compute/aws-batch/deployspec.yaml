@@ -14,6 +14,7 @@ deploy:
       - cdk deploy --require-approval never --progress events --app "python app.py" --outputs-file ./cdk-exports.json
       # Export metadata
       - seedfarmer metadata convert -f cdk-exports.json || true
+      - echo "test"
 destroy:
   phases:
     install:
