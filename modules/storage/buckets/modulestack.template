@@ -19,5 +19,5 @@ Resources:
       PolicyDocument:
         Statement:
         Version: 2012-10-17
-      PolicyName: "filestorage-modulespecific-policy"
+      PolicyName: "buckets-modulespecific-policy"
       Roles: [!Ref RoleName]
