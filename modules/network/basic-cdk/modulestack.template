@@ -19,6 +19,6 @@ Resources:
       PolicyDocument:
         Statement:
         Version: 2012-10-17
-      PolicyName: "filestorage-modulespecific-policy"
+      PolicyName: "networking-modulespecific-policy"
       Roles: [!Ref RoleName]
  
