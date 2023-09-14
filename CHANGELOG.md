@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - added workflow entries to all IDF modules
 - made `requirements.txt` file of MWAA configurable via a user defined entry from module manifest file
 - added `app-registry` module for being able to scrape app-specific CloudFormation stacks for AWS Solutions
+- added `app-insights` integration with app-registry module to derive additional insights from the associated resources in the resource group
 
 ### **Changed**
 

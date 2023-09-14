@@ -6,6 +6,7 @@ from typing import Any, cast
 
 import cdk_nag
 from aws_cdk import Aspects, Aws, Stack, Tags
+from aws_cdk import aws_applicationinsights as applicationinsights
 from aws_cdk import aws_servicecatalogappregistry as appregistry
 from cdk_nag import NagPackSuppression, NagSuppressions
 from constructs import Construct, IConstruct
@@ -94,6 +95,16 @@ class AppRegistry(Stack):
             resource_type="CFN_STACK",
         )
         cfn_resource_association.node.add_dependency(self.app_registry)
+
+        # Enabling AppInsights
+        applicationinsights.CfnApplication(
+            self,
+            "AppInsights",
+            resource_group_name=f"AWS_AppRegistry_Application-{full_dep_mod}-AppRegistryApp",
+            auto_configuration_enabled=True,
+            cwe_monitor_enabled=True,
+            ops_center_enabled=True,
+        )
 
         Aspects.of(self).add(cdk_nag.AwsSolutionsChecks())
 
