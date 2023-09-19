@@ -19,5 +19,7 @@ destroy:
       - pip install -r requirements.txt
     build:
       commands:
+      - export EMR_APP_ID=$(echo $SEEDFARMER_MODULE_METADATA | jq -r '."EmrApplicationId"') || true
+      - aws emr-serverless stop-application --application-id $EMR_APP_ID || true
       - cdk destroy --force --app "python app.py"
 
