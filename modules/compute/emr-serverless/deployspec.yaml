@@ -11,7 +11,6 @@ deploy:
       - cdk deploy --require-approval never --progress events --app "python app.py" --outputs-file ./cdk-exports.json
       # Export metadata
       - seedfarmer metadata convert -f cdk-exports.json || true
-      - echo "test"
 destroy:
   phases:
     install:
@@ -20,5 +19,7 @@ destroy:
       - pip install -r requirements.txt
     build:
       commands:
+      - export EMR_APP_ID=$(echo $SEEDFARMER_MODULE_METADATA | jq -r '."EmrApplicationId"') || true
+      - aws emr-serverless stop-application --application-id $EMR_APP_ID || true
       - cdk destroy --force --app "python app.py"
 
