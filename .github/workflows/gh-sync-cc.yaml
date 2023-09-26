@@ -18,7 +18,6 @@ permissions:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    # if: github.ref == 'refs/heads/addf-sonarscan-branch'
     steps:
       - name: Git clone the repository
         uses: actions/checkout@v3
@@ -36,10 +35,20 @@ jobs:
           ls -al av-adas-solution
 
           echo "Copying modules one after the other"
+          # Compute
           cp -R modules/compute/aws-batch av-adas-solution/modules/compute
           cp -R modules/compute/emr-serverless av-adas-solution/modules/compute
+          # Networking
+          cp -R modules/network/basic-cdk av-adas-solution/modules/network
+          # Orchestration
+          cp -R modules/orchestration/mwaa av-adas-solution/modules/orchestration
+          # Catalog
+          cp -R modules/service-catalog/app-registry av-adas-solution/modules/service-catalog
+          # Storage
+          cp -R modules/storage/opensearch av-adas-solution/modules/storage
           ls -al av-adas-solution/modules/
-          echo "Copyied modules"
+          echo "Copied modules"
+
           cd av-adas-solution/
           git config --global user.email "ssriche@amazon.com"
           git config --global user.name "Srinivas"
