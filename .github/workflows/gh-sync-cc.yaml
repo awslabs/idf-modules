@@ -50,7 +50,7 @@ jobs:
           echo "Copied modules"
 
           echo "Copying data folder contents..."
-          cp -R data/mwaa/ av-adas-solution/data
+          cp -R data/mwaa/ av-adas-solution/data/mwaa
 
           cd av-adas-solution/
           git config --global user.email "ssriche@amazon.com"
