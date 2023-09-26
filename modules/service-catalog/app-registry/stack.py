@@ -2,11 +2,11 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import logging
-from typing import Any, Dict, List, cast
+from typing import Any, cast
 
-import aws_cdk
 import cdk_nag
 from aws_cdk import Aspects, Aws, Stack, Tags
+from aws_cdk import aws_applicationinsights as applicationinsights
 from aws_cdk import aws_servicecatalogappregistry as appregistry
 from cdk_nag import NagPackSuppression, NagSuppressions
 from constructs import Construct, IConstruct
@@ -31,7 +31,7 @@ class AppRegistry(Stack):
         super().__init__(
             scope,
             id,
-            description="This stack deploys AWS AppRegistry resources for being able to visualize resources related to an AWS Solution",
+            description="Deploy AWS AppRegistry to visualize resources related to an AWS Solution",
             **kwargs,
         )
 
@@ -55,7 +55,7 @@ class AppRegistry(Stack):
             self,
             f"{full_dep_mod}-AppRegistryApp",
             name=f"{full_dep_mod}-AppRegistryApp",
-            description=f"Service Catalog application to track and manage all your resources for the solution {self.solution_name}",
+            description=f"Service Catalog app to visualize resources for the solution {self.solution_name}",
             tags={
                 "Solutions:SolutionID": self.solution_id,
                 "Solutions:SolutionName": self.solution_name,
@@ -95,6 +95,16 @@ class AppRegistry(Stack):
             resource_type="CFN_STACK",
         )
         cfn_resource_association.node.add_dependency(self.app_registry)
+
+        # Enabling AppInsights
+        applicationinsights.CfnApplication(
+            self,
+            "AppInsights",
+            resource_group_name=f"AWS_AppRegistry_Application-{full_dep_mod}-AppRegistryApp",
+            auto_configuration_enabled=True,
+            cwe_monitor_enabled=True,
+            ops_center_enabled=True,
+        )
 
         Aspects.of(self).add(cdk_nag.AwsSolutionsChecks())
 
