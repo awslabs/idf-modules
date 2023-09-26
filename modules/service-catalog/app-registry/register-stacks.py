@@ -16,7 +16,7 @@ from botocore.exceptions import ClientError
 APPREG_CLIENT = boto3.client("servicecatalog-appregistry")
 CFN_CLIENT = boto3.client("cloudformation")
 PROJECT_NAME = os.getenv("SEEDFARMER_PROJECT_NAME", "addf")
-DEP_NAME = os.getenv("SEEDFARMER_DEPLOYMENT_NAME", "aws-solutions-wip")
+DEP_NAME = os.getenv("SEEDFARMER_DEPLOYMENT_NAME")
 APP_REG_NAME = json.loads(os.getenv("SEEDFARMER_MODULE_METADATA"))["AppRegistryName"]  # type: ignore
 ACTION = sys.argv[1]
 
@@ -64,12 +64,16 @@ def _list_stacks(prefix: str) -> List[str]:
     """List CloudFormation Stacks by the desired prefix"""
 
     stacks_tobe_registsred = []
+    paginator = CFN_CLIENT.get_paginator("list_stacks")
+    response_iterator = paginator.paginate(
+        StackStatusFilter=["CREATE_COMPLETE", "UPDATE_COMPLETE", "UPDATE_ROLLBACK_COMPLETE"]
+    )
 
-    response = CFN_CLIENT.list_stacks(StackStatusFilter=["CREATE_COMPLETE"])
-
-    for stack in response["StackSummaries"]:
-        if stack["StackName"].startswith(prefix):
-            stacks_tobe_registsred.append(stack["StackName"])
+    for page in response_iterator:
+        stacks = page["StackSummaries"]
+        for stack in stacks:
+            if stack["StackName"].startswith(prefix):
+                stacks_tobe_registsred.append(stack["StackName"])
 
     print("The list of stacks: {}".format(stacks_tobe_registsred))
     return stacks_tobe_registsred

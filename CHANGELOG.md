@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - applying changes based off security scans and code standards recommendations
 - `data/mwaa/requirements/requirements-emr-serverless.txt` updated `Pillow~=9.3.0` as per bot
 - changed the `data/mwaa/requirements/requirements-emr-serverless.txt` to support Amazon MWAA 2.6.3 version
+- added paginatior for CFN list stacks to scrape the stacks starting with `addf` for registering the apps to appregistry
 
 ### **Removed**
 
