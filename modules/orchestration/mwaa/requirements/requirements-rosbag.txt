@@ -1,4 +1,4 @@
-Pillow~=9.0.1
+Pillow~=10.0.1
 boto3~=1.21.37
 awscli~=1.22.80
 airflow-kubernetes-job-operator~=2.0.4
