@@ -118,7 +118,7 @@ types-pyyaml==6.0.12.10
     # via responses
 typing-extensions==4.2.0
     # via jsii
-urllib3==1.26.15
+urllib3==1.26.17
     # via
     #   botocore
     #   requests
