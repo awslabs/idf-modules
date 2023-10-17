@@ -29,12 +29,13 @@ class AwsBatch(Stack):
         vpc_id: str,
         private_subnet_ids: List[str],
         batch_compute: Dict[str, Any],
+        stack_description: str,
         **kwargs: Any,
     ) -> None:
         super().__init__(
             scope,
             id,
-            description="This stack deploys AWS Batch Compute Environments and Job Queues",
+            description=stack_description,
             **kwargs,
         )
 

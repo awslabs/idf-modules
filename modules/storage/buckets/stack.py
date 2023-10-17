@@ -27,6 +27,7 @@ class BucketsStack(Stack):  # type: ignore
         hash: str,
         buckets_encryption_type: str,
         buckets_retention: str,
+        stack_description: str,
         **kwargs: Any,
     ) -> None:
 
@@ -38,7 +39,7 @@ class BucketsStack(Stack):  # type: ignore
         # used to tag AWS resources. Tag Value length cant exceed 256 characters
         full_dep_mod = dep_mod[:256] if len(dep_mod) > 256 else dep_mod
 
-        super().__init__(scope, id, description="This stack creates AWS S3 Bucket(s)", **kwargs)
+        super().__init__(scope, id, description=stack_description, **kwargs)
         Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=full_dep_mod)
 
         artifact_bucket_name = f"{project_name}-{deployment_name}-artifacts-bucket-{hash}"

@@ -32,6 +32,20 @@ if not vpc_id:
 if not private_subnet_ids:
     raise ValueError("Missing input parameter private-subnet-ids")
 
+
+def generate_description() -> str:
+    soln_id = os.getenv("SEEDFARMER_PARAMETER_SOLUTION_ID", None)
+    soln_name = os.getenv("SEEDFARMER_PARAMETER_SOLUTION_NAME", None)
+    soln_version = os.getenv("SEEDFARMER_PARAMETER_SOLUTION_VERSION", None)
+
+    desc = "IDF - EMR Serverless Module"
+    if soln_id and soln_name and soln_version:
+        desc = f"({soln_id}) {soln_name}. Version {soln_version}"
+    elif soln_id and soln_name:
+        desc = f"({soln_id}) {soln_name}"
+    return desc
+
+
 app = App()
 
 emr_serverless = EmrServerlessStack(
@@ -42,6 +56,7 @@ emr_serverless = EmrServerlessStack(
     module_name=cast(str, module_name),
     vpc_id=vpc_id,
     private_subnet_ids=private_subnet_ids,
+    stack_description=generate_description(),
     env=Environment(
         account=os.environ["CDK_DEFAULT_ACCOUNT"],
         region=os.environ["CDK_DEFAULT_REGION"],

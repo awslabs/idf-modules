@@ -39,6 +39,20 @@ if not vpc_id:
 if not private_subnet_ids:
     raise ValueError("missing input parameter private-subnet-ids")
 
+
+def generate_description() -> str:
+    soln_id = os.getenv("SEEDFARMER_PARAMETER_SOLUTION_ID", None)
+    soln_name = os.getenv("SEEDFARMER_PARAMETER_SOLUTION_NAME", None)
+    soln_version = os.getenv("SEEDFARMER_PARAMETER_SOLUTION_VERSION", None)
+
+    desc = "IDF - MWAA Module"
+    if soln_id and soln_name and soln_version:
+        desc = f"({soln_id}) {soln_name}. Version {soln_version}"
+    elif soln_id and soln_name:
+        desc = f"({soln_id}) {soln_name}"
+    return desc
+
+
 app = App()
 
 # zip plugin
@@ -65,6 +79,7 @@ stack = MWAAStack(
     vpc_id=vpc_id,
     private_subnet_ids=private_subnet_ids,
     unique_requirements_file=unique_requirements_file,  # type: ignore
+    stack_description=generate_description(),
     env=aws_cdk.Environment(
         account=os.environ["CDK_DEFAULT_ACCOUNT"],
         region=os.environ["CDK_DEFAULT_REGION"],

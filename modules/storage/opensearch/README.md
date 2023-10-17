@@ -22,6 +22,9 @@ This module creates an OpenSearch cluster for use in IDF
 - `opensearch_master_nodes`: The number of master nodes, defaults to `0`
 - `opensearch_master_nodes_instance_type`: The master node type, defaults to `r6g.large.search`
 - `opensearch_ebs_volume_size`: The EBS volume size (in GB), defaults to `10`
+- `solution-id`: a unique identifier for this deployment (must be used with `solution-description`)
+- `solution-name`: a unique name for this deployment (must be used with `solution-id`)
+- `solution-version`: a unique version for this deployment
 
 ### Module Metadata Outputs
 

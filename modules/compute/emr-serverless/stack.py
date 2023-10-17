@@ -21,10 +21,11 @@ class EmrServerlessStack(Stack):
         module_name: str,
         vpc_id: str,
         private_subnet_ids: List[str],
+        stack_description: str,
         **kwargs: Any,
     ) -> None:
 
-        super().__init__(scope, id, description="This stack deploys AWS EMR Serverless Infrastructure", **kwargs)
+        super().__init__(scope, id, description=stack_description, **kwargs)
 
         self.project_name = project_name
         self.deployment_name = deployment_name

@@ -24,7 +24,10 @@ NA
 
 #### Optional
 
-dataFiles: User can optionally provide `filePath` reference to a custom airflow requirements.txt file(available locally/remote) and should make sure to provide the value of the filepath as an environment variable under `Parameters`. Following is the reference implementation using dataFiles:
+- `dataFiles`: User can optionally provide `filePath` reference to a custom airflow requirements.txt file(available locally/remote) and should make sure to provide the value of the filepath as an environment variable under `Parameters`. Following is the reference implementation using dataFiles:
+- `solution-id`: a unique identifier for this deployment (must be used with `solution-description`)
+- `solution-name`: a unique name for this deployment (must be used with `solution-id`)
+- `solution-version`: a unique version for this deployment
 
 ```yaml
 name: mwaa
