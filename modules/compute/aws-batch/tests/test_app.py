@@ -75,3 +75,25 @@ def test_batch_cmpute(stack_defaults):
                 {"env_name": "ng3", "max_vcpus": 4800, "desired_vcpus": 0, "compute_type": "FARGATE", "order": 1},
             ]
         }
+
+
+def test_solution_description(stack_defaults):
+    os.environ["SEEDFARMER_PARAMETER_SOLUTION_ID"] = "SO123456"
+    os.environ["SEEDFARMER_PARAMETER_SOLUTION_NAME"] = "MY GREAT TEST"
+    os.environ["SEEDFARMER_PARAMETER_SOLUTION_VERSION"] = "v1.0.0"
+
+    import app
+
+    ver = app.generate_description()
+    assert ver == "(SO123456) MY GREAT TEST. Version v1.0.0"
+
+
+def test_solution_description_no_version(stack_defaults):
+    os.environ["SEEDFARMER_PARAMETER_SOLUTION_ID"] = "SO123456"
+    os.environ["SEEDFARMER_PARAMETER_SOLUTION_NAME"] = "MY GREAT TEST"
+    del os.environ["SEEDFARMER_PARAMETER_SOLUTION_VERSION"]
+
+    import app
+
+    ver = app.generate_description()
+    assert ver == "(SO123456) MY GREAT TEST"

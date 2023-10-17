@@ -13,11 +13,14 @@ This module:
 
 #### Required
 
-- None
+- `vpc-id`: The VPC-ID that the cluster will be created in
+- `private-subnet-ids`: The Private Subnets that the AWS Batch Compute resources will be deployed to
 
 #### Optional
 
-- None
+- `solution-id`: a unique identifier for this deployment (must be used with `solution-description`)
+- `solution-name`: a unique name for this deployment (must be used with `solution-id`)
+- `solution-version`: a unique version for this deployment
  
 ### Module Metadata Outputs
 

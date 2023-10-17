@@ -33,10 +33,11 @@ class OpenSearchStack(Stack):  # type: ignore
         os_master_nodes: int,
         os_master_node_instance_type: str,
         os_ebs_volume_size: int,
+        stack_description: str,
         **kwargs: Any,
     ) -> None:
 
-        super().__init__(scope, id, description="This stack creates Amazon Opensearch cluster resources", **kwargs)
+        super().__init__(scope, id, description=stack_description, **kwargs)
 
         dep_mod = f"{project_name}-{deployment_name}-{module_name}"
 
