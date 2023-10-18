@@ -26,6 +26,7 @@ This module creates an OpenSearch cluster for use in IDF
 - `solution-name`: a unique name for this deployment (must be used with `solution-id`)
 - `solution-version`: a unique version for this deployment
 
+The parameters `(solution-*)` will resolve a custom text that is used as a description of the stack if populated.
 ### Module Metadata Outputs
 
 - `OpenSearchDomainEndpoint`: the endpoint name of the OpenSearch Domain
