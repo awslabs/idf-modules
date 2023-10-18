@@ -18,6 +18,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - made `requirements.txt` file of MWAA configurable via a user defined entry from module manifest file
 - added `app-registry` module for being able to scrape app-specific CloudFormation stacks for AWS Solutions
 - added `app-insights` integration with app-registry module to derive additional insights from the associated resources in the resource group
+- added dynamic stack naming based on Solution Info:
+  - modules/compute/aws-batch
+  - modules/compute/emr-serverless
+  - modules/network/basic-cdk
+  - modules/orchestration/mwaa
+  - modules/service-catalog/app-registry
+  - modules/storage/buckets
+  - modules/storage/opensearch
 
 ### **Changed**
 
