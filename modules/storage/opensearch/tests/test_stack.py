@@ -43,6 +43,7 @@ def test_synthesize_stack(stack_defaults):
         os_master_nodes=0,
         os_master_node_instance_type="r6g.large.search",
         os_ebs_volume_size=10,
+        stack_description="Testing",
         env=cdk.Environment(
             account=os.environ["CDK_DEFAULT_ACCOUNT"],
             region=os.environ["CDK_DEFAULT_REGION"],

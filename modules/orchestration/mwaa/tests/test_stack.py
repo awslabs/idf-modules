@@ -42,6 +42,7 @@ def test_synthesize_stack(stack_defaults):
         environment_class="mw1.small",
         max_workers=25,
         unique_requirements_file="test.txt",
+        stack_description="Testing",
         env=cdk.Environment(
             account=os.environ["CDK_DEFAULT_ACCOUNT"],
             region=os.environ["CDK_DEFAULT_REGION"],
