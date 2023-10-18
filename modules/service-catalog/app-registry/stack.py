@@ -31,7 +31,7 @@ class AppRegistry(Stack):
         super().__init__(
             scope,
             id,
-            description="Deploy AWS AppRegistry to visualize resources related to an AWS Solution",
+            description=f"({solution_id}) {solution_name}. Version {solution_version}",
             **kwargs,
         )
 

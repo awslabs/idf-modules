@@ -30,6 +30,20 @@ if buckets_retention not in ["DESTROY", "RETAIN"]:
 if buckets_encryption_type not in ["SSE", "KMS"]:
     raise ValueError("The only ENCRYPTION_TYPE values accepted are 'SSE' and 'KMS' ")
 
+
+def generate_description() -> str:
+    soln_id = os.getenv("SEEDFARMER_PARAMETER_SOLUTION_ID", None)
+    soln_name = os.getenv("SEEDFARMER_PARAMETER_SOLUTION_NAME", None)
+    soln_version = os.getenv("SEEDFARMER_PARAMETER_SOLUTION_VERSION", None)
+
+    desc = "IDF - Buckets Module"
+    if soln_id and soln_name and soln_version:
+        desc = f"({soln_id}) {soln_name}. Version {soln_version}"
+    elif soln_id and soln_name:
+        desc = f"({soln_id}) {soln_name}"
+    return desc
+
+
 stack = BucketsStack(
     scope=app,
     id=f"{project_name}-{deployment_name}-{module_name}",
@@ -39,6 +53,7 @@ stack = BucketsStack(
     buckets_encryption_type=buckets_encryption_type,
     buckets_retention=buckets_retention,
     hash=hash,
+    stack_description=generate_description(),
     env=aws_cdk.Environment(
         account=os.environ["CDK_DEFAULT_ACCOUNT"],
         region=os.environ["CDK_DEFAULT_REGION"],

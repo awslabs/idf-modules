@@ -22,10 +22,11 @@ class NetworkingStack(Stack):  # type: ignore
         deployment_name: str,
         module_name: str,
         internet_accessible: bool,
+        stack_description: str,
         **kwargs: Any,
     ) -> None:
 
-        super().__init__(scope, id, description="This stack creates AWS Networking resources", **kwargs)
+        super().__init__(scope, id, description=stack_description, **kwargs)
         dep_mod = f"{project_name}-{deployment_name}-{module_name}"
         # Stitch the below with `hash` to make it unique
         dep_mod = dep_mod[:19]

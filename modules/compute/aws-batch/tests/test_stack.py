@@ -50,6 +50,7 @@ def test_synthesize_stack(stack_defaults):
         vpc_id="vpc-12345",
         private_subnet_ids=["subnet-12345", "subnet-54321"],
         batch_compute=batch_compute,
+        stack_description="Testing",
         env=cdk.Environment(
             account=os.environ["CDK_DEFAULT_ACCOUNT"],
             region=os.environ["CDK_DEFAULT_REGION"],
