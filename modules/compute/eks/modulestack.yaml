@@ -35,12 +35,12 @@ Resources:
             Action:
               - "s3:ListBucket"
             Resource:
-              - "arn:aws:s3:::*-dockerimages-replications-*"
+              - "arn:aws:s3:::*-d*-rep*-*"
           - Effect: Allow
             Action:
               - "s3:GetObject"
             Resource:
-              - "arn:aws:s3:::*-dockerimages-replications-*/*"
+              - "arn:aws:s3:::*-d*-rep*-*/*"
         Version: 2012-10-17
       PolicyName: "idf-modulespecific-policy"
       Roles: [!Ref RoleName]

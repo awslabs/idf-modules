@@ -36,6 +36,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - changed the `data/mwaa/requirements/requirements-emr-serverless.txt` to support Amazon MWAA 2.6.3 version
 - added paginatior for CFN list stacks to scrape the stacks starting with `addf` for registering the apps to appregistry
 - updated `Pillow~=10.0.1` in `mwaa/requirements/requirements*.txt` and in `data/mwaa/requirements/requirements-emr-serverless.txt`
+- reduced the length of s3 bucket name for docker images replication to fix failures caused due to naming length
+
 ### **Removed**
 
 =======
