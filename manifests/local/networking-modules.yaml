@@ -1,6 +1,0 @@
-name: basic-networking
-path: modules/network/basic-cdk/
-targetAccount: primary
-parameters:
-  - name: internet-accessible
-    value: true
