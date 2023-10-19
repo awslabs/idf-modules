@@ -45,13 +45,13 @@ Resources:
               - "s3:ListBucket"
               - "s3:PutObject"
             Effect: Allow
-            Resource: "arn:aws:s3:::*-dockerimages-replications-*"
+            Resource: "arn:aws:s3:::*-d*-rep*-*"
           - Action:
               - "s3:CreateBucket"
               - "s3:ListBucket"
               - "s3:PutObject"
             Effect: Allow
-            Resource: "arn:aws:s3:::*-dockerimages-replications-*/*"
+            Resource: "arn:aws:s3:::*-d*-rep*-*/*"
         Version: 2012-10-17
       PolicyName: "idf-modulespecific-policy"
       Roles: [!Ref RoleName]
