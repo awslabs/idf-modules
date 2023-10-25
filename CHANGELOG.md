@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - added paginatior for CFN list stacks to scrape the stacks starting with `addf` for registering the apps to appregistry
 - updated `Pillow~=10.0.1` in `mwaa/requirements/requirements*.txt` and in `data/mwaa/requirements/requirements-emr-serverless.txt`
 - reduced the length of s3 bucket name for docker images replication to fix failures caused due to naming length
+- added logic to validate relative paths in `storage/fsx-lustre` module
 
 ### **Removed**
 

@@ -49,6 +49,14 @@ if "SCRATCH" in fs_deployment_type and storage_throughput is not None:
 if "PERSISTENT" in fs_deployment_type and storage_throughput is None:
     raise ValueError(f"The storage throughput must be specified for Lustre fs_deployment_type={fs_deployment_type}")
 
+
+def fix_paths(p: str) -> str:
+    if p:
+        return f"/{p}" if not p.startswith("/") else p
+    else:
+        return p
+
+
 app = App()
 
 stack = FsxFileSystem(
@@ -61,8 +69,8 @@ stack = FsxFileSystem(
     module_name=module_name,
     private_subnet_ids=private_subnet_ids,
     vpc_id=vpc_id,
-    import_path=import_path,
-    export_path=export_path,
+    import_path=fix_paths(import_path),  # type: ignore
+    export_path=fix_paths(export_path),  # type: ignore
     storage_throughput=storage_throughput,  # type: ignore
     env=Environment(account=os.environ["CDK_DEFAULT_ACCOUNT"], region=os.environ["CDK_DEFAULT_REGION"]),
 )
