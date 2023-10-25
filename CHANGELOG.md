@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - modules/service-catalog/app-registry
   - modules/storage/buckets
   - modules/storage/opensearch
+- added ability for artifact buckets to write events to event bridge.
 
 ### **Changed**
 
