@@ -19,7 +19,7 @@ def stack_defaults():
     os.environ["SEEDFARMER_PARAMETER_PRIVATE_SUBNET_IDS"] = '["subnet-1234","subnet-5678"]'
     os.environ["SEEDFARMER_PARAMETER_FS_DEPLOYMENT_TYPE"] = "PERSISTENT_1"
     os.environ["SEEDFARMER_PARAMETER_IMPORT_PATH"] = "somepathin/"
-    os.environ["SEEDFARMER_PARAMETER_EXPORT_PATH"] = "somepatout/"
+    os.environ["SEEDFARMER_PARAMETER_EXPORT_PATH"] = "somepathout/"
     os.environ["SEEDFARMER_PARAMETER_DATA_BUCKET_NAME"] = "thbucketname"
     os.environ["SEEDFARMER_PARAMETER_STORAGE_THROUGHPUT"] = "50"
 
@@ -98,3 +98,13 @@ def test_throughput_invalid(stack_defaults):
     os.environ["SEEDFARMER_PARAMETER_STORAGE_THROUGHPUT"] = "text"
     with pytest.raises(Exception):
         import app  # noqa: F811 F401
+
+
+def test_fixpaths(stack_defaults):
+    import app  # noqa: F811 F401
+
+    without_path = app.fix_paths("missingleading/missing")
+    with_path = app.fix_paths("/has/leading/")
+
+    assert without_path == "/missingleading/missing"
+    assert with_path == "/has/leading/"
