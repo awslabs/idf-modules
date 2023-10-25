@@ -175,6 +175,12 @@ class BucketsStack(Stack):  # type: ignore
                     "reason": "Resource access restriced to IDF resources",
                 }
             ),
+            NagPackSuppression(
+                **{
+                    "id": "AwsSolutions-IAM4",
+                    "reason": "Resource access restriced to IDF resources",
+                }
+            ),
         ]
 
         NagSuppressions.add_stack_suppressions(self, suppressions)
