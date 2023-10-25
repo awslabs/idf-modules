@@ -61,6 +61,7 @@ class BucketsStack(Stack):  # type: ignore
             versioned=True,
             block_public_access=aws_s3.BlockPublicAccess.BLOCK_ALL,
             enforce_ssl=True,
+            event_bridge_enabled=True,
         )
 
         log_bucket_name = f"{project_name}-{deployment_name}-logs-bucket-{hash}"
