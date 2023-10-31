@@ -55,6 +55,7 @@ def test_subnets_invalid(stack_defaults):
 
 def test_fs_storage_types_invalid(stack_defaults):
     os.environ["SEEDFARMER_PARAMETER_FS_DEPLOYMENT_TYPE"] = "PERSISTENT_2"
+    os.environ["SEEDFARMER_PARAMETER_FSX_VERSION"] = "2.10"
     with pytest.raises(Exception):
         import app  # noqa: F811 F401
 
