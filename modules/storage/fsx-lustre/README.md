@@ -29,11 +29,13 @@ Persistent file systems are designed for longer-term storage and workloads. The 
   - For more information, and an up-to-date list of AWS Regions in which `PERSISTENT_2` is available, see File system deployment options for FSx for Lustre in the Amazon FSx for Lustre User Guide . .. epigraph:: If you choose `PERSISTENT_2` , and you set FileSystemTypeVersion to 2.10, the CreateFileSystem operation fails. Encryption of data in transit is automatically turned on when you access SCRATCH_2 , PERSISTENT_1 and `PERSISTENT_2` file systems from Amazon EC2 instances that [support automatic encryption](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/data- protection.html) in the AWS Regions where they are available. For more information about encryption in transit for FSx for Lustre file systems, see Encrypting data in transit in the Amazon FSx for Lustre User Guide . (Default = SCRATCH_1 )
 
 #### Optional
+- `fsx_version`: The version of FSX-Luster to use (`2.10`,`2.12`,`2.15`)
+  - defaults to `2.12`
 - `data_bucket_name`: The S3 bucket used for mapping to and from the FSx filesystem
 - `export_path`: Available with `Scratch` and `Persistent_1` deployment types. Specifies the path in the Amazon S3 bucket where the root of your Amazon FSx file system is exported. The path will use the same Amazon S3 bucket as specified in `data_bucket_name`. You can provide an optional prefix to which new and changed data is to be exported from your Amazon FSx for Lustre file system. If an ExportPath value is not provided, Amazon FSx sets a default export path, s3://import-bucket/FSxLustre[creation-timestamp] . The timestamp is in UTC format, for example s3://import-bucket/FSxLustre20181105T222312Z . The Amazon S3 export bucket must be the same as the import bucket specified by ImportPath . If you specify only a bucket name, such as s3://import-bucket, you get a 1:1 mapping of file system objects to S3 bucket objects. This mapping means that the input data in S3 is overwritten on export. If you provide a custom prefix in the export path, such as s3://import-bucket/[custom-optional-prefix] , Amazon FSx exports the contents of your file system to that export prefix in the Amazon S3 bucket.
-  - This parameter is not supported for file systems using the `Persistent_2` deployment type.
+  - This parameter is not supported for file systems using the `Persistent_2` deployment type in version `2.10`.
 - `import_path`: The path to the Amazon S3 bucket that you’re using as the data repository for your Amazon FSx for Lustre file system. The root of your FSx for Lustre file system will be mapped to the root of the Amazon S3 bucket you select. If you specify a prefix for the Amazon S3 bucket name, only object keys with that prefix are loaded into the file system.
-  - This parameter is not supported for Lustre file systems using the Persistent_2 deployment type.
+  - This parameter is not supported for Lustre file systems using the Persistent_2 deployment type in version `2.10`.
 - `storage_throughput`: Required with `PERSISTENT_1` and `PERSISTENT_2` deployment types, provisions the amount of read and write throughput for each 1 tebibyte (TiB) of file system storage capacity, in MB/s/TiB. File system throughput capacity is calculated by multiplying ﬁle system storage capacity (TiB) by the PerUnitStorageThroughput (MB/s/TiB). For a 2.4-TiB ﬁle system, provisioning 50 MB/s/TiB of PerUnitStorageThroughput yields 120 MB/s of ﬁle system throughput. You pay for the amount of throughput that you provision.
   - For `PERSISTENT_1` SSD storage: 50, 100, 200 MB/s/TiB.
   - For `PERSISTENT_1` HDD storage: 12, 40 MB/s/TiB.
@@ -87,10 +89,11 @@ parameters:
 
 ```json
 {
-    "FSxLustreAttrDnsName":"fs-XXXXXXX.fsx.us-east-2.amazonaws.com",
-    "FSxLustreFileSystemId":"fs-00a12bc345defg78",
-    "FSxLustreSecurityGroup":"sg-0a1b2c3e4d5e6g7j7h",
-    "FSxLustreMountName":"123abc45",
-    "FSxLustreFileSystemDeploymentType":"PERSISTENT_2"
+  "FSxLustreAttrDnsName": "fs-05d205d87c763d71e.fsx.us-east-1.amazonaws.com",
+  "FSxLustreFileSystemDeploymentType": "PERSISTENT_1",
+  "FSxLustreFileSystemId": "fs-05d205d87c763d71e",
+  "FSxLustreMountName": "frinzbev",
+  "FSxLustreSecurityGroup": "sg-0ca5da2aebca3459b",
+  "FSxLustreVersion": "2.12"
 }
 ```

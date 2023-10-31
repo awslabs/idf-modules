@@ -41,6 +41,8 @@ def test_synthesize_stack(stack_defaults):
         data_bucket_name="mybucket",
         export_path=None,
         import_path=None,
+        stack_description="Tesing",
+        file_system_type_version="2.15",
         env=cdk.Environment(
             account=os.environ["CDK_DEFAULT_ACCOUNT"],
             region=os.environ["CDK_DEFAULT_REGION"],
