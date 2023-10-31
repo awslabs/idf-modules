@@ -25,10 +25,12 @@ class FsxFileSystem(Stack):
         vpc_id: str,
         fs_deployment_type: str,
         private_subnet_ids: List[str],
+        stack_description: str,
         storage_throughput: Union[int, float, None],
         data_bucket_name: Optional[str],
         export_path: Optional[str],
         import_path: Optional[str],
+        file_system_type_version: Optional[str],
         **kwargs: Any,
     ) -> None:
         # Env vars
@@ -36,7 +38,7 @@ class FsxFileSystem(Stack):
         self.deployment_name = deployment_name
         self.module_name = module_name
 
-        super().__init__(scope, id, **kwargs)
+        super().__init__(scope, id, description=stack_description, **kwargs)
 
         dep_mod = f"{project_name}-{deployment_name}-{module_name}"
         # used to tag AWS resources. Tag Value length cant exceed 256 characters
@@ -82,6 +84,7 @@ class FsxFileSystem(Stack):
             subnet_ids=[self.private_subnet_ids[0]],
             security_group_ids=[self.fsx_security_group.security_group_id],
             tags=[CfnTag(key="Name", value="fsx-lustre")],
+            file_system_type_version=file_system_type_version if file_system_type_version else None,
             lustre_configuration=fsx.CfnFileSystem.LustreConfigurationProperty(
                 deployment_type=fs_deployment_type,
                 import_path=import_path,
