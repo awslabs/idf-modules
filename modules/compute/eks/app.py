@@ -87,6 +87,7 @@ CfnOutput(
             "CNIMetricsHelperRoleName": stack.cni_metrics_role_name,
             # Cluster Master role created as a part of this stack gets added to RBAC system:masters group
             "EksClusterMasterRoleArn": stack.eks_cluster_masterrole.role_arn,
+            "EksNodeRoleArn": stack.node_role.role_arn
         }
     ),
 )

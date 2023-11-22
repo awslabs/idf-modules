@@ -332,6 +332,27 @@ class Eks(Stack):  # type: ignore
         # This depends both on the service account and the patches to the existing CNI resources having been done first
         vpc_cni_chart.node.add_dependency(sg_pods_service_account)
 
+        # Node role for all nodes
+        self.node_role = iam.Role(
+            self,
+            "NodeRole",
+            role_name=f"{project_name}-{deployment_name}-{module_name}-{self.region}-noderole",
+            assumed_by=iam.ServicePrincipal("ec2.amazonaws.com"),
+            description="Role for EKS nodes"
+        )
+        self.node_role.add_managed_policy(
+            iam.ManagedPolicy.from_aws_managed_policy_name("AmazonSSMManagedInstanceCore")
+        )
+        self.node_role.add_managed_policy(
+            iam.ManagedPolicy.from_aws_managed_policy_name("AmazonEC2ContainerRegistryReadOnly")
+        )
+        self.node_role.add_managed_policy(
+            iam.ManagedPolicy.from_aws_managed_policy_name("AmazonEKS_CNI_Policy")
+        )
+        self.node_role.add_managed_policy(
+            iam.ManagedPolicy.from_aws_managed_policy_name("AmazonEKSWorkerNodePolicy")
+        )
+
         # Add Managed Node Group(s)
         if eks_compute_config.get("eks_nodegroup_config"):
             # Spot InstanceType
@@ -357,6 +378,10 @@ class Eks(Stack):  # type: ignore
                                 ),
                             )
                         ],
+                        metadata_options=ec2.CfnLaunchTemplate.MetadataOptionsProperty(
+                            http_tokens="required",
+                            http_put_response_hop_limit=2
+                        )
                     ),
                 )
 
@@ -372,6 +397,7 @@ class Eks(Stack):  # type: ignore
                     labels=ng.get("eks_node_labels") if ng.get("eks_node_labels") else None,
                     release_version=get_ami_version(str(eks_version)),
                     subnets=ec2.SubnetSelection(subnets=self.dataplane_subnets),
+                    node_role=self.node_role
                 )
 
                 nodegroup.role.add_managed_policy(
