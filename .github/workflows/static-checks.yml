@@ -27,11 +27,10 @@ jobs:
         run: |
           set -x
           # Get all the modules that have the directory "tests"
-          MODULES=$(find modules/ -type d -name "tests" | cut -d/ -f 3-4 | uniq)
+          MODULES=$(find modules/ -type d -name "tests" | cut -d/ -f 2-3 | uniq)
           # Create our json structure [{"module_name": "..."}]
           MODULES_JSON=$(echo "$MODULES" | jq -R -s 'split("\n")' | jq '[ .[] | select(length > 0) ]' | jq 'map({"module_name": .})')
           # Export the modules as json to the outputs
-          OUTPUT=$(sed -e 's/^"//' -e 's/"$//' <<<$(echo $MODULES_JSON | jq -c | jq -R))
           echo 'matrix<<EOF' >> $GITHUB_OUTPUT
           echo $MODULES_JSON >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
@@ -57,6 +56,7 @@ jobs:
           python-version: "3.10"
       - name: Install Requirements
         run: |
+          set -x
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
           pip install -r $MODULE_PATH/requirements.txt
