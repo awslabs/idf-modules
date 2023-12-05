@@ -1,1 +1,1 @@
-matrix="[{\"module_name\":\"database/neptune\"},{\"module_name\":\"service-catalog/app-registry\"},{\"module_name\":\"network/basic-cdk\"},{\"module_name\":\"storage/buckets\"},{\"module_name\":\"storage/fsx-lustre\"},{\"module_name\":\"storage/opensearch\"},{\"module_name\":\"storage/efs\"},{\"module_name\":\"compute/emr-serverless\"},{\"module_name\":\"compute/eks\"},{\"module_name\":\"compute/aws-batch\"},{\"module_name\":\"ml/sagemaker-studio\"},{\"module_name\":\"orchestration/mwaa\"},{\"module_name\":\"replication/dockerimage-replication\"}]"
+matrix=${OUTPUT}

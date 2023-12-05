@@ -31,7 +31,8 @@ jobs:
           # Create our json structure [{"module_name": "..."}]
           MODULES_JSON=$(echo "$MODULES" | jq -R -s 'split("\n")' | jq '[ .[] | select(length > 0) ]' | jq 'map({"module_name": .})')
           # Export the integrations as json to the outputs
-          echo "matrix=$(echo "$MODULES_JSON"| jq -c)" | jq -R >> $GITHUB_OUTPUT
+          OUTPUT=$(echo $MODULES_JSON | jq -c | jq -R)
+          echo "matrix=$(echo "$OUTPUT")" >> $GITHUB_OUTPUT
 
   test:
     name: Run unit tests for module ${{ matrix.modules.module_name }}
