@@ -32,7 +32,7 @@ jobs:
           echo "modules with test:"
           echo $MODULES_JSON
           # Export the integrations as json to the outputs
-          echo "matrix=$(echo "$MODULES_JSON"| jq -c)" | jq -R >> $GITHUB_OUTPUT
+          echo "matrix={$(echo "$MODULES_JSON"| jq -c)}" | jq -R >> $GITHUB_OUTPUT
 
   test:
     name: Run unit tests for module ${{ matrix.modules.module_name }}
@@ -40,7 +40,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        modules: ${{ fromJson(needs.get-modules.outputs.matrix) }}
+        modules: ${{ needs.get-modules.outputs.matrix }}
     runs-on: ubuntu-latest
     env:
       MODULE_PATH: 'modules/${{ matrix.modules.module_name }}'
