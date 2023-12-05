@@ -32,7 +32,9 @@ jobs:
           echo "modules with test:"
           echo $MODULES_JSON
           # Export the integrations as json to the outputs
+          echo 'var<<EOF' >> $GITHUB_OUTPUT
           echo "matrix=$(echo "$MODULES_JSON")" >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
 
   test:
     name: Run unittests for module ${{ matrix.modules.module_name }}
