@@ -29,6 +29,8 @@ jobs:
           MODULES=$(find modules/ -type d -name "tests" | cut -d/ -f 3-4 | uniq)
           # Create our json structure [{"module_name": "..."}]
           MODULES_JSON=$(echo "$MODULES" | jq -R -s 'split("\n")' | jq '[ .[] | select(length > 0) ]' | jq 'map({"module_name": .})')
+          echo "modules with test:"
+          echo $MODULES_JSON
           # Export the integrations as json to the outputs
           echo "matrix=$(echo "$MODULES_JSON")" >> $GITHUB_OUTPUT
 
