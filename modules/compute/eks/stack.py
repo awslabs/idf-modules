@@ -1098,8 +1098,8 @@ class Eks(Stack):  # type: ignore
                             + "   auto_create_group true\n    log_retention_days "
                             + str(self.node.try_get_context("cloudwatch_container_insights_logs_retention_days"))
                             + "\n",
-                            "filters.conf": "[FILTER]\n  Name  kubernetes\n  Match  kube.*\n  Merge_Log  On\n  Buffer_Size  0\n  Kube_Meta_Cache_TTL  300s\n"
-                            + "[FILTER]\n    Name modify\n    Match *\n    Rename log log_data\n    Rename stream stream_name\n"
+                            "filters.conf": "[FILTER]\n  Name  kubernetes\n  Match  kube.*\n  Merge_Log  On\n  Buffer_Size  0\n  Kube_Meta_Cache_TTL  300s\n" # noqa: E501
+                            + "[FILTER]\n    Name modify\n    Match *\n    Rename log log_data\n    Rename stream stream_name\n" # noqa: E501
                             + "[FILTER]\n    Name record_modifier\n    Match *\n    Record log_type startup\n"
                             + "[FILTER]\n    Name record_modifier\n    Match *\n    Record log_type shutdown\n"
                             + "[FILTER]\n    Name record_modifier\n    Match *\n    Record log_type error\n"
