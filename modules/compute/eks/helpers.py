@@ -105,7 +105,7 @@ def _parse_versions_file(eks_version: str) -> None:
         eks_version (str): EKS version
 
     Returns:
-        dict: Parsed file
+        Dict: Parsed file
     """
 
     # we do not want to load and parse yaml file for every workload
@@ -116,14 +116,14 @@ def _parse_versions_file(eks_version: str) -> None:
             workload_versions[eks_version] = yaml.safe_load(yaml_file)
 
 
-def deep_merge(*dicts: Dict) -> Dict:
-    """Merges two dictionaries
+def deep_merge(*Dicts: Dict) -> Dict:
+    """Merges two Dictionaries
 
     Returns:
-        Dict: Merged dictionary
+        Dict: Merged Dictionary
     """
     merged = {}
-    for d in dicts:
+    for d in Dicts:
         tmp = deepcopy(d)
         merged = always_merger.merge(merged, tmp)
     return merged
@@ -194,11 +194,11 @@ def get_chart_repo(eks_version: str, workload_name: str) -> str:
     return _get_chart_repo_from_file(eks_version, workload_name)
 
 
-def get_chart_values(data: dict, workload_name: str) -> Dict:
+def get_chart_values(data: Dict, workload_name: str) -> Dict:
     """Get chart additional values
 
     Args:
-        data (dict): Data structure containing chart values
+        data (Dict): Data structure containing chart values
         workload_name (str): Workload name
 
     Returns:
@@ -225,12 +225,12 @@ def get_chart_version(eks_version: str, workload_name: str) -> str:
     return _get_chart_version_from_file(eks_version, workload_name)
 
 
-def get_image(eks_version: str, data: dict, workload_name: str) -> str:
+def get_image(eks_version: str, data: Dict, workload_name: str) -> str:
     """Get chart additional values
 
     Args:
         eks_version (str): EKS version
-        data (dict): Data structure containing image values
+        data (Dict): Data structure containing image values
         workload_name (str): Workload name
 
     Returns:
