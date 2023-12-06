@@ -116,14 +116,14 @@ def _parse_versions_file(eks_version: str) -> None:
             workload_versions[eks_version] = yaml.safe_load(yaml_file)
 
 
-def deep_merge(*Dicts: Dict) -> Dict:
+def deep_merge(*dicts: Dict) -> Dict:
     """Merges two Dictionaries
 
     Returns:
         Dict: Merged Dictionary
     """
     merged = {}
-    for d in Dicts:
+    for d in dicts:
         tmp = deepcopy(d)
         merged = always_merger.merge(merged, tmp)
     return merged
