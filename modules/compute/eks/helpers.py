@@ -5,7 +5,7 @@
 import logging
 import os
 from copy import deepcopy
-from typing import Dict, List
+from typing import Any, Dict, List, Union
 
 import boto3
 import botocore
@@ -18,7 +18,7 @@ project_dir = os.path.dirname(os.path.abspath(__file__))
 
 data_dir = os.getenv("VERSIONS_DIR", "data/eks_dockerimage-replication/versions/")
 
-workload_versions = {}
+workload_versions: Dict[Union[Any, Dict], Union[Any, Dict]] = {}
 
 
 def _get_ami_version_from_file(eks_version: str) -> str:

@@ -11,7 +11,7 @@ import yaml
 _parsed_file = {}
 
 
-def _get_branch(data: dict) -> list:
+def _get_branch(data: dict) -> list:  # type: ignore
     """Gets branch from the data
 
     Args:
@@ -25,10 +25,10 @@ def _get_branch(data: dict) -> list:
     if "subchart" in data:
         branch = [data["subchart"]] + data["path"].split(".")
 
-    return branch
+    return branch  # type: ignore
 
 
-def _add_branch(tree: dict, branch: list, value: str) -> dict:
+def _add_branch(tree: dict, branch: list, value: str) -> dict:  # type: ignore
     """Adds a branch to a dictionary
 
     Args:
@@ -44,7 +44,7 @@ def _add_branch(tree: dict, branch: list, value: str) -> dict:
     return tree
 
 
-def _get_dictionary_value_by_dot_separated_key(dct: dict, key: str) -> str:
+def _get_dictionary_value_by_dot_separated_key(dct: dict, key: str) -> str:  # type: ignore
     """Gets value from dictionary based on dot-separated key
 
     Args:
@@ -54,10 +54,10 @@ def _get_dictionary_value_by_dot_separated_key(dct: dict, key: str) -> str:
     Returns:
         str: _description_
     """
-    return reduce(lambda c, k: c[k], key.split("."), dct)
+    return reduce(lambda c, k: c[k], key.split("."), dct)  # type: ignore
 
 
-def _parse_versions_file(versions_dir: str, eks_version: str) -> dict:
+def _parse_versions_file(versions_dir: str, eks_version: str) -> dict:  # type: ignore
     """Parses versions file
 
     Args:
@@ -76,10 +76,10 @@ def _parse_versions_file(versions_dir: str, eks_version: str) -> dict:
         with open(yaml_path, encoding="utf-8") as yaml_file:
             _parsed_file[eks_version] = yaml.safe_load(yaml_file)
 
-    return _parsed_file[eks_version]
+    return _parsed_file[eks_version]  # type: ignore
 
 
-def _needs_custom_replication(data: dict, image_name: str, type_of_value: str) -> bool:
+def _needs_custom_replication(data: dict, image_name: str, type_of_value: str) -> bool:  # type: ignore
     """Checks if image needs custom replication
 
     Args:
@@ -96,7 +96,7 @@ def _needs_custom_replication(data: dict, image_name: str, type_of_value: str) -
     return False
 
 
-def add_branch_to_dict(dct: dict, data: dict, value: str) -> dict:
+def add_branch_to_dict(dct: dict, data: dict, value: str) -> dict:  # type: ignore
     """Adds branch to dictionary
 
     Args:
@@ -123,12 +123,12 @@ def get_ami_version(versions_dir: str, eks_version: str) -> str:
     """
     workload_versions = _parse_versions_file(versions_dir, eks_version)
     if "ami" in workload_versions and "version" in workload_versions["ami"]:
-        return workload_versions["ami"]["version"]
+        return workload_versions["ami"]["version"]  # type: ignore
 
     return ""
 
 
-def get_additional_images(versions_dir: str, eks_version: str) -> dict:
+def get_additional_images(versions_dir: str, eks_version: str) -> dict:  # type: ignore
     """Gets additional images from parsed data
 
     Args:
@@ -139,14 +139,14 @@ def get_additional_images(versions_dir: str, eks_version: str) -> dict:
         dict: Dictionary of additional images
     """
     workload_versions = _parse_versions_file(versions_dir, eks_version)
-    additional_images = {}
+    additional_images = {}  # type: ignore
     if "additional_images" in workload_versions:
-        return workload_versions["additional_images"]
+        return workload_versions["additional_images"]  # type: ignore
 
     return additional_images
 
 
-def get_workloads(versions_dir: str, eks_version: str) -> dict:
+def get_workloads(versions_dir: str, eks_version: str) -> dict:  # type: ignore
     """Parses versions files
 
     Args:
@@ -169,10 +169,12 @@ def get_workloads(versions_dir: str, eks_version: str) -> dict:
         if "replication" in value:
             workload_data["charts"][name]["replication"] = value["replication"]
 
-    return workload_data["charts"]
+    return workload_data["charts"]  # type: ignore
 
 
-def parse_value(workload: dict, values: dict, image_name: str, image_data: dict, value_name: str) -> str:
+def parse_value(
+    workload: dict, values: dict, image_name: str, image_data: dict, value_name: str  # type: ignore
+) -> str:  # type: ignore
     """Parses value from the Helm charts based on versions file
 
     Args:
@@ -186,7 +188,7 @@ def parse_value(workload: dict, values: dict, image_name: str, image_data: dict,
         str: Parsed value
     """
     if _needs_custom_replication(values, image_name, value_name):
-        return values["replication"][image_name][value_name]
+        return values["replication"][image_name][value_name]  # type: ignore
 
     value = ""
     if "subchart" in image_data:

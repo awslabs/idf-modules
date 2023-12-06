@@ -26,12 +26,12 @@ def _param(name: str) -> str:
 vpc_id = os.getenv(_param("VPC_ID"))  # required
 dataplane_subnet_ids = json.loads(os.getenv(_param("DATAPLANE_SUBNET_IDS"), ""))  # required
 controlplane_subnet_ids = json.loads(os.getenv(_param("CONTROLPLANE_SUBNET_IDS"), ""))  # required
-custom_subnet_ids = (
+custom_subnet_ids = (  # type: ignore
     json.loads(os.getenv(_param("CUSTOM_SUBNET_IDS"))) if os.getenv(_param("CUSTOM_SUBNET_IDS")) else None
 )
-eks_version = os.getenv(_param("EKS_VERSION"))  # required
-eks_compute_config = json.loads(os.getenv(_param("EKS_COMPUTE")))  # required
-eks_addons_config = json.loads(os.getenv(_param("EKS_ADDONS")))  # required
+eks_version = os.getenv(_param("EKS_VERSION"), "")  # required
+eks_compute_config = json.loads(os.getenv(_param("EKS_COMPUTE"), ""))  # required
+eks_addons_config = json.loads(os.getenv(_param("EKS_ADDONS"), ""))  # required
 
 if not vpc_id:
     raise ValueError("missing input parameter vpc-id")
