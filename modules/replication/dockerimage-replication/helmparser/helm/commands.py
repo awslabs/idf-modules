@@ -7,6 +7,7 @@ import os
 import shlex
 import shutil
 import subprocess  # nosec B404
+from typing import Any, Dict
 
 import yaml
 
@@ -47,7 +48,7 @@ def _unarchive_repo(project_path: str, repo: str, chart: str, version: str) -> N
     _execute_command(f"helm pull {repo}/{chart} --version {version} --untar --untardir {project_path}")
 
 
-def show(subcommand: str, chart: str, version: str) -> dict:
+def show(subcommand: str, chart: str, version: str) -> Any:
     """Shows helm values
 
     Args:
@@ -61,7 +62,7 @@ def show(subcommand: str, chart: str, version: str) -> dict:
     return yaml.safe_load(_execute_command(f"helm show {subcommand} {chart} --version {version}"))
 
 
-def show_subchart(project_path: str, repo: str, chart: str, subchart: str, version: str) -> dict:
+def show_subchart(project_path: str, repo: str, chart: str, subchart: str, version: str) -> Dict[Any, Any]:
     """Shows helm values for subchart
 
     Args:
@@ -76,7 +77,7 @@ def show_subchart(project_path: str, repo: str, chart: str, subchart: str, versi
     """
     _unarchive_repo(project_path, repo, chart, version)
 
-    result = {}
+    result: Dict[Any, Any] = {}
     result["chart"] = yaml.safe_load(
         _execute_command(f"helm show chart {os.path.join(project_path, chart, 'charts', subchart)}")
     )

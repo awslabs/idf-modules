@@ -49,7 +49,7 @@ class TestParser(unittest.TestCase):
                 },
                 "additional_images": {
                     "cloudwatch_agent": "public.ecr.aws/cloudwatch-agent/cloudwatch-agent:1.247358.0b252413",
-                    "secrets_store_csi_driver_provider_aws": "public.ecr.aws/aws-secrets-manager/secrets-store-csi-driver-provider-aws:1.0.r2-2021.08.13.20.34-linux-amd64",
+                    "secrets_store_csi_driver_provider_aws": "public.ecr.aws/aws-secrets-manager/secrets-store-csi-driver-provider-aws:1.0.r2-2021.08.13.20.34-linux-amd64",  # noqa: E501
                 },
             },
         )
@@ -114,7 +114,7 @@ class TestParser(unittest.TestCase):
             result,
             {
                 "cloudwatch_agent": "public.ecr.aws/cloudwatch-agent/cloudwatch-agent:1.247358.0b252413",
-                "secrets_store_csi_driver_provider_aws": "public.ecr.aws/aws-secrets-manager/secrets-store-csi-driver-provider-aws:1.0.r2-2021.08.13.20.34-linux-amd64",
+                "secrets_store_csi_driver_provider_aws": "public.ecr.aws/aws-secrets-manager/secrets-store-csi-driver-provider-aws:1.0.r2-2021.08.13.20.34-linux-amd64",  # noqa: E501
             },
         )
 

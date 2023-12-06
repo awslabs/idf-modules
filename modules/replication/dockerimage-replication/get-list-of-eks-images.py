@@ -51,7 +51,7 @@ def main() -> None:
 
     custom_chart_values = {}
 
-    parsed_charts = {}
+    parsed_charts = {}  # type: ignore
     for workload, values in workloads_data.items():
         parsed_charts[workload] = {}
         if "images" not in values:
@@ -97,7 +97,7 @@ def main() -> None:
 
                         if registry:
                             custom_chart_values[workload]["values"] = parser.add_branch_to_dict(
-                                custom_chart_values[workload]["values"],
+                                custom_chart_values[workload]["values"],  # type: ignore
                                 v,
                                 f"{args.registry_prefix}{registry}",
                             )
@@ -118,7 +118,7 @@ def main() -> None:
                             repository_in_chart_values = f"{args.registry_prefix}{repository}"
 
                         custom_chart_values[workload]["values"] = parser.add_branch_to_dict(
-                            custom_chart_values[workload]["values"],
+                            custom_chart_values[workload]["values"],  # type: ignore
                             v,
                             repository_in_chart_values,
                         )
@@ -129,7 +129,7 @@ def main() -> None:
                         tag = parser.parse_value(parsed_charts[workload], values, image_name, v, k)
 
                         custom_chart_values[workload]["values"] = parser.add_branch_to_dict(
-                            custom_chart_values[workload]["values"], v, tag
+                            custom_chart_values[workload]["values"], v, tag  # type: ignore
                         )
 
                         continue
@@ -139,7 +139,7 @@ def main() -> None:
                     # set value to empty, e.g. digest as it will be different after push to ECR
                     if k == "remove":
                         custom_chart_values[workload]["values"] = parser.add_branch_to_dict(
-                            custom_chart_values[workload]["values"], v, ""
+                            custom_chart_values[workload]["values"], v, ""  # type: ignore
                         )
                         continue
 
