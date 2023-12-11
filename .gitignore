@@ -384,3 +384,6 @@ codeseeder.out
 .env
 seedfarmer.gitmodules/
 archive/
+
+# Integration Testing Files
+**/*snapshot/*
