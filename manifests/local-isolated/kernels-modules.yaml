@@ -1,0 +1,29 @@
+name: sagemaker-custom-kernel
+path: modules/ml/sagemaker-custom-kernel/
+parameters:
+  - name: ecr-repo-name
+    value: default
+  - name: studio-domain-id
+    valueFrom:
+      moduleMetadata:
+        group: ml
+        name: sagemaker-studio
+        key: StudioDomainId
+  - name: studio-domain-name
+    valueFrom:
+      moduleMetadata:
+        group: ml
+        name: sagemaker-studio
+        key: StudioDomainName     
+  - name: sagemaker-image-name
+    value: echo-kernel
+  - name: app-image-config-name
+    value: echo-kernel-app-config
+  - name: custom-kernel-name
+    value: echo
+  - name: kernel-user-uid
+    value: '0'
+  - name: kernel-user-gid
+    value: '0'
+  - name: kernel-user-home-mount-path
+    value: /root
