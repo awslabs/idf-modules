@@ -1,14 +1,14 @@
-import sys
-
-sys.path.append("../")
 import datetime
+import sys
 import uuid
 
 import aws_cdk as cdk
 import aws_cdk.cloud_assembly_schema as cas
 import aws_cdk.integ_tests_alpha as integration
 
-import stack
+sys.path.append("../")
+
+import stack  # noqa: E402
 
 app = cdk.App()
 timestamp = datetime.datetime.now()
