@@ -1,0 +1,27 @@
+{
+  "version": "32.0.0",
+  "testCases": {
+    "Integration Tests Buckets Module/DefaultTest": {
+      "stacks": [
+        "buckets"
+      ],
+      "diffAssets": true,
+      "cdkCommandOptions": {
+        "deploy": {
+          "args": {
+            "json": true,
+            "requireApproval": "never"
+          }
+        },
+        "destroy": {
+          "args": {
+            "force": true
+          }
+        }
+      },
+      "stackUpdateWorkflow": true,
+      "assertionStack": "Integration Tests Buckets Module/DefaultTest/DeployAssert",
+      "assertionStackName": "IntegrationTestsBucketsModuleDefaultTestDeployAssertAF7B1A8B"
+    }
+  }
+}
