@@ -20,7 +20,7 @@ parameters:
     value:
     - lead-ds-user-1
   - name: server_lifecycle_name
-    value: studio-auto-shutdown-2
+    value: studio-auto-shutdown
   - name: studio_bucket_name
     value: mlops-*
   - name: retain_efs
