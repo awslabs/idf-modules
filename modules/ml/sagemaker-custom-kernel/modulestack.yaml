@@ -2,8 +2,19 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: This stack deploys a Module specific IAM permissions
 
 Parameters:
-
+  ProjectName:
+    Type: String
+    Description: The name of the project
+  DeploymentName:
+    Type: String
+    Description: The name of the deployment
+  ModuleName:
+    Type: String
+    Description: The name of the Module
   RoleName:
+    Type: String
+    Description: The name of the IAM Role
+  StudioExecutionRoleArn:
     Type: String
     Description: The name of the IAM Role
 
@@ -28,8 +39,13 @@ Resources:
               - "sagemaker:UpdateDomain"
               - "sagemaker:DescribeDomain"
               - "sagemaker:AddTags"
-              - "iam:PassRole"
             Resource: "*"
+          - Effect: Allow
+            Action:
+              - "iam:PassRole"
+            Resource:
+              - !Sub "arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-${DeploymentName}-${ModuleName}-image-role"
+              - !Ref StudioExecutionRoleArn
           - Action:
               - "ecr:Create*"
               - "ecr:Delete*"

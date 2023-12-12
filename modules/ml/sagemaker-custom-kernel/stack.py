@@ -23,6 +23,7 @@ class CustomKernelStack(Stack):
         self.sagemaker_studio_image_role = iam.Role(
             self,
             f"{app_prefix}-image-role",
+            role_name=f"{app_prefix}-image-role",
             assumed_by=iam.ServicePrincipal("sagemaker.amazonaws.com"),
         )
         self.sagemaker_studio_image_role.add_managed_policy(

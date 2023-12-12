@@ -14,7 +14,13 @@ parameters:
       moduleMetadata:
         group: ml
         name: sagemaker-studio
-        key: StudioDomainName     
+        key: StudioDomainName
+  - name: studio-execution-role-arn
+    valueFrom:
+      moduleMetadata:
+        group: ml
+        name: sagemaker-studio
+        key: SageMakerExecutionRoleArn
   - name: sagemaker-image-name
     value: echo-kernel
   - name: app-image-config-name
