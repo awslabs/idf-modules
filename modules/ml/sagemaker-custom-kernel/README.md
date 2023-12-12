@@ -14,6 +14,7 @@ This module builds custom kernel for SageMaker studio from Dockerfile.
 - `studio_domain_id`: SageMaker studio domain to attach the kernel to.
 - `studio_domain_name`: SageMaker studio name to attach the kernel to.
 - `sagemaker_image_name`: Name of the sagemaker image. This variable is also used to find the Dockerfile. The docker build script will be looking for file inside `modules/mlops/custom-kernel/docker/{sagemaker_image_name}`. 1 Dockerfile is added already: `pytorch-10`.
+- `studio-execution-role-arn`: SageMaker Studio Domain execution role. Required to associate custom kernel with SageMaker Studio Domain.
 
 #### Optional
 
