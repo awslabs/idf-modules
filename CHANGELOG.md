@@ -10,8 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## UNRELEASED
 
 ### **Added**
+- added eks node iam role that all eks nodes will assume on start
 
 ### **Changed**
+- added logic to require IMDSv2 in eks nodes
 
 ### **Removed**
 
@@ -37,7 +39,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - modules/storage/buckets
   - modules/storage/opensearch
 - added ability for artifact buckets to write events to event bridge.
-- added eks node iam role that all eks nodes will assume on start
 
 ### **Changed**
 
@@ -50,7 +51,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - updated `Pillow~=10.0.1` in `mwaa/requirements/requirements*.txt` and in `data/mwaa/requirements/requirements-emr-serverless.txt`
 - reduced the length of s3 bucket name for docker images replication to fix failures caused due to naming length
 - added logic to validate relative paths in `storage/fsx-lustre` module, accept `fsx-version` input parameter
-- added logic to require IMDSv2 in eks nodes
 
 ### **Removed**
 

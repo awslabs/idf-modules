@@ -112,6 +112,7 @@ EKS integrates with AWS Identity and Access Management (IAM) to control access t
 - `EksOidcArn`: The EKS Cluster's OIDC Arn
 - `EksClusterOpenIdConnectIssuer`: EKS Cluster's OPEN ID Issuer
 - `CNIMetricsHelperRoleName`: Name of role created for CNIMetricHelper SA
+- `EksClusterMasterRoleArn` - the masterrole used for cluster creation
 - `EksNodeRoleArn` - the role assigned to nodes when nodes are spinning up in node groups.
 
 #### Output Example
