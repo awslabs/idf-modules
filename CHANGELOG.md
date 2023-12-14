@@ -10,8 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## UNRELEASED
 
 ### **Added**
+- added eks node iam role that all eks nodes will assume on start
 
 ### **Changed**
+- added logic to require IMDSv2 in eks nodes
 
 ### **Removed**
 
