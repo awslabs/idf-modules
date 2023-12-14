@@ -434,79 +434,91 @@ class Eks(Stack):  # type: ignore
             awslbcontroller_chart.node.add_dependency(awslbcontroller_service_account)
 
         # NGINX Ingress Controller
-        if (
-            "value" in eks_addons_config.get("deploy_nginx_controller")
-            and eks_addons_config.get("deploy_nginx_controller")["value"]
-        ):
-            nginx_controller_service_account = eks_cluster.add_service_account(
-                "nginx-controller",
-                name="nginx-controller",
-                namespace="kube-system",
-            )
+        if eks_addons_config.get("deploy_nginx_controller"):
+            if (
+                "value" in eks_addons_config.get("deploy_nginx_controller")
+                and eks_addons_config.get("deploy_nginx_controller")["value"]
+            ):
+                nginx_controller_service_account = eks_cluster.add_service_account(
+                    "nginx-controller",
+                    name="nginx-controller",
+                    namespace="kube-system",
+                )
 
-            # Create the PolicyStatements to attach to the role
-            nginx_controller_policy_statement = iam.PolicyStatement(
-                effect=iam.Effect.ALLOW,
-                actions=[
-                    "acm:DescribeCertificate",
-                    "acm:ListCertificates",
-                    "acm:GetCertificate",
-                    "ec2:AuthorizeSecurityGroupIngress",
-                    "ec2:CreateSecurityGroup",
-                    "ec2:CreateTags",
-                    "ec2:DeleteTags",
-                    "ec2:DeleteSecurityGroup",
-                    "ec2:DescribeAccountAttributes",
-                    "ec2:DescribeAddresses",
-                    "ec2:DescribeInstances",
-                    "ec2:DescribeInstanceStatus",
-                    "ec2:DescribeInternetGateways",
-                    "ec2:DescribeNetworkInterfaces",
-                    "ec2:DescribeSecurityGroups",
-                    "ec2:DescribeSubnets",
-                    "ec2:DescribeTags",
-                    "ec2:DescribeVpcs",
-                    "ec2:ModifyInstanceAttribute",
-                    "ec2:ModifyNetworkInterfaceAttribute",
-                    "ec2:RevokeSecurityGroupIngress",
-                ],
-                resources=["*"],
-            )
+                # Create the PolicyStatements to attach to the role
+                nginx_controller_policy_statement = iam.PolicyStatement(
+                    effect=iam.Effect.ALLOW,
+                    actions=[
+                        "acm:DescribeCertificate",
+                        "acm:ListCertificates",
+                        "acm:GetCertificate",
+                        "ec2:AuthorizeSecurityGroupIngress",
+                        "ec2:CreateSecurityGroup",
+                        "ec2:CreateTags",
+                        "ec2:DeleteTags",
+                        "ec2:DeleteSecurityGroup",
+                        "ec2:DescribeAccountAttributes",
+                        "ec2:DescribeAddresses",
+                        "ec2:DescribeInstances",
+                        "ec2:DescribeInstanceStatus",
+                        "ec2:DescribeInternetGateways",
+                        "ec2:DescribeNetworkInterfaces",
+                        "ec2:DescribeSecurityGroups",
+                        "ec2:DescribeSubnets",
+                        "ec2:DescribeTags",
+                        "ec2:DescribeVpcs",
+                        "ec2:ModifyInstanceAttribute",
+                        "ec2:ModifyNetworkInterfaceAttribute",
+                        "ec2:RevokeSecurityGroupIngress",
+                    ],
+                    resources=["*"],
+                )
 
-            # Attach the necessary permissions
-            nginx_controller_policy = iam.Policy(
-                self,
-                "nginx-controller-policy",
-                policy_name="nginx-controller-policy",
-                statements=[nginx_controller_policy_statement],
-            )
-            nginx_controller_service_account.role.attach_inline_policy(nginx_controller_policy)
+                # Attach the necessary permissions
+                nginx_controller_policy = iam.Policy(
+                    self,
+                    "nginx-controller-policy",
+                    policy_name="nginx-controller-policy",
+                    statements=[nginx_controller_policy_statement],
+                )
+                nginx_controller_service_account.role.attach_inline_policy(nginx_controller_policy)
 
-            custom_values = {}
-            if "nginx_additional_annotations" in eks_addons_config.get("deploy_nginx_controller"):
-                custom_values = {
-                    "controller": {
-                        "configAnnotations": eks_addons_config.get("deploy_nginx_controller")[
-                            "nginx_additional_annotations"
-                        ]
+                custom_values = {}
+                if "nginx_additional_annotations" in eks_addons_config.get("deploy_nginx_controller"):
+                    custom_values = {
+                        "controller": {
+                            "configAnnotations": eks_addons_config.get("deploy_nginx_controller")[
+                                "nginx_additional_annotations"
+                            ]
+                        }
                     }
-                }
 
-            # Deploy the Nginx Ingress Controller
-            # For more info check out https://github.com/kubernetes/ingress-nginx/tree/main/charts/ingress-nginx
-            nginx_controller_chart = eks_cluster.add_helm_chart(
-                "nginx-ingress",
-                chart=get_chart_release(str(eks_version), NGINX_CONTROLLER),
-                version=get_chart_version(str(eks_version), NGINX_CONTROLLER),
-                repository=get_chart_repo(str(eks_version), NGINX_CONTROLLER),
-                release="nginxcontroller",
-                namespace="kube-system",
-                values=deep_merge(
-                    custom_values,
-                    get_chart_values(replicated_ecr_images_metadata, NGINX_CONTROLLER),
-                ),
+                # Deploy the Nginx Ingress Controller
+                # For more info check out https://github.com/kubernetes/ingress-nginx/tree/main/charts/ingress-nginx
+                nginx_controller_chart = eks_cluster.add_helm_chart(
+                    "nginx-ingress",
+                    chart=get_chart_release(str(eks_version), NGINX_CONTROLLER),
+                    version=get_chart_version(str(eks_version), NGINX_CONTROLLER),
+                    repository=get_chart_repo(str(eks_version), NGINX_CONTROLLER),
+                    release="nginxcontroller",
+                    namespace="kube-system",
+                    values=deep_merge(
+                        custom_values,
+                        get_chart_values(replicated_ecr_images_metadata, NGINX_CONTROLLER),
+                    ),
+                )
+                nginx_controller_chart.node.add_dependency(nginx_controller_service_account)
+
+        # AWS S3 CSI Driver
+        if eks_addons_config.get("deploy_aws_s3_csi"):
+            s3_addon = eks.CfnAddon(
+                self,
+                "s3-addon",
+                addon_name="aws-mountpoint-s3-csi-driver",
+                resolve_conflicts="OVERWRITE",
+                cluster_name=eks_cluster.cluster_name,
             )
-            nginx_controller_chart.node.add_dependency(nginx_controller_service_account)
+            s3_addon.node.add_dependency(eks_cluster)
 
         # AWS EBS CSI Driver
         if eks_addons_config.get("deploy_aws_ebs_csi"):
@@ -1504,25 +1516,27 @@ class Eks(Stack):  # type: ignore
 
             default_deny_policy.node.add_dependency(allow_tigera_operator_policy)
 
-        if "value" in eks_addons_config.get("deploy_kyverno") and eks_addons_config.get("deploy_kyverno")["value"]:
-            # https://kyverno.github.io/kyverno/
-            kyverno_chart = eks_cluster.add_helm_chart(
-                "kyverno",
-                chart=get_chart_release(str(eks_version), KYVERNO),
-                version=get_chart_version(str(eks_version), KYVERNO),
-                repository=get_chart_repo(str(eks_version), KYVERNO),
-                values=deep_merge(
-                    {
-                        "resources": {
-                            "limits": {"memory": "4Gi"},
-                            "requests": {"cpu": "1", "memory": "1Gi"},
-                        }
-                    },
-                    get_chart_values(replicated_ecr_images_metadata, KYVERNO),
-                ),
-                release="kyverno",
-                namespace="kyverno",
-            )
+        # Kyverno policies
+        if eks_addons_config.get("deploy_kyverno"):
+            if "value" in eks_addons_config.get("deploy_kyverno") and eks_addons_config.get("deploy_kyverno")["value"]:
+                # https://kyverno.github.io/kyverno/
+                kyverno_chart = eks_cluster.add_helm_chart(
+                    "kyverno",
+                    chart=get_chart_release(str(eks_version), KYVERNO),
+                    version=get_chart_version(str(eks_version), KYVERNO),
+                    repository=get_chart_repo(str(eks_version), KYVERNO),
+                    values=deep_merge(
+                        {
+                            "resources": {
+                                "limits": {"memory": "4Gi"},
+                                "requests": {"cpu": "1", "memory": "1Gi"},
+                            }
+                        },
+                        get_chart_values(replicated_ecr_images_metadata, KYVERNO),
+                    ),
+                    release="kyverno",
+                    namespace="kyverno",
+                )
 
             if eks_addons_config.get("deploy_calico"):
 

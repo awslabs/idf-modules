@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### **Added**
 
+- added support for S3 CSI driver
+
 ### **Changed**
 
 ### **Removed**
