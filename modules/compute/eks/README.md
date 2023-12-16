@@ -21,6 +21,7 @@ Storage:
 
 - EBS CSI Driver
 - EFS CSI Driver
+- S3 CSI Driver
 - FSX Lustre Driver
 
 Secrets:
@@ -73,6 +74,7 @@ Security:
 - `deploy_aws_ebs_csi`: Deploys the [AWS EBS](https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html) Driver. Default behavior is set to False
 - `deploy_aws_efs_csi`: Deploys the [AWS EFS](https://docs.aws.amazon.com/eks/latest/userguide/efs-csi.html). Default behavior is set to False
 - `deploy_aws_fsx_csi`: Deploys the [AWS FSX](https://docs.aws.amazon.com/eks/latest/userguide/fsx-csi.html). Default behavior is set to False
+- `deploy_aws_s3_csi`: Deploys the [Amazon S3](https://docs.aws.amazon.com/eks/latest/userguide/s3-csi.html). Default behavior is set to False
 - `deploy_cluster_autoscaler`: Deploys the [Cluster Autoscaler](https://docs.aws.amazon.com/eks/latest/userguide/autoscaling.html) to scale EKS Workers
 - `deploy_metrics_server`: Deploys the [Metrics server](https://docs.aws.amazon.com/eks/latest/userguide/metrics-server.html) and HPA for scaling out/in pods. Default behavior is set to False
 - `deploy_secretsmanager_csi`: Deploys [Secrets Manager CSI driver](https://docs.aws.amazon.com/secretsmanager/latest/userguide/integrating_csi_driver.html) to interact with Secrets mounted as files. Default behavior is set to False
