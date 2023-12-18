@@ -2,4 +2,4 @@ name: buckets
 path: modules/storage/buckets
 parameters:
   - name: encryption-type
-    value: S3
+    value: SSE

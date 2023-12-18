@@ -2,4 +2,4 @@ name: buckets
 path: git::https://github.com/awslabs/idf-modules.git//modules/storage/buckets/?ref=workshop-seedfarmer
 parameters:
   - name: encryption-type
-    value: S3
+    value: SSE
