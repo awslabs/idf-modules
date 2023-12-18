@@ -1,0 +1,7 @@
+name: ecr-repository
+path: modules/containers/ecr/
+parameters:
+  - name: repository_name
+    value: "ecr-repository"
+  - name: "image_tag_mutability"
+    value: "MUTABLE"
