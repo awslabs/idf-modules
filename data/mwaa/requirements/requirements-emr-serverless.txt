@@ -1,3 +1,0 @@
-Pillow~=10.0.1
-sagemaker==2.180.0
-emr_serverless @ https://github.com/aws-samples/emr-serverless-samples/releases/download/v1.0.1/mwaa_plugin.zip
