@@ -13,7 +13,7 @@ deployment_name = os.getenv("SEEDFARMER_DEPLOYMENT_NAME", "")
 module_name = os.getenv("SEEDFARMER_MODULE_NAME", "")
 app_prefix = f"{project_name}-{deployment_name}-{module_name}"
 
-DEFAULT_REPOSITORY_NAME = "ecr-repository"
+DEFAULT_REPOSITORY_NAME = f"{app_prefix}-ecr"
 DEFAULT_IMAGE_MUTABILITY = "IMMUTABLE"
 DEFAULT_LIFECYCLE = None  # No lifecycle policy
 
