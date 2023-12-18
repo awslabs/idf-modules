@@ -1,4 +1,4 @@
-name: workshop
+name: git
 toolchainRegion: us-east-1
 groups:
   - name: example
