@@ -2,7 +2,7 @@ name: workshop
 toolchainRegion: us-east-1
 groups:
   - name: example
-    path: manifests/local/example-modules.yaml
+    path: manifests/workshop/git/example-modules.yaml
 targetAccountMappings:
   - alias: primary
     accountId:
