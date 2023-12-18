@@ -20,7 +20,8 @@ def stack_defaults():
         del sys.modules["stack"]
 
 
-def test_synthesize_stack(stack_defaults):
+@pytest.mark.parametrize("repository_name", [None, "dummy"])
+def test_synthesize_stack(stack_defaults, repository_name):
     import stack
 
     app = cdk.App()
@@ -28,7 +29,6 @@ def test_synthesize_stack(stack_defaults):
     dep_name = "test-deployment"
     mod_name = "test-module"
     app_prefix = f"{project_name}-{dep_name}-{mod_name}"
-    repository_name = "dummy"
     image_tag_mutability = "IMMUTABLE"
     lifecycle = None
 
