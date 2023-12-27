@@ -4,7 +4,7 @@
 from typing import Any, Optional
 
 import cdk_nag
-from aws_cdk import Aspects, Duration, Stack, RemovalPolicy
+from aws_cdk import Aspects, Duration, RemovalPolicy, Stack
 from aws_cdk import aws_ecr as ecr
 from constructs import Construct
 
