@@ -8,22 +8,20 @@ parameters:
     valueFrom:
       moduleMetadata:
         group: example
-        name: basic-networking
+        name: network
         key: VpcId
   - name: controlplane-subnet-ids
     valueFrom:
       moduleMetadata:
-        group: networking
-        name: basic-networking
+        group: example
+        name: network
         key: PrivateSubnetIds
   - name: dataplane-subnet-ids
     valueFrom:
       moduleMetadata:
-        group: networking
-        name: basic-networking
+        group: example
+        name: network
         key: PrivateSubnetIds
-  # - name: custom-subnet-ids
-  #   value: ["subnet-0132ecb9b627b1c57", "subnet-0f2c81d12cba7ca69"]
   - name: eks-admin-role-name
     value: Admin
   - name: eks-poweruser-role-name
@@ -31,9 +29,7 @@ parameters:
   - name: eks-read-only-role-name
     value: ReadOnly
   - name: eks-version
-    # value: 1.25
-    valueFrom:
-      envVariable: GLOBAL_EKS_VERSION
+    value: '1.25'
   - name: eks-compute
     value:
       eks_nodegroup_config:
