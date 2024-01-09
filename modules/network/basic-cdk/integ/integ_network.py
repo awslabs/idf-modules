@@ -14,7 +14,7 @@ timestamp = datetime.datetime.now()
 
 integration.IntegTest(
     app,
-    "Integration Tests Buckets Module",
+    "Integration Tests Basic Module",
     test_cases=[
         stack.NetworkingStack(
             app,
