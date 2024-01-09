@@ -23,7 +23,9 @@ integration.IntegTest(
             deployment_name="testing",
             module_name="basic-cdk",
             internet_accessible=True,
-            stack_description=f"Integration Test: {timestamp.month}-{timestamp.day} {timestamp.hour}:{timestamp.minute}",
+            stack_description=f"""
+            Integration Test: {timestamp.month}-{timestamp.day} {timestamp.hour}:{timestamp.minute}
+            """,
         ),
         stack.NetworkingStack(
             app,
@@ -32,8 +34,10 @@ integration.IntegTest(
             deployment_name="testing",
             module_name="basic-cdk",
             internet_accessible=False,
-            stack_description=f"Integration Test: {timestamp.month}-{timestamp.day} {timestamp.hour}:{timestamp.minute}",
-        )
+            stack_description=f"""
+            Integration Test: {timestamp.month}-{timestamp.day} {timestamp.hour}:{timestamp.minute}
+            """,
+        ),
     ],
     diff_assets=True,
     stack_update_workflow=True,
