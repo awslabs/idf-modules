@@ -4,7 +4,7 @@
 from typing import Any, Optional
 
 import cdk_nag
-from aws_cdk import Aspects, Duration, Stack
+from aws_cdk import Aspects, Duration, RemovalPolicy, Stack
 from aws_cdk import aws_ecr as ecr
 from constructs import Construct
 
@@ -23,6 +23,7 @@ class EcrStack(Stack):
         image_tag_mutability: str,
         lifecycle_max_image_count: Optional[str],
         lifecycle_max_days: Optional[str],
+        removal_policy: RemovalPolicy = RemovalPolicy.RETAIN,
         **kwargs: Optional[Any],
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)
@@ -32,6 +33,7 @@ class EcrStack(Stack):
             f"{repository_name}",
             repository_name=repository_name,
             image_tag_mutability=IMAGE_MUTABILITY[image_tag_mutability],
+            removal_policy=removal_policy,
         )
         self.lifecycle_max_days = lifecycle_max_days
         self.lifecycle_max_image_count = lifecycle_max_image_count
