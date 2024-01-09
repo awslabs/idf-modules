@@ -1,5 +1,6 @@
 import datetime
 import sys
+import uuid
 
 import aws_cdk as cdk
 import aws_cdk.cloud_assembly_schema as cas
@@ -18,7 +19,7 @@ integration.IntegTest(
     test_cases=[
         stack.NetworkingStack(
             app,
-            "network-public",
+            f"network-public-{str(uuid.uuid4())[:8]}",
             project_name="integ",
             deployment_name="testing",
             module_name="basic-cdk",
@@ -29,7 +30,7 @@ integration.IntegTest(
         ),
         stack.NetworkingStack(
             app,
-            "network-private",
+            f"network-private-{str(uuid.uuid4())[:8]}",
             project_name="integ",
             deployment_name="testing",
             module_name="basic-cdk",
