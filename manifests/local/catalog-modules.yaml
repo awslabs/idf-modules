@@ -1,9 +1,0 @@
-name: app-reg
-path: modules/service-catalog/app-registry
-parameters:
-  - name: solution-id
-    value: id
-  - name: solution-name
-    value: name
-  - name: solution-version
-    value: version
