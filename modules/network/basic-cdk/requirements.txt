@@ -18,6 +18,7 @@ aws-cdk-lib==2.82.0
     # via
     #   -r requirements.in
     #   cdk-nag
+aws_cdk.integ-tests-alpha==2.82.0a0
 cattrs==22.2.0
     # via jsii
 cdk-nag==2.12.29
