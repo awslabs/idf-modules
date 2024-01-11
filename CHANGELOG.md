@@ -10,12 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## UNRELEASED
 
 ### **Added**
-- added eks node iam role that all eks nodes will assume on start
 
+- added eks node iam role that all eks nodes will assume on start
 - added support for S3 CSI driver
 
 ### **Changed**
+
 - added logic to require IMDSv2 in eks nodes
+- regrouped ecr module from `containers` to `storage` group
+- fixed the execution of workflow logic to remove an additional `/`
 
 ### **Removed**
 
