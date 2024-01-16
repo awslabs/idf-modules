@@ -11,6 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### **Added**
 
+### **Changed**
+
+### **Removed**
+
+=======
+
+=======
+
+## v1.3.0 (2024-01-16)
+
+### **Added**
+
 - added eks node iam role that all eks nodes will assume on start
 - added support for S3 CSI driver
 
