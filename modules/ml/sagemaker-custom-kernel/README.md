@@ -25,12 +25,20 @@ This module builds custom kernel for SageMaker studio from Dockerfile.
 
 ### Module Metadata Outputs
 
+- `ECRRepositoryName`: ECR repository name
+- `CustomKernelImageName`: Image name
+- `CustomKernelImageURI`: Image URI
+- `AppImageConfigName`: AppConfig image name
 - `SageMakerCustomKernelRoleArn`: Role for custom kernel
 
 #### Output Example
 
 ```json
 {
+    "ECRRepositoryName": "default",
+    "CustomKernelImageName": "echo-kernel",
+    "CustomKernelImageURI": "<account>.dkr.ecr.us-east-1.amazonaws.com/default:latest",
+    "AppImageConfigName": "echo-kernel-app-config",
     "SageMakerCustomKernelRoleArn": "arn:aws:iam::<account>:role/idf-shared-infra-kernels-addfsharedinfrakernelske-9O6FZXGI0MM8",
 }
 
