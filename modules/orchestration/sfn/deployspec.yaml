@@ -1,0 +1,37 @@
+publishGenericEnvVariables: true
+deploy:
+  phases:
+    install:
+      commands:
+      - npm install -g aws-cdk@2.124.0
+      - pip install -r requirements.txt
+    build:
+      commands:
+      - pushd requirements/ && pwd && popd
+      - aws iam create-service-linked-role --aws-service-name airflow.amazonaws.com || true
+      - aws iam create-service-linked-role --aws-service-name ecs.amazonaws.com || true
+      - >
+        if [ ! -z $SEEDFARMER_PARAMETER_CUSTOM_REQUIREMENTS_PATH ]; then 
+            if [ -f $SEEDFARMER_PARAMETER_CUSTOM_REQUIREMENTS_PATH ]; then 
+                export REQUIREMENTS_FILE=$(echo $SEEDFARMER_PARAMETER_CUSTOM_REQUIREMENTS_PATH | cut -d / -f 3-)
+                echo "Moving ${SEEDFARMER_PARAMETER_CUSTOM_REQUIREMENTS_PATH} to ${REQUIREMENTS_FILE}"
+                mv $SEEDFARMER_PARAMETER_CUSTOM_REQUIREMENTS_PATH $REQUIREMENTS_FILE
+            fi
+        else
+            export REQUIREMENTS_FILE="requirements/requirements.txt"
+        fi
+      - export UNIQUE_REQUIREMENTS_FILE="${REQUIREMENTS_FILE}-$(date +%s)"
+      - echo "Moving ${REQUIREMENTS_FILE} to ${UNIQUE_REQUIREMENTS_FILE}"
+      - mv ${REQUIREMENTS_FILE} ${UNIQUE_REQUIREMENTS_FILE}
+      - cdk deploy --require-approval never --progress events --app "python app.py" --outputs-file ./cdk-exports.json
+      # Export metadata
+      - seedfarmer metadata convert -f cdk-exports.json || true
+destroy:
+  phases:
+    install:
+      commands:
+      - npm install -g aws-cdk@2.124.0
+      - pip install -r requirements.txt
+    build:
+      commands:
+      - cdk destroy --force --app "python app.py"
