@@ -83,6 +83,8 @@ CfnOutput(
     value=stack.to_json_string(
         {
             "EksClusterName": stack.eks_cluster.cluster_name,
+            "EksClusterCertAuthData": stack.eks_cluster.cluster_certificate_authority_data,
+            "EksClusterEndpoint": stack.eks_cluster.cluster_endpoint,
             # Cluster Creator role automatically gets added to RBAC system:masters group
             "EksClusterAdminRoleArn": stack.eks_cluster.admin_role.role_arn,
             "EksClusterSecurityGroupId": stack.eks_cluster.cluster_security_group.security_group_id,
