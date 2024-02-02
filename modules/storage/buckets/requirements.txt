@@ -18,6 +18,7 @@ aws-cdk-lib==2.82.0
     # via
     #   -r requirements.in
     #   cdk-nag
+aws_cdk.integ-tests-alpha==2.82.0a0
 boto3==1.26.153
     # via -r requirements.in
 botocore==1.29.153
@@ -73,5 +74,5 @@ typeguard==2.13.3
     #   jsii
 typing-extensions==4.6.3
     # via jsii
-urllib3==1.26.17
+urllib3==1.26.18
     # via botocore

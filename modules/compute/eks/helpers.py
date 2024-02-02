@@ -1,11 +1,12 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
+# type: ignore
 """Helper utilities"""
 import logging
 import os
 from copy import deepcopy
-from typing import Dict, List
+from typing import Any, Dict, List, Union
 
 import boto3
 import botocore
@@ -18,7 +19,7 @@ project_dir = os.path.dirname(os.path.abspath(__file__))
 
 data_dir = os.getenv("VERSIONS_DIR", "data/eks_dockerimage-replication/versions/")
 
-workload_versions = {}
+workload_versions: Dict[Union[Any, Dict], Union[Any, Dict]] = {}
 
 
 def _get_ami_version_from_file(eks_version: str) -> str:
@@ -104,7 +105,7 @@ def _parse_versions_file(eks_version: str) -> None:
         eks_version (str): EKS version
 
     Returns:
-        dict: Parsed file
+        Dict: Parsed file
     """
 
     # we do not want to load and parse yaml file for every workload
@@ -116,10 +117,10 @@ def _parse_versions_file(eks_version: str) -> None:
 
 
 def deep_merge(*dicts: Dict) -> Dict:
-    """Merges two dictionaries
+    """Merges two Dictionaries
 
     Returns:
-        Dict: Merged dictionary
+        Dict: Merged Dictionary
     """
     merged = {}
     for d in dicts:
@@ -193,11 +194,11 @@ def get_chart_repo(eks_version: str, workload_name: str) -> str:
     return _get_chart_repo_from_file(eks_version, workload_name)
 
 
-def get_chart_values(data: dict, workload_name: str) -> Dict:
+def get_chart_values(data: Dict, workload_name: str) -> Dict:
     """Get chart additional values
 
     Args:
-        data (dict): Data structure containing chart values
+        data (Dict): Data structure containing chart values
         workload_name (str): Workload name
 
     Returns:
@@ -224,12 +225,12 @@ def get_chart_version(eks_version: str, workload_name: str) -> str:
     return _get_chart_version_from_file(eks_version, workload_name)
 
 
-def get_image(eks_version: str, data: dict, workload_name: str) -> str:
+def get_image(eks_version: str, data: Dict, workload_name: str) -> str:
     """Get chart additional values
 
     Args:
         eks_version (str): EKS version
-        data (dict): Data structure containing image values
+        data (Dict): Data structure containing image values
         workload_name (str): Workload name
 
     Returns:

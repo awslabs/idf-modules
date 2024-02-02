@@ -7,7 +7,8 @@ deploy:
         - wget https://get.helm.sh/helm-v3.11.3-linux-amd64.tar.gz && tar zxf helm-v3.11.3-linux-amd64.tar.gz && mv linux-amd64/helm /usr/local/bin/helm
     build:
       commands:
-        - S3_BUCKET_NAME="${SEEDFARMER_PROJECT_NAME}-dockerimages-replications-metadata-${AWS_DEFAULT_REGION}-${AWS_ACCOUNT_ID}"
+        # dkr - docker; img - images; rep - replications; md - metadata
+        - S3_BUCKET_NAME="${SEEDFARMER_PROJECT_NAME}-dkr-img-rep-md-${AWS_DEFAULT_REGION}-${AWS_ACCOUNT_ID}"
         - S3_OBJECT_NAME="${SEEDFARMER_DEPLOYMENT_NAME}-${SEEDFARMER_MODULE_NAME}-metadata.json"
         - |
           if ! aws s3api head-bucket --bucket "${S3_BUCKET_NAME}"; then
@@ -36,5 +37,5 @@ destroy:
       commands:
         - chmod +x replication.sh
         # The below command removes the ECR repos with `idf` as prefix which has the replicated images. PLEASE USE IT AT YOUR OWN RISK
-        # - bash replication.sh destroy
+        - bash replication.sh destroy
 build_type: BUILD_GENERAL1_LARGE

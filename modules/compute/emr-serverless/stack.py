@@ -21,10 +21,11 @@ class EmrServerlessStack(Stack):
         module_name: str,
         vpc_id: str,
         private_subnet_ids: List[str],
+        stack_description: str,
         **kwargs: Any,
     ) -> None:
 
-        super().__init__(scope, id, description="This stack deploys AWS EMR Serverless Infrastructure", **kwargs)
+        super().__init__(scope, id, description=stack_description, **kwargs)
 
         self.project_name = project_name
         self.deployment_name = deployment_name
@@ -57,34 +58,8 @@ class EmrServerlessStack(Stack):
             type="Spark",
             auto_start_configuration=emrserverless.CfnApplication.AutoStartConfigurationProperty(enabled=True),
             auto_stop_configuration=emrserverless.CfnApplication.AutoStopConfigurationProperty(
-                enabled=False, idle_timeout_minutes=5
+                enabled=True, idle_timeout_minutes=5
             ),
-            initial_capacity=[
-                emrserverless.CfnApplication.InitialCapacityConfigKeyValuePairProperty(
-                    key="Driver",
-                    value=emrserverless.CfnApplication.InitialCapacityConfigProperty(
-                        worker_configuration=emrserverless.CfnApplication.WorkerConfigurationProperty(
-                            cpu="2vCPU",
-                            memory="4GB",
-                            # the properties below are optional
-                            disk="20GB",
-                        ),
-                        worker_count=2,
-                    ),
-                ),
-                emrserverless.CfnApplication.InitialCapacityConfigKeyValuePairProperty(
-                    key="Executor",
-                    value=emrserverless.CfnApplication.InitialCapacityConfigProperty(
-                        worker_configuration=emrserverless.CfnApplication.WorkerConfigurationProperty(
-                            cpu="2vCPU",
-                            memory="4GB",
-                            # the properties below are optional
-                            disk="20GB",
-                        ),
-                        worker_count=4,
-                    ),
-                ),
-            ],
             maximum_capacity=emrserverless.CfnApplication.MaximumAllowedResourcesProperty(
                 cpu="100vCPU",
                 memory="100GB",

@@ -3,13 +3,13 @@
 
 #!/usr/bin/env python
 import boto3
-from botocore.exceptions import ClientError, WaiterError
+from botocore.exceptions import ClientError
 
 ECR_CLIENT = boto3.client("ecr")
 SSM_CLIENT = boto3.client("ssm")
 
 
-def cleanup_ecr_repos(prefix: str):
+def cleanup_ecr_repos(prefix: str) -> None:
     paginator = ECR_CLIENT.get_paginator("describe_repositories")
     for entry in paginator.paginate():
         for repo in entry["repositories"]:
@@ -25,7 +25,7 @@ def cleanup_ecr_repos(prefix: str):
                         raise ex
 
 
-def cleanup_ssm_params(path: str):
+def cleanup_ssm_params(path: str) -> None:
 
     paginator = SSM_CLIENT.get_paginator("get_parameters_by_path")
 

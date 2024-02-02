@@ -38,8 +38,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 =======
 
-=======
-
 ## v1.2.0 (2023-11-09)
 
 ### **Added**
@@ -51,6 +49,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - made `requirements.txt` file of MWAA configurable via a user defined entry from module manifest file
 - added `app-registry` module for being able to scrape app-specific CloudFormation stacks for AWS Solutions
 - added `app-insights` integration with app-registry module to derive additional insights from the associated resources in the resource group
+- added dynamic stack naming based on Solution Info:
+  - modules/compute/aws-batch
+  - modules/compute/emr-serverless
+  - modules/network/basic-cdk
+  - modules/orchestration/mwaa
+  - modules/service-catalog/app-registry
+  - modules/storage/buckets
+  - modules/storage/opensearch
+- added ability for artifact buckets to write events to event bridge.
 
 ### **Changed**
 
@@ -61,6 +68,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - changed the `data/mwaa/requirements/requirements-emr-serverless.txt` to support Amazon MWAA 2.6.3 version
 - added paginatior for CFN list stacks to scrape the stacks starting with `addf` for registering the apps to appregistry
 - updated `Pillow~=10.0.1` in `mwaa/requirements/requirements*.txt` and in `data/mwaa/requirements/requirements-emr-serverless.txt`
+- reduced the length of s3 bucket name for docker images replication to fix failures caused due to naming length
+- added logic to validate relative paths in `storage/fsx-lustre` module, accept `fsx-version` input parameter
+
 ### **Removed**
 
 =======

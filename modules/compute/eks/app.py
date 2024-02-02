@@ -1,6 +1,8 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
+# type: ignore
+
 import json
 import os
 
@@ -16,6 +18,8 @@ module_name = os.getenv("SEEDFARMER_MODULE_NAME", "")
 
 if len(f"{project_name}-{deployment_name}") > 36:
     raise ValueError("This module cannot support a project+deployment name character length greater than 35")
+
+
 def _param(name: str) -> str:
     return f"SEEDFARMER_PARAMETER_{name}"
 
@@ -24,12 +28,12 @@ def _param(name: str) -> str:
 vpc_id = os.getenv(_param("VPC_ID"))  # required
 dataplane_subnet_ids = json.loads(os.getenv(_param("DATAPLANE_SUBNET_IDS"), ""))  # required
 controlplane_subnet_ids = json.loads(os.getenv(_param("CONTROLPLANE_SUBNET_IDS"), ""))  # required
-custom_subnet_ids = (
+custom_subnet_ids = (  # type: ignore
     json.loads(os.getenv(_param("CUSTOM_SUBNET_IDS"))) if os.getenv(_param("CUSTOM_SUBNET_IDS")) else None
 )
-eks_version = os.getenv(_param("EKS_VERSION"))  # required
-eks_compute_config = json.loads(os.getenv(_param("EKS_COMPUTE")))  # required
-eks_addons_config = json.loads(os.getenv(_param("EKS_ADDONS")))  # required
+eks_version = os.getenv(_param("EKS_VERSION"), "")  # required
+eks_compute_config = json.loads(os.getenv(_param("EKS_COMPUTE"), ""))  # required
+eks_addons_config = json.loads(os.getenv(_param("EKS_ADDONS"), ""))  # required
 
 if not vpc_id:
     raise ValueError("missing input parameter vpc-id")
@@ -79,6 +83,8 @@ CfnOutput(
     value=stack.to_json_string(
         {
             "EksClusterName": stack.eks_cluster.cluster_name,
+            "EksClusterCertAuthData": stack.eks_cluster.cluster_certificate_authority_data,
+            "EksClusterEndpoint": stack.eks_cluster.cluster_endpoint,
             # Cluster Creator role automatically gets added to RBAC system:masters group
             "EksClusterAdminRoleArn": stack.eks_cluster.admin_role.role_arn,
             "EksClusterSecurityGroupId": stack.eks_cluster.cluster_security_group.security_group_id,
@@ -87,6 +93,7 @@ CfnOutput(
             "CNIMetricsHelperRoleName": stack.cni_metrics_role_name,
             # Cluster Master role created as a part of this stack gets added to RBAC system:masters group
             "EksClusterMasterRoleArn": stack.eks_cluster_masterrole.role_arn,
+            "EksNodeRoleArn": stack.node_role.role_arn,
         }
     ),
 )

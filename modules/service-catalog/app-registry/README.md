@@ -19,6 +19,8 @@ This module:
 - `solution-name`: The solution Name for the AWS Solution
 - `solution-version`: The solution Version for the AWS Solution
 
+The parameters `(solution-*)` will resolve a custom text that is used as a description of the stack.
+
 ### Sample declaration of AWS Batch Compute Configuration
 
 ```yaml

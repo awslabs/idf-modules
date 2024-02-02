@@ -1,7 +1,7 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-from typing import List, cast
+from typing import Any, List, Optional, cast
 
 import aws_cdk as cdk
 from aws_cdk import Stack, Tags
@@ -20,7 +20,7 @@ class OpenSearchServerlessVpcEndpointStack(Stack):
         project_name: str,
         deployment_name: str,
         module_name: str,
-        **kwargs,
+        **kwargs: Optional[Any],
     ) -> None:
         super().__init__(scope, id, **kwargs)
 

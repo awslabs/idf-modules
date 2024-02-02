@@ -119,7 +119,11 @@ class OpenSearchServerlessStack(Stack):  # type: ignore
 
         collection_pipeline_policy_doc.add_statements(
             iam.PolicyStatement(
-                **{"effect": iam.Effect.ALLOW, "resources": ["*"], "actions": ["aoss:BatchGetCollection"]}
+                **{
+                    "effect": iam.Effect.ALLOW,
+                    "resources": ["*"],
+                    "actions": ["aoss:BatchGetCollection"],
+                }  # type: ignore
             )
         )
 
@@ -170,7 +174,7 @@ class OpenSearchServerlessStack(Stack):  # type: ignore
         data_access_policy_name = f"{collection_name}-ap"
         assert len(data_access_policy_name) <= 32
 
-        _cfn_access_policy = opensearch_s.CfnAccessPolicy(
+        opensearch_s.CfnAccessPolicy(
             self,
             "OpssDataAccessPolicy",
             name=data_access_policy_name,

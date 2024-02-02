@@ -37,6 +37,7 @@ class MWAAStack(Stack):  # type: ignore
         airflow_version: str,
         max_workers: int = 25,
         unique_requirements_file: str,
+        stack_description: str,
         **kwargs: Any,
     ) -> None:
 
@@ -54,9 +55,7 @@ class MWAAStack(Stack):  # type: ignore
         https://docs.aws.amazon.com/opensearch-service/latest/developerguide/createupdatedomains.html
         """
 
-        super().__init__(
-            scope, id, description="This stack deploys Amazon Managed Workflows for Apache Airflow", **kwargs
-        )
+        super().__init__(scope, id, description=stack_description, **kwargs)
         Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=full_dep_mod)
 
         self.vpc_id = vpc_id

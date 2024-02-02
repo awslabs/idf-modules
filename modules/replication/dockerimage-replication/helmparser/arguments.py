@@ -4,9 +4,10 @@
 """Argument parsing module"""
 
 import argparse
+from typing import Any
 
 
-def parse_args(args):
+def parse_args(args: Any) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Generates list of images to sync",
     )

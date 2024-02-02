@@ -48,6 +48,19 @@ os_ebs_volume_size = int(os.getenv(_param("OPENSEARCH_EBS_VOLUME_SIZE"), 10))
 # REF: developerguide/supported-instance-types.html
 
 
+def generate_description() -> str:
+    soln_id = os.getenv("SEEDFARMER_PARAMETER_SOLUTION_ID", None)
+    soln_name = os.getenv("SEEDFARMER_PARAMETER_SOLUTION_NAME", None)
+    soln_version = os.getenv("SEEDFARMER_PARAMETER_SOLUTION_VERSION", None)
+
+    desc = "IDF - OpenSearch Module"
+    if soln_id and soln_name and soln_version:
+        desc = f"({soln_id}) {soln_name}. Version {soln_version}"
+    elif soln_id and soln_name:
+        desc = f"({soln_id}) {soln_name}"
+    return desc
+
+
 app = App()
 
 stack = OpenSearchStack(
@@ -65,6 +78,7 @@ stack = OpenSearchStack(
     os_master_nodes=os_master_nodes,
     os_master_node_instance_type=os_master_node_instance_type,
     os_ebs_volume_size=os_ebs_volume_size,
+    stack_description=generate_description(),
     env=aws_cdk.Environment(
         account=os.environ["CDK_DEFAULT_ACCOUNT"],
         region=os.environ["CDK_DEFAULT_REGION"],
