@@ -35,8 +35,6 @@ if not vpc_id:
 if not private_subnet_ids:
     raise ValueError("missing input parameter private-subnet-ids")
 
-# REF: developerguide/supported-instance-types.html
-
 ENV = aws_cdk.Environment(
     account=os.environ["CDK_DEFAULT_ACCOUNT"],
     region=os.environ["CDK_DEFAULT_REGION"],

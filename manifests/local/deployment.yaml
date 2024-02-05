@@ -9,8 +9,6 @@ groups:
     path: manifests/local/networking-modules.yaml
   - name: storage
     path: manifests/local/storage-modules.yaml
-  - name: integration
-    path: manifests/local/integration-modules.yaml
   - name: replication
     path: manifests/local/replicator-modules.yaml
   - name: compute

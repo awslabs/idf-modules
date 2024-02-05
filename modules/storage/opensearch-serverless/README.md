@@ -2,7 +2,7 @@
 
 ## Description
 
-This module creates a Serverless OpenSearch cluster for use in IDF
+This module creates an  Amazon OpenSearch Serverless (AOSS) cluster for use in IDF
 
 ## Inputs/Outputs
 
@@ -14,6 +14,10 @@ This module creates a Serverless OpenSearch cluster for use in IDF
 - `private-subnet-ids`: The private subnets that the cluster will be created in
 
 #### Optional
+
+AOSS's [default](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-scaling.html#serverless-scaling-limits) maximum capacity is 10 OCUs for indexing and 10 OCUs for search. The minimum allowed capacity for an account is 2 OCUs for indexing and 2 OCUs for search. You can always enforce limits at an account level using AWS CLI or any suppoprted SDKs.
+
+As an example, you can follow the [docs](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-scaling.html#serverless-scaling-configure) here, and add the relevant AWS CLI command in the deployspec.yaml to enforce the capacity settings. Also make sure to update the modulestack.yaml with the necessary IAM permissions to make the relevant API call(s).
 
 ### Sample manifest declaration
 
