@@ -1,7 +1,6 @@
 name: buckets
 path: modules/storage/buckets
 targetAccount: primary
-targetRegion: us-east-1
 parameters:
   - name: encryption-type
     value: SSE
@@ -11,7 +10,6 @@ parameters:
 name: opensearch
 path: modules/storage/opensearch
 targetAccount: primary
-targetRegion: us-east-1
 parameters:
   - name: encryption-type
     value: SSE
@@ -30,10 +28,25 @@ parameters:
         name: basic-networking
         key: PrivateSubnetIds
 ---
+name: opensearch-s
+path: modules/storage/opensearch-serverless
+parameters:
+  - name: vpc-id
+    valueFrom:
+      moduleMetadata:
+        group: networking
+        name: basic-networking
+        key: VpcId
+  - name: private-subnet-ids
+    valueFrom:
+      moduleMetadata:
+        group: networking
+        name: basic-networking
+        key: PrivateSubnetIds
+---
 name: efs
 path: modules/storage/efs
 targetAccount: primary
-targetRegion: us-east-1
 parameters:
   - name: vpc-id
     valueFrom:

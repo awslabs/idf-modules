@@ -11,13 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### **Added**
 
-- Added EKS outputs for feeding AWS Stepfunctions EKS Tasks
+- added Opensearch serverless module
 
 ### **Changed**
 
 ### **Removed**
-
-- removed boto3 from mwaa reqs.txt which is conflicting
 
 =======
 
