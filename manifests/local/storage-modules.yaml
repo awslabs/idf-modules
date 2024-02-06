@@ -1,5 +1,6 @@
 name: buckets
 path: modules/storage/buckets
+targetAccount: primary
 parameters:
   - name: encryption-type
     value: SSE
@@ -8,6 +9,7 @@ parameters:
 ---
 name: opensearch
 path: modules/storage/opensearch
+targetAccount: primary
 parameters:
   - name: encryption-type
     value: SSE
@@ -44,6 +46,7 @@ parameters:
 ---
 name: efs
 path: modules/storage/efs
+targetAccount: primary
 parameters:
   - name: vpc-id
     valueFrom:
