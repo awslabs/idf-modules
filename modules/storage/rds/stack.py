@@ -45,7 +45,7 @@ class TemplateStack(cdk.Stack):
         engine: str,
         username: str,
         port: int | None,
-        db_retention: str,
+        removal_policy: cdk.RemovalPolicy,
         instance_type: str,
         multi_az: bool,
         **kwargs: Any,
@@ -60,16 +60,6 @@ class TemplateStack(cdk.Stack):
         dep_mod = f"{self.project_name}-{self.deployment_name}-{self.module_name}"
         dep_mod = dep_mod[:64]
         cdk.Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=dep_mod)
-
-        #### Removal Policy ####
-        removal_policy: cdk.RemovalPolicy
-        deletion_protection: bool
-        if db_retention == "RETAIN":
-            removal_policy = cdk.RemovalPolicy.RETAIN
-            deletion_protection = True
-        else:
-            removal_policy = cdk.RemovalPolicy.DESTROY
-            deletion_protection = False
 
         #### Secrets ####
         self.db_credentials_secret = sm.Secret(
@@ -117,7 +107,7 @@ class TemplateStack(cdk.Stack):
             vpc_subnets=ec2.SubnetSelection(subnets=private_subnets),
             multi_az=multi_az,
             removal_policy=removal_policy,
-            deletion_protection=deletion_protection,
+            deletion_protection=removal_policy == cdk.RemovalPolicy.RETAIN,
         )
 
         # Adds an ingress rule which allows resources in the VPC's CIDR to access the database.

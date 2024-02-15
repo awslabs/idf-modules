@@ -6,7 +6,7 @@ import json
 import os
 from typing import Callable, TypeVar
 
-from aws_cdk import App, CfnOutput, Environment
+import aws_cdk as cdk
 
 from stack import TemplateStack
 
@@ -46,9 +46,15 @@ private_subnet_ids: list[str] = _get_env("PRIVATE_SUBNET_IDS", required=True, fu
 engine: str = _get_env("ENGINE", required=True)
 username: str = _get_env("ADMIN_USERNAME", required=True)
 port: int | None = _get_env("PORT", required=False, function=int)
-db_retention: str = _get_env("DB_RETENTION", required=False, default_value="RETAIN", function=str.upper)
 instance_type: str = _get_env("INSTANCE_TYPE", required=False, default_value="t2.small")
 multi_az: bool = _get_env("MULTI_AZ", required=False, default_value=False, function=lambda x: x.lower() == "true")
+
+removal_policy: cdk.RemovalPolicy = _get_env(
+    "REMOVAL_POLICY",
+    required=False,
+    default_value=cdk.RemovalPolicy.RETAIN,
+    function=lambda x: cdk.RemovalPolicy(x.upper()),
+)
 
 
 def generate_description() -> str:
@@ -64,7 +70,7 @@ def generate_description() -> str:
     return desc
 
 
-app = App()
+app = cdk.App()
 
 template_stack = TemplateStack(
     scope=app,
@@ -73,7 +79,7 @@ template_stack = TemplateStack(
     deployment_name=deployment_name,
     module_name=module_name,
     stack_description=generate_description(),
-    env=Environment(
+    env=cdk.Environment(
         account=os.environ["CDK_DEFAULT_ACCOUNT"],
         region=os.environ["CDK_DEFAULT_REGION"],
     ),
@@ -82,13 +88,13 @@ template_stack = TemplateStack(
     engine=engine,
     username=username,
     port=port,
-    db_retention=db_retention,
+    removal_policy=removal_policy,
     instance_type=instance_type,
     multi_az=multi_az,
 )
 
 
-CfnOutput(
+cdk.CfnOutput(
     scope=template_stack,
     id="metadata",
     value=template_stack.to_json_string(

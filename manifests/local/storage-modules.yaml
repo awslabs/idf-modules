@@ -27,10 +27,10 @@ parameters:
     value: mysql
   - name: admin-username
     value: admin
-  - name: db-retention
-    value: DESTROY
   - name: instance-type
     value: t2.small
+  - name: removal-policy
+    value: DESTROY
 ---
 name: opensearch
 path: modules/storage/opensearch
