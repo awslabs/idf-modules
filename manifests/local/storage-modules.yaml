@@ -7,6 +7,29 @@ parameters:
   - name: retention-type
     value: RETAIN
 ---
+name: rds
+path: modules/storage/rds
+targetAccount: primary
+parameters:
+  - name: vpc-id
+    valueFrom:
+      moduleMetadata:
+        group: networking
+        name: basic-networking
+        key: VpcId
+  - name: private-subnet-ids
+    valueFrom:
+      moduleMetadata:
+        group: networking
+        name: basic-networking
+        key: PrivateSubnetIds
+  - name: admin-username
+    value: admin
+  - name: db-retention
+    value: DESTROY
+  - name: instance-type
+    value: t2.small
+---
 name: opensearch
 path: modules/storage/opensearch
 targetAccount: primary

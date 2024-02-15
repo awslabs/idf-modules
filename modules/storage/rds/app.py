@@ -1,8 +1,10 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
+from __future__ import annotations
 
 import json
 import os
+from typing import Callable, TypeVar
 
 from aws_cdk import App, CfnOutput, Environment
 
@@ -17,12 +19,34 @@ if len(f"{project_name}-{deployment_name}") > 36:
     raise ValueError("This module cannot support a project+deployment name character length greater than 35")
 
 
-def _param(name: str) -> str:
-    return f"SEEDFARMER_PARAMETER_{name}"
+T = TypeVar("T")
+EnvFunction = Callable[[str], T]
 
 
-vpc_id = os.getenv(_param("VPC_ID"))
-private_subnet_ids = json.loads(os.getenv(_param("PRIVATE_SUBNET_IDS")))
+def _get_env(
+    name: str, required: bool = False, default_value: T | None = None, function: EnvFunction | None = None
+) -> T | str | None:
+    env_value = os.getenv(f"SEEDFARMER_PARAMETER_{name}")
+
+    if env_value is None and required:
+        raise ValueError(f"Missing required environment variable SEEDFARMER_PARAMETER_{name}")
+
+    if env_value is None and not required:
+        return default_value
+
+    if function is None:
+        return env_value
+
+    return function(env_value)
+
+
+vpc_id: str = _get_env("VPC_ID", required=True)
+private_subnet_ids: list[str] = _get_env("PRIVATE_SUBNET_IDS", required=True, function=json.loads)
+
+username: str = _get_env("ADMIN_USERNAME", required=True)
+port: int | None = _get_env("PORT", required=False, function=int)
+db_retention: str = _get_env("DB_RETENTION", required=False, default_value="RETAIN", function=str.upper)
+instance_type: str = _get_env("INSTANCE_TYPE", required=False, default_value="t2.small")
 
 
 def generate_description() -> str:
@@ -51,6 +75,12 @@ template_stack = TemplateStack(
         account=os.environ["CDK_DEFAULT_ACCOUNT"],
         region=os.environ["CDK_DEFAULT_REGION"],
     ),
+    vpc_id=vpc_id,
+    private_subnet_ids=private_subnet_ids,
+    username=username,
+    port=port,
+    db_retention=db_retention,
+    instance_type=instance_type,
 )
 
 
@@ -59,7 +89,9 @@ CfnOutput(
     id="metadata",
     value=template_stack.to_json_string(
         {
-            "TemplateOutput1": "Add something from template_stack",
+            "CredentialsSecretArn": template_stack.db_credentials_secret.secret_arn,
+            "DatabaseHostname": template_stack.database.instance_endpoint.hostname,
+            "DatabasePort": template_stack.database.instance_endpoint.port,
         }
     ),
 )
