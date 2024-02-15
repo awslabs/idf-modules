@@ -13,6 +13,24 @@ from cdk_nag import NagPackSuppression, NagSuppressions
 from constructs import Construct, IConstruct
 
 
+def _get_hosted_rotation_for_engine(engine: str) -> sm.HostedRotation:
+    if engine == "mysql":
+        return sm.HostedRotation.mysql_single_user()
+    elif engine == "postgresql":
+        return sm.HostedRotation.postgre_sql_single_user()
+    else:
+        raise ValueError(f"Unsupported engine: {engine}")
+
+
+def _get_db_instance_engine(engine: str) -> rds.DatabaseInstanceEngine:
+    if "mysql" == engine:
+        return rds.DatabaseInstanceEngine.mysql(version=rds.MysqlEngineVersion.VER_8_0_35)
+    elif "postgresql" == engine:
+        return rds.DatabaseInstanceEngine.postgres(version=rds.PostgresEngineVersion.VER_16_1)
+    else:
+        raise ValueError(f"Unsupported engine: {engine}")
+
+
 class TemplateStack(cdk.Stack):
     def __init__(
         self,
@@ -24,10 +42,12 @@ class TemplateStack(cdk.Stack):
         stack_description: str,
         vpc_id: str,
         private_subnet_ids: list[str],
+        engine: str,
         username: str,
         port: int | None,
         db_retention: str,
         instance_type: str,
+        multi_az: bool,
         **kwargs: Any,
     ) -> None:
 
@@ -69,7 +89,7 @@ class TemplateStack(cdk.Stack):
         self.db_credentials_secret.add_rotation_schedule(
             "RotationSchedule",
             automatically_after=cdk.Duration.days(90),
-            hosted_rotation=sm.HostedRotation.mysql_single_user(),
+            hosted_rotation=_get_hosted_rotation_for_engine(engine),
         )
 
         ### Database ###
@@ -90,11 +110,12 @@ class TemplateStack(cdk.Stack):
             id="RDS Database",
             port=port,
             credentials=rds.Credentials.from_secret(self.db_credentials_secret),
-            engine=rds.DatabaseInstanceEngine.mysql(version=rds.MysqlEngineVersion.VER_8_0_35),
+            engine=_get_db_instance_engine(engine),
             instance_type=ec2.InstanceType(instance_type),
             vpc=vpc,
             security_groups=[sg_rds],
             vpc_subnets=ec2.SubnetSelection(subnets=private_subnets),
+            multi_az=multi_az,
             removal_policy=removal_policy,
             deletion_protection=deletion_protection,
         )

@@ -7,7 +7,7 @@ parameters:
   - name: retention-type
     value: RETAIN
 ---
-name: rds
+name: mysql
 path: modules/storage/rds
 targetAccount: primary
 parameters:
@@ -23,6 +23,8 @@ parameters:
         group: networking
         name: basic-networking
         key: PrivateSubnetIds
+  - name: engine
+    value: mysql
   - name: admin-username
     value: admin
   - name: db-retention

@@ -43,10 +43,12 @@ def _get_env(
 vpc_id: str = _get_env("VPC_ID", required=True)
 private_subnet_ids: list[str] = _get_env("PRIVATE_SUBNET_IDS", required=True, function=json.loads)
 
+engine: str = _get_env("ENGINE", required=True)
 username: str = _get_env("ADMIN_USERNAME", required=True)
 port: int | None = _get_env("PORT", required=False, function=int)
 db_retention: str = _get_env("DB_RETENTION", required=False, default_value="RETAIN", function=str.upper)
 instance_type: str = _get_env("INSTANCE_TYPE", required=False, default_value="t2.small")
+multi_az: bool = _get_env("MULTI_AZ", required=False, default_value=False, function=lambda x: x.lower() == "true")
 
 
 def generate_description() -> str:
@@ -77,10 +79,12 @@ template_stack = TemplateStack(
     ),
     vpc_id=vpc_id,
     private_subnet_ids=private_subnet_ids,
+    engine=engine,
     username=username,
     port=port,
     db_retention=db_retention,
     instance_type=instance_type,
+    multi_az=multi_az,
 )
 
 
