@@ -22,8 +22,6 @@ The database will also come with automatic credentials rotation for the admin us
   - defaults to `t2.small`
 - `port`: database port
   - if absent, default for the engine will be used
-- `multi_az`: whether to launch RDS in MultiAZ mode
-  - defaults to `false`
 - `removal-policy`: the retention policy to put on the EFS service
   - defaults to `RETAIN`
   - supports `DESTROY` and `RETAIN` only

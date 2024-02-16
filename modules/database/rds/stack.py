@@ -46,7 +46,6 @@ class RDSDatabaseStack(cdk.Stack):
         instance_type: str,
         removal_policy: cdk.RemovalPolicy,
         port: int | None = None,
-        multi_az: bool = False,
         stack_description: str | None = None,
         **kwargs: Any,
     ) -> None:
@@ -108,7 +107,7 @@ class RDSDatabaseStack(cdk.Stack):
             vpc=vpc,
             security_groups=[sg_rds],
             vpc_subnets=ec2.SubnetSelection(subnets=private_subnets),
-            multi_az=multi_az,
+            multi_az=True,
             removal_policy=removal_policy,
             deletion_protection=removal_policy == cdk.RemovalPolicy.RETAIN,
         )
@@ -120,18 +119,18 @@ class RDSDatabaseStack(cdk.Stack):
         )
 
         # Set up CDK nag
-        # cdk.Aspects.of(self).add(cdk_nag.AwsSolutionsChecks())
+        cdk.Aspects.of(self).add(cdk_nag.AwsSolutionsChecks())
         cdk_nag.NagSuppressions.add_stack_suppressions(
             self,
             apply_to_nested_stacks=True,
             suppressions=[
                 cdk_nag.NagPackSuppression(
-                    id="AwsSolutions-IAM4",
-                    reason="Managed Policies are for service account roles only",
+                    id="AwsSolutions-RDS10",
+                    reason="Deletion protection can be disabled",
                 ),
                 cdk_nag.NagPackSuppression(
-                    id="AwsSolutions-IAM5",
-                    reason="Resource access restriced to resources",
+                    id="AwsSolutions-RDS11",
+                    reason="Default endpoint port",
                 ),
             ],
         )

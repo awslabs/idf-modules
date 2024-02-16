@@ -39,7 +39,6 @@ username: str = _get_env("ADMIN_USERNAME", required=True)  # type: ignore[assign
 
 port: str | None = _get_env("PORT", required=False)
 instance_type: str = _get_env("INSTANCE_TYPE", required=False, default="t2.small")  # type: ignore[assignment]
-multi_az: str = _get_env("MULTI_AZ", required=False, default="false")  # type: ignore[assignment]
 
 
 def _parse_removal_policy(value: str) -> cdk.RemovalPolicy:
@@ -95,7 +94,6 @@ template_stack = RDSDatabaseStack(
     port=int(port) if port else None,
     removal_policy=removal_policy,
     instance_type=instance_type,
-    multi_az=multi_az == "true",
 )
 
 
