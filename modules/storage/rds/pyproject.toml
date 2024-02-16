@@ -29,7 +29,16 @@ py_version = 38
 skip_gitignore = false
 
 [tool.pytest.ini_options]
-addopts = "-v --cov=. --cov-report term --cov-config=coverage.ini"
+addopts = "-v --cov=. --cov-report term"
 pythonpath = [
   "."
 ]
+
+[tool.coverage.run]
+branch = true
+omit = [
+  "tests/*"
+]
+
+[tool.coverage.report]
+show_missing = true
