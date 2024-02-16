@@ -8,7 +8,7 @@ from typing import Callable, TypeVar
 
 import aws_cdk as cdk
 
-from stack import TemplateStack
+from stack import RDSDatabaseStack
 
 # Project specific
 project_name: str = os.getenv("SEEDFARMER_PROJECT_NAME")
@@ -41,7 +41,7 @@ def _get_env(
 
 
 vpc_id: str = _get_env("VPC_ID", required=True)
-private_subnet_ids: list[str] = _get_env("PRIVATE_SUBNET_IDS", required=True, function=json.loads)
+subnet_ids: list[str] = _get_env("SUBNET_IDS", required=True, function=json.loads)
 
 engine: str = _get_env("ENGINE", required=True)
 username: str = _get_env("ADMIN_USERNAME", required=True)
@@ -49,11 +49,23 @@ port: int | None = _get_env("PORT", required=False, function=int)
 instance_type: str = _get_env("INSTANCE_TYPE", required=False, default_value="t2.small")
 multi_az: bool = _get_env("MULTI_AZ", required=False, default_value=False, function=lambda x: x.lower() == "true")
 
+
+def _parse_removal_policy(value: str) -> cdk.RemovalPolicy:
+    value = value.upper()
+
+    if value == "DESTROY":
+        return cdk.RemovalPolicy.DESTROY
+    if value == "RETAIN":
+        return cdk.RemovalPolicy.RETAIN
+
+    raise ValueError(f"Invalid removal policy {value}")
+
+
 removal_policy: cdk.RemovalPolicy = _get_env(
     "REMOVAL_POLICY",
     required=False,
     default_value=cdk.RemovalPolicy.RETAIN,
-    function=lambda x: cdk.RemovalPolicy(x.upper()),
+    function=_parse_removal_policy,
 )
 
 
@@ -72,7 +84,7 @@ def generate_description() -> str:
 
 app = cdk.App()
 
-template_stack = TemplateStack(
+template_stack = RDSDatabaseStack(
     scope=app,
     id=f"{project_name}-{deployment_name}-{module_name}",
     project_name=project_name,
@@ -84,7 +96,7 @@ template_stack = TemplateStack(
         region=os.environ["CDK_DEFAULT_REGION"],
     ),
     vpc_id=vpc_id,
-    private_subnet_ids=private_subnet_ids,
+    subnet_ids=subnet_ids,
     engine=engine,
     username=username,
     port=port,

@@ -31,7 +31,7 @@ def _get_db_instance_engine(engine: str) -> rds.DatabaseInstanceEngine:
         raise ValueError(f"Unsupported engine: {engine}")
 
 
-class TemplateStack(cdk.Stack):
+class RDSDatabaseStack(cdk.Stack):
     def __init__(
         self,
         scope: Construct,
@@ -39,15 +39,15 @@ class TemplateStack(cdk.Stack):
         project_name: str,
         deployment_name: str,
         module_name: str,
-        stack_description: str,
         vpc_id: str,
-        private_subnet_ids: list[str],
+        subnet_ids: list[str],
         engine: str,
         username: str,
-        port: int | None,
-        removal_policy: cdk.RemovalPolicy,
         instance_type: str,
-        multi_az: bool,
+        removal_policy: cdk.RemovalPolicy,
+        port: int | None = None,
+        multi_az: bool = False,
+        stack_description: str | None = None,
         **kwargs: Any,
     ) -> None:
 
@@ -85,7 +85,7 @@ class TemplateStack(cdk.Stack):
         ### Database ###
         vpc = ec2.Vpc.from_lookup(self, "VPC", vpc_id=vpc_id)
         private_subnets = [
-            ec2.Subnet.from_subnet_id(self, f"Subnet {subnet_id}", subnet_id) for subnet_id in private_subnet_ids
+            ec2.Subnet.from_subnet_id(self, f"Subnet {subnet_id}", subnet_id) for subnet_id in subnet_ids
         ]
 
         sg_rds = ec2.SecurityGroup(

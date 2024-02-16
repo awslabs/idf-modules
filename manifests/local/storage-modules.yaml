@@ -17,7 +17,7 @@ parameters:
         group: networking
         name: basic-networking
         key: VpcId
-  - name: private-subnet-ids
+  - name: subnet-ids
     valueFrom:
       moduleMetadata:
         group: networking
