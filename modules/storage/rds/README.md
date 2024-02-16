@@ -1,14 +1,9 @@
-
-# storage/rds
-
+# RDS Instance Module
 
 ## Description
 
-A short description of the module.
-This module:
-
-- FILL THIS OUT
-
+This module will create a RDS database instance tied to the provided VPC.
+The database will also come with automatic credentials rotation for the admin user.
 
 ## Inputs/Outputs
 
