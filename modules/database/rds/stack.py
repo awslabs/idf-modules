@@ -120,7 +120,7 @@ class RDSDatabaseStack(cdk.Stack):
         )
 
         # Set up CDK nag
-        cdk_nag.Aspects.of(self).add(cdk_nag.AwsSolutionsChecks())
+        cdk.Aspects.of(self).add(cdk_nag.AwsSolutionsChecks())
         cdk_nag.NagSuppressions.add_stack_suppressions(
             self,
             apply_to_nested_stacks=True,
