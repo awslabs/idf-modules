@@ -4,50 +4,42 @@ from __future__ import annotations
 
 import json
 import os
-from typing import Callable, TypeVar
 
 import aws_cdk as cdk
 
 from stack import RDSDatabaseStack
 
 # Project specific
-project_name: str = os.getenv("SEEDFARMER_PROJECT_NAME")
-deployment_name: str = os.getenv("SEEDFARMER_DEPLOYMENT_NAME")
-module_name: str = os.getenv("SEEDFARMER_MODULE_NAME")
+project_name: str = os.environ["SEEDFARMER_PROJECT_NAME"]
+deployment_name: str = os.environ["SEEDFARMER_DEPLOYMENT_NAME"]
+module_name: str = os.environ["SEEDFARMER_MODULE_NAME"]
 
 if len(f"{project_name}-{deployment_name}") > 36:
     raise ValueError("This module cannot support a project+deployment name character length greater than 35")
 
 
-T = TypeVar("T")
-EnvFunction = Callable[[str], T]
+def _param(name: str) -> str:
+    return f"SEEDFARMER_PARAMETER_{name}"
 
 
-def _get_env(
-    name: str, required: bool = False, default_value: T | None = None, function: EnvFunction | None = None
-) -> T | str | None:
-    env_value = os.getenv(f"SEEDFARMER_PARAMETER_{name}")
+def _get_env(name: str, default: str | None = None, required: bool = True) -> str | None:
+    param_name = _param(name)
+    value = os.getenv(param_name, default)
 
-    if env_value is None and required:
-        raise ValueError(f"Missing required environment variable SEEDFARMER_PARAMETER_{name}")
+    if required and not value:
+        raise ValueError(f"Missing input parameter {param_name}")
 
-    if env_value is None and not required:
-        return default_value
-
-    if function is None:
-        return env_value
-
-    return function(env_value)
+    return value
 
 
-vpc_id: str = _get_env("VPC_ID", required=True)
-subnet_ids: list[str] = _get_env("SUBNET_IDS", required=True, function=json.loads)
+vpc_id: str = str, _get_env("VPC_ID")  # type: ignore[assignment]
+subnet_ids: list[str] = json.loads(_get_env("SUBNET_IDS", required=True))  # type: ignore[arg-type,assignment]
+engine: str = _get_env("ENGINE", required=True)  # type: ignore[assignment]
+username: str = _get_env("ADMIN_USERNAME", required=True)  # type: ignore[assignment]
 
-engine: str = _get_env("ENGINE", required=True)
-username: str = _get_env("ADMIN_USERNAME", required=True)
-port: int | None = _get_env("PORT", required=False, function=int)
-instance_type: str = _get_env("INSTANCE_TYPE", required=False, default_value="t2.small")
-multi_az: bool = _get_env("MULTI_AZ", required=False, default_value=False, function=lambda x: x.lower() == "true")
+port: str | None = _get_env("PORT", required=False)
+instance_type: str = _get_env("INSTANCE_TYPE", required=False, default="t2.small")  # type: ignore[assignment]
+multi_az: str = _get_env("MULTI_AZ", required=False, default="false")  # type: ignore[assignment]
 
 
 def _parse_removal_policy(value: str) -> cdk.RemovalPolicy:
@@ -61,11 +53,12 @@ def _parse_removal_policy(value: str) -> cdk.RemovalPolicy:
     raise ValueError(f"Invalid removal policy {value}")
 
 
-removal_policy: cdk.RemovalPolicy = _get_env(
-    "REMOVAL_POLICY",
-    required=False,
-    default_value=cdk.RemovalPolicy.RETAIN,
-    function=_parse_removal_policy,
+removal_policy: cdk.RemovalPolicy = _parse_removal_policy(
+    _get_env(  # type: ignore[arg-type]
+        "REMOVAL_POLICY",
+        required=False,
+        default="retain",
+    )
 )
 
 
@@ -99,10 +92,10 @@ template_stack = RDSDatabaseStack(
     subnet_ids=subnet_ids,
     engine=engine,
     username=username,
-    port=port,
+    port=int(port) if port else None,
     removal_policy=removal_policy,
     instance_type=instance_type,
-    multi_az=multi_az,
+    multi_az=multi_az == "true",
 )
 
 

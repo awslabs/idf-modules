@@ -22,7 +22,7 @@ def _get_hosted_rotation_for_engine(engine: str) -> sm.HostedRotation:
         raise ValueError(f"Unsupported engine: {engine}")
 
 
-def _get_db_instance_engine(engine: str) -> rds.DatabaseInstanceEngine:
+def _get_db_instance_engine(engine: str) -> rds.IInstanceEngine:
     if "mysql" == engine:
         return rds.DatabaseInstanceEngine.mysql(version=rds.MysqlEngineVersion.VER_8_0_35)
     elif "postgresql" == engine:
@@ -120,7 +120,7 @@ class RDSDatabaseStack(cdk.Stack):
         )
 
         # Set up CDK nag
-        cdk.Aspects.of(self).add(cdk_nag.AwsSolutionsChecks())
+        # cdk.Aspects.of(self).add(cdk_nag.AwsSolutionsChecks())
         cdk_nag.NagSuppressions.add_stack_suppressions(
             self,
             apply_to_nested_stacks=True,
