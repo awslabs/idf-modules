@@ -120,17 +120,20 @@ class RDSDatabaseStack(cdk.Stack):
 
         # Set up CDK nag
         cdk.Aspects.of(self).add(cdk_nag.AwsSolutionsChecks(log_ignores=True))
-        cdk_nag.NagSuppressions.add_stack_suppressions(
-            self,
-            apply_to_nested_stacks=True,
-            suppressions=[
-                cdk_nag.NagPackSuppression(
-                    id="AwsSolutions-RDS10",
-                    reason="Deletion protection can be disabled for testing",
-                ),
+
+        nag_supressions: list[cdk_nag.NagPackSuppression] = []
+        if port is None:
+            nag_supressions.append(
                 cdk_nag.NagPackSuppression(
                     id="AwsSolutions-RDS11",
                     reason="Default port will be returned as a module output",
                 ),
-            ],
-        )
+            )
+        if removal_policy == cdk.RemovalPolicy.DESTROY:
+            nag_supressions.append(
+                cdk_nag.NagPackSuppression(
+                    id="AwsSolutions-RDS10",
+                    reason="Retention policy was explicitely set to DESTROY",
+                ),
+            )
+        cdk_nag.NagSuppressions.add_stack_suppressions(self, suppressions=nag_supressions)
