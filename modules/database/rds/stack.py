@@ -110,7 +110,6 @@ class RDSDatabaseStack(cdk.Stack):
             multi_az=True,
             storage_encrypted=True,
             removal_policy=removal_policy,
-            deletion_protection=removal_policy == cdk.RemovalPolicy.RETAIN,
         )
 
         # Adds an ingress rule which allows resources in the VPC's CIDR to access the database.
@@ -120,7 +119,7 @@ class RDSDatabaseStack(cdk.Stack):
         )
 
         # Set up CDK nag
-        cdk.Aspects.of(self).add(cdk_nag.AwsSolutionsChecks())
+        cdk.Aspects.of(self).add(cdk_nag.AwsSolutionsChecks(log_ignores=True))
         cdk_nag.NagSuppressions.add_stack_suppressions(
             self,
             apply_to_nested_stacks=True,
