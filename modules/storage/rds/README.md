@@ -77,6 +77,4 @@ parameters:
     "DatabaseHostname": "*.*.rds.amazonaws.com",
     "DatabasePort": "3306",
 }
-
-
-
+```
