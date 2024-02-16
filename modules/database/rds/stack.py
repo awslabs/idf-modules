@@ -6,10 +6,10 @@ import json
 from typing import Any, cast
 
 import aws_cdk as cdk
+import cdk_nag
 from aws_cdk import aws_ec2 as ec2
 from aws_cdk import aws_rds as rds
 from aws_cdk import aws_secretsmanager as sm
-from cdk_nag import NagPackSuppression, NagSuppressions
 from constructs import Construct, IConstruct
 
 
@@ -61,7 +61,7 @@ class RDSDatabaseStack(cdk.Stack):
         dep_mod = dep_mod[:64]
         cdk.Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=dep_mod)
 
-        #### Secrets ####
+        # Create secret and generate password
         self.db_credentials_secret = sm.Secret(
             self,
             "Database Secret",
@@ -76,18 +76,20 @@ class RDSDatabaseStack(cdk.Stack):
             removal_policy=removal_policy,
         )
 
+        # Add rotation schedule
         self.db_credentials_secret.add_rotation_schedule(
             "RotationSchedule",
             automatically_after=cdk.Duration.days(90),
             hosted_rotation=_get_hosted_rotation_for_engine(engine),
         )
 
-        ### Database ###
+        # Find VPC and subnets
         vpc = ec2.Vpc.from_lookup(self, "VPC", vpc_id=vpc_id)
         private_subnets = [
             ec2.Subnet.from_subnet_id(self, f"Subnet {subnet_id}", subnet_id) for subnet_id in subnet_ids
         ]
 
+        # Create security group for database
         sg_rds = ec2.SecurityGroup(
             self,
             "Security Group",
@@ -95,6 +97,7 @@ class RDSDatabaseStack(cdk.Stack):
             security_group_name=f"{project_name}-{deployment_name}-{module_name}-rds-sg",
         )
 
+        # Create database instance
         self.database = rds.DatabaseInstance(
             scope=self,
             id="RDS Database",
@@ -116,16 +119,17 @@ class RDSDatabaseStack(cdk.Stack):
             description="Allows resources in the VPC CIDR to access the database",
         )
 
-        ### Nag supressions ###
-        NagSuppressions.add_stack_suppressions(
+        # Set up CDK nag
+        cdk_nag.Aspects.of(self).add(cdk_nag.AwsSolutionsChecks())
+        cdk_nag.NagSuppressions.add_stack_suppressions(
             self,
             apply_to_nested_stacks=True,
             suppressions=[
-                NagPackSuppression(
+                cdk_nag.NagPackSuppression(
                     id="AwsSolutions-IAM4",
                     reason="Managed Policies are for service account roles only",
                 ),
-                NagPackSuppression(
+                cdk_nag.NagPackSuppression(
                     id="AwsSolutions-IAM5",
                     reason="Resource access restriced to resources",
                 ),

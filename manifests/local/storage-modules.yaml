@@ -7,31 +7,6 @@ parameters:
   - name: retention-type
     value: RETAIN
 ---
-name: mysql
-path: modules/storage/rds
-targetAccount: primary
-parameters:
-  - name: vpc-id
-    valueFrom:
-      moduleMetadata:
-        group: networking
-        name: basic-networking
-        key: VpcId
-  - name: subnet-ids
-    valueFrom:
-      moduleMetadata:
-        group: networking
-        name: basic-networking
-        key: PrivateSubnetIds
-  - name: engine
-    value: mysql
-  - name: admin-username
-    value: admin
-  - name: instance-type
-    value: t2.small
-  - name: removal-policy
-    value: DESTROY
----
 name: opensearch
 path: modules/storage/opensearch
 targetAccount: primary

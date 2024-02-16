@@ -38,12 +38,15 @@ def test_project_deployment_name_length() -> None:
     assert "module cannot support a project+deployment name character length greater than" in str(e)
 
 
-@pytest.mark.parametrize("param", [
-    "SEEDFARMER_PARAMETER_VPC_ID",
-    "SEEDFARMER_PARAMETER_SUBNET_IDS",
-    "SEEDFARMER_PARAMETER_ENGINE",
-    "SEEDFARMER_PARAMETER_ADMIN_USERNAME"
-])
+@pytest.mark.parametrize(
+    "param",
+    [
+        "SEEDFARMER_PARAMETER_VPC_ID",
+        "SEEDFARMER_PARAMETER_SUBNET_IDS",
+        "SEEDFARMER_PARAMETER_ENGINE",
+        "SEEDFARMER_PARAMETER_ADMIN_USERNAME",
+    ],
+)
 def test_missing_parameter(param: str) -> None:
     del os.environ[param]
 
