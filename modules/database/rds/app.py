@@ -32,7 +32,7 @@ def _get_env(name: str, default: str | None = None, required: bool = True) -> st
     return value
 
 
-vpc_id: str = str, _get_env("VPC_ID")  # type: ignore[assignment]
+vpc_id: str = _get_env("VPC_ID")  # type: ignore[assignment]
 subnet_ids: list[str] = json.loads(_get_env("SUBNET_IDS", required=True))  # type: ignore[arg-type,assignment]
 engine: str = _get_env("ENGINE", required=True)  # type: ignore[assignment]
 username: str = _get_env("ADMIN_USERNAME", required=True)  # type: ignore[assignment]

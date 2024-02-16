@@ -108,6 +108,7 @@ class RDSDatabaseStack(cdk.Stack):
             security_groups=[sg_rds],
             vpc_subnets=ec2.SubnetSelection(subnets=private_subnets),
             multi_az=True,
+            storage_encrypted=True,
             removal_policy=removal_policy,
             deletion_protection=removal_policy == cdk.RemovalPolicy.RETAIN,
         )
@@ -126,11 +127,11 @@ class RDSDatabaseStack(cdk.Stack):
             suppressions=[
                 cdk_nag.NagPackSuppression(
                     id="AwsSolutions-RDS10",
-                    reason="Deletion protection can be disabled",
+                    reason="Deletion protection can be disabled for testing",
                 ),
                 cdk_nag.NagPackSuppression(
                     id="AwsSolutions-RDS11",
-                    reason="Default endpoint port",
+                    reason="Default port will be returned as a module output",
                 ),
             ],
         )
