@@ -19,26 +19,26 @@ create() {
     TARGET_ECR_TAG=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$TARGET_REPOSITORY_NAME:${image_tag}
     IMAGE_META="$( aws ecr batch-get-image --repository-name=$TARGET_REPOSITORY_NAME --image-ids=imageTag=$image_tag --query 'images[].imageId.imageTag' --output text )" || true
     if [[ $IMAGE_META == $image_tag ]]; then
-    echo "$IMAGE_META found in $TARGET_ECR_TAG skipping replication"
+        echo "$IMAGE_META found in $TARGET_ECR_TAG skipping replication"
     else
-    echo "$TARGET_REPOSITORY_NAME:$image_tag not found, fetching"
-    echo Pulling $image
-    docker pull $image
-    # Setting connection with AWS ECR
-    DESCRIBE_REPO=$(aws ecr describe-repositories --repository-names $TARGET_REPOSITORY_NAME || echo "REPOSITORY_MISSING" )
-    if [[ $DESCRIBE_REPO == "REPOSITORY_MISSING" ]]; then
-        echo "$TARGET_REPOSITORY_NAME not found in ECR. Creating..."
-        aws ecr create-repository --repository-name $TARGET_REPOSITORY_NAME --image-scanning-configuration scanOnPush=true
-        sleep 10
-    else
-        echo "$TARGET_REPOSITORY_NAME found in ECR"
-    fi
-    aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
-    # Tagging and pushing Docker images according to https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-pull-ecr-image.html
-    docker tag $image $TARGET_ECR_TAG
-    docker push $TARGET_ECR_TAG
-    # Deleting so it wouldn't cause issues with codebuild storage space for huge images
-    docker rmi $image
+        echo "$TARGET_REPOSITORY_NAME:$image_tag not found, fetching"
+        echo Pulling $image
+        docker pull $image
+        # Setting connection with AWS ECR
+        DESCRIBE_REPO=$(aws ecr describe-repositories --repository-names $TARGET_REPOSITORY_NAME || echo "REPOSITORY_MISSING" )
+        if [[ $DESCRIBE_REPO == "REPOSITORY_MISSING" ]]; then
+            echo "$TARGET_REPOSITORY_NAME not found in ECR. Creating..."
+            aws ecr create-repository --repository-name $TARGET_REPOSITORY_NAME --image-scanning-configuration scanOnPush=true
+            sleep 10
+        else
+            echo "$TARGET_REPOSITORY_NAME found in ECR"
+        fi
+        aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+        # Tagging and pushing Docker images according to https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-pull-ecr-image.html
+        docker tag $image $TARGET_ECR_TAG
+        docker push $TARGET_ECR_TAG
+        # Deleting so it wouldn't cause issues with codebuild storage space for huge images
+        docker rmi $image
     fi
     done < images.txt
 }
