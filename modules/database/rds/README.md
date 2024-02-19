@@ -75,6 +75,7 @@ parameters:
 - `CredentialsSecretArn`: ARN of the secret
 - `DatabaseHostname`: Database hostname
 - `DatabasePort`: Database port
+- `SecurityGroupId`: ID of the database security group
 
 #### Output Example
 
