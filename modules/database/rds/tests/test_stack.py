@@ -6,7 +6,7 @@ import sys
 
 import aws_cdk as cdk
 import pytest
-from aws_cdk.assertions import Template
+from aws_cdk.assertions import Match, Template
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -29,7 +29,8 @@ def test_synthesize_stack(engine: str) -> None:
     dep_name = "test-deployment"
     mod_name = "test-module"
 
-    efs_stack = stack.RDSDatabaseStack(
+    instance_type = "t2.small"
+    rds_stack = stack.RDSDatabaseStack(
         scope=app,
         id=f"{project_name}-{dep_name}-{mod_name}",
         project_name=project_name,
@@ -39,7 +40,7 @@ def test_synthesize_stack(engine: str) -> None:
         subnet_ids=["subnet-12345", "subnet-67890", "subnet-91011"],
         engine=engine,
         username="admin",
-        instance_type="t2.small",
+        instance_type=instance_type,
         removal_policy=cdk.RemovalPolicy.DESTROY,
         env=cdk.Environment(
             account=os.environ["CDK_DEFAULT_ACCOUNT"],
@@ -47,6 +48,14 @@ def test_synthesize_stack(engine: str) -> None:
         ),
     )
 
-    template = Template.from_stack(efs_stack)
+    template = Template.from_stack(rds_stack)
 
     template.resource_count_is("AWS::RDS::DBInstance", 1)
+
+    template.has_resource_properties(
+        "AWS::RDS::DBInstance",
+        {
+            "Engine": "postgres" if engine == "postgresql" else engine,
+            "DBInstanceClass": f"db.{instance_type}",
+        },
+    )
