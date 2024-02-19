@@ -16,7 +16,7 @@ from aws_cdk import aws_ec2 as ec2
 from aws_cdk import aws_eks as eks
 from aws_cdk import aws_iam as iam
 from aws_cdk import aws_kms as kms
-from aws_cdk.lambda_layer_kubectl_v23 import KubectlV23Layer
+from aws_cdk.lambda_layer_kubectl_v29 import KubectlV29Layer
 from cdk_nag import NagSuppressions
 from constructs import Construct, IConstruct
 
@@ -192,7 +192,7 @@ class Eks(Stack):  # type: ignore
             else eks.EndpointAccess.PUBLIC,
             version=eks.KubernetesVersion.of(str(eks_version)),
             # Work around until CDK team makes kubectl upto date https://github.com/aws/aws-cdk/issues/23376
-            kubectl_layer=KubectlV23Layer(self, "Kubectlv23Layer"),
+            kubectl_layer=KubectlV29Layer(self, "Kubectlv29Layer"),
             default_capacity=0,
             secrets_encryption_key=secrets_key if eks_compute_config.get("eks_secrets_envelope_encryption") else None,
             cluster_logging=[
