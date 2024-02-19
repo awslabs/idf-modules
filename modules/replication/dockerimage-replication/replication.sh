@@ -25,9 +25,8 @@ create() {
     echo Pulling $image
     docker pull $image
     # Setting connection with AWS ECR
-    DESCRIBE_REPO=$(aws ecr describe-repositories --repository-names $TARGET_REPOSITORY_NAME )
-    DESCRIBE_REPO_STATUS=$?
-    if [ $DESCRIBE_REPO_STATUS -ne 0 ]; then
+    DESCRIBE_REPO=$(aws ecr describe-repositories --repository-names $TARGET_REPOSITORY_NAME || echo "REPOSITORY_MISSING" )
+    if [[ $DESCRIBE_REPO_STATUS == "REPOSITORY_MISSING" ]]; then
         echo "$TARGET_REPOSITORY_NAME not found in ECR. Creating..."
         aws ecr create-repository --repository-name $TARGET_REPOSITORY_NAME --image-scanning-configuration scanOnPush=true
         sleep 10
