@@ -18,7 +18,7 @@ create() {
     TARGET_REPOSITORY_NAME=${AWS_CODESEEDER_NAME}-${image_name}
     IMAGE_META="$( aws ecr batch-get-image --repository-name=$TARGET_REPOSITORY_NAME --image-ids=imageTag=$image_tag --query 'images[].imageId.imageTag' --output text )" || true
     if [[ $IMAGE_META == $image_tag ]]; then
-    echo "$IMAGE_META found in $TARGET_REPOSITORY_NAME skipping build"
+    echo "$IMAGE_META found in $TARGET_REPOSITORY_NAME skipping replication"
     else
     echo "$TARGET_REPOSITORY_NAME:$image_tag not found, fetching"
     echo Pulling $image
