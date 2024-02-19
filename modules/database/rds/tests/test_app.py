@@ -19,6 +19,7 @@ def stack_defaults() -> None:
     os.environ["SEEDFARMER_PARAMETER_VPC_ID"] = "vpc-12345"
     os.environ["SEEDFARMER_PARAMETER_SUBNET_IDS"] = json.dumps(["subnet-12345", "subnet-67890"])
     os.environ["SEEDFARMER_PARAMETER_ENGINE"] = "mysql"
+    os.environ["SEEDFARMER_PARAMETER_ENGINE_VERSION"] = "8.0.35"
     os.environ["SEEDFARMER_PARAMETER_ADMIN_USERNAME"] = "admin"
 
     if "app" in sys.modules:

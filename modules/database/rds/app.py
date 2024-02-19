@@ -35,10 +35,14 @@ def _get_env(name: str, default: str | None = None, required: bool = True) -> st
 vpc_id: str = _get_env("VPC_ID")  # type: ignore[assignment]
 subnet_ids: list[str] = json.loads(_get_env("SUBNET_IDS", required=True))  # type: ignore[arg-type,assignment]
 engine: str = _get_env("ENGINE", required=True)  # type: ignore[assignment]
+engine_version: str = _get_env("ENGINE_VERSION", required=True)  # type: ignore[assignment]
 username: str = _get_env("ADMIN_USERNAME", required=True)  # type: ignore[assignment]
 
 port: str | None = _get_env("PORT", required=False)
 instance_type: str = _get_env("INSTANCE_TYPE", required=False, default="t2.small")  # type: ignore[assignment]
+credential_rotation_days: int = int(
+    _get_env("CREDENTIAL_ROTATION_DAYS", required=False, default="0"),  # type: ignore[arg-type]
+)
 
 
 def _parse_removal_policy(value: str) -> cdk.RemovalPolicy:
@@ -90,7 +94,9 @@ template_stack = RDSDatabaseStack(
     vpc_id=vpc_id,
     subnet_ids=subnet_ids,
     engine=engine,
+    engine_version=engine_version,
     username=username,
+    credential_rotation_days=credential_rotation_days,
     port=int(port) if port else None,
     removal_policy=removal_policy,
     instance_type=instance_type,

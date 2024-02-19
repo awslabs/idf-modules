@@ -13,20 +13,20 @@ from aws_cdk import aws_secretsmanager as sm
 from constructs import Construct, IConstruct
 
 
-def _get_hosted_rotation_for_engine(engine: str) -> sm.HostedRotation:
+def _get_hosted_rotation_for_engine(engine: str, vpc: ec2.IVpc, vpc_subnets: ec2.SubnetSelection) -> sm.HostedRotation:
     if engine == "mysql":
-        return sm.HostedRotation.mysql_single_user()
+        return sm.HostedRotation.mysql_single_user(vpc=vpc, vpc_subnets=vpc_subnets)
     elif engine == "postgresql":
-        return sm.HostedRotation.postgre_sql_single_user()
+        return sm.HostedRotation.postgre_sql_single_user(vpc=vpc, vpc_subnets=vpc_subnets)
     else:
         raise ValueError(f"Unsupported engine: {engine}")
 
 
-def _get_db_instance_engine(engine: str) -> rds.IInstanceEngine:
+def _get_db_instance_engine(engine: str, version: str) -> rds.IInstanceEngine:
     if "mysql" == engine:
-        return rds.DatabaseInstanceEngine.mysql(version=rds.MysqlEngineVersion.VER_8_0_35)
+        return rds.DatabaseInstanceEngine.mysql(version=rds.MysqlEngineVersion.of(version, version))
     elif "postgresql" == engine:
-        return rds.DatabaseInstanceEngine.postgres(version=rds.PostgresEngineVersion.VER_16_1)
+        return rds.DatabaseInstanceEngine.postgres(version=rds.PostgresEngineVersion.of(version, version))
     else:
         raise ValueError(f"Unsupported engine: {engine}")
 
@@ -42,7 +42,9 @@ class RDSDatabaseStack(cdk.Stack):
         vpc_id: str,
         subnet_ids: list[str],
         engine: str,
+        engine_version: str,
         username: str,
+        credential_rotation_days: int,
         instance_type: str,
         removal_policy: cdk.RemovalPolicy,
         port: int | None = None,
@@ -60,6 +62,12 @@ class RDSDatabaseStack(cdk.Stack):
         dep_mod = dep_mod[:64]
         cdk.Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=dep_mod)
 
+        # Find VPC and subnets
+        vpc = ec2.Vpc.from_lookup(self, "VPC", vpc_id=vpc_id)
+        vpc_subnets = ec2.SubnetSelection(
+            subnets=[ec2.Subnet.from_subnet_id(self, f"Subnet {subnet_id}", subnet_id) for subnet_id in subnet_ids]
+        )
+
         # Create secret and generate password
         self.db_credentials_secret = sm.Secret(
             self,
@@ -76,17 +84,12 @@ class RDSDatabaseStack(cdk.Stack):
         )
 
         # Add rotation schedule
-        self.db_credentials_secret.add_rotation_schedule(
-            "RotationSchedule",
-            automatically_after=cdk.Duration.days(90),
-            hosted_rotation=_get_hosted_rotation_for_engine(engine),
-        )
-
-        # Find VPC and subnets
-        vpc = ec2.Vpc.from_lookup(self, "VPC", vpc_id=vpc_id)
-        private_subnets = [
-            ec2.Subnet.from_subnet_id(self, f"Subnet {subnet_id}", subnet_id) for subnet_id in subnet_ids
-        ]
+        if credential_rotation_days > 0:
+            self.db_credentials_secret.add_rotation_schedule(
+                "Rotation",
+                automatically_after=cdk.Duration.days(credential_rotation_days),
+                hosted_rotation=_get_hosted_rotation_for_engine(engine, vpc, vpc_subnets),
+            )
 
         # Create security group for database
         self.sg_rds = ec2.SecurityGroup(
@@ -102,11 +105,11 @@ class RDSDatabaseStack(cdk.Stack):
             id="RDS Database",
             port=port,
             credentials=rds.Credentials.from_secret(self.db_credentials_secret),
-            engine=_get_db_instance_engine(engine),
+            engine=_get_db_instance_engine(engine, engine_version),
             instance_type=ec2.InstanceType(instance_type),
             vpc=vpc,
             security_groups=[self.sg_rds],
-            vpc_subnets=ec2.SubnetSelection(subnets=private_subnets),
+            vpc_subnets=vpc_subnets,
             multi_az=True,
             storage_encrypted=True,
             removal_policy=removal_policy,

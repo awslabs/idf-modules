@@ -34,9 +34,42 @@ parameters:
         key: PrivateSubnetIds
   - name: engine
     value: mysql
-  - name: admin-username
-    value: admin
+  - name: engine-version
+    value: 8.0.35
   - name: instance-type
     value: t2.small
+  - name: admin-username
+    value: admin
+  - name: credential-rotation-days
+    value: 90
+  - name: removal-policy
+    value: DESTROY
+---
+name: postgresql
+path: modules/database/rds
+targetAccount: primary
+parameters:
+  - name: vpc-id
+    valueFrom:
+      moduleMetadata:
+        group: networking
+        name: basic-networking
+        key: VpcId
+  - name: subnet-ids
+    valueFrom:
+      moduleMetadata:
+        group: networking
+        name: basic-networking
+        key: PrivateSubnetIds
+  - name: engine
+    value: postgresql
+  - name: engine-version
+    value: 16.1
+  - name: instance-type
+    value: m6gd.large
+  - name: admin-username
+    value: postgres
+  - name: credential-rotation-days
+    value: 90
   - name: removal-policy
     value: DESTROY

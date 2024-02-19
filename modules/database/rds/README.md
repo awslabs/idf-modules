@@ -4,7 +4,7 @@
 
 This module will create a RDS database instance tied to the provided VPC.
 The password for the database admin will be automatically generated and stored in SecretsManager.
-SecretsManager is set up to automatically rotate the credentials every 90 days.
+The module can also set up SecretsManager to automatically rotate the credentials.
 
 ## Inputs/Outputs
 
@@ -12,15 +12,19 @@ SecretsManager is set up to automatically rotate the credentials every 90 days.
 
 #### Required
 
-- `vpc-id`: The ID of the VPC to launch the RDS instance in
+- `vpc-id`: the ID of the VPC to launch the RDS instance in
 - `private-subnet-ids`: Subnet IDs to launch the RDS instance in
 - `engine`: database engine (`mysql` or `postgresql`)
+- `engine-version`: engine version
 - `admin-username`: admin username for the RDS instance
 
 #### Optional
 
 - `instance-type`: instance type for the DB instance
   - defaults to `t2.small`
+- `credential-rotation-days`: schedule for the credential rotation in days
+  - if absent, no rotation will be set up
+  - the value can also explicitely be set to 0 to remove the rotation
 - `port`: database port
   - if absent, default for the engine will be used
 - `removal-policy`: the retention policy to put on the EFS service
@@ -53,10 +57,14 @@ parameters:
         key: PrivateSubnetIds
   - name: engine
     value: mysql
-  - name: admin-username
-    value: admin
+  - name: engine-version
+    value: 8.0.35
   - name: instance-type
     value: t2.small
+  - name: admin-username
+    value: admin
+  - name: credential-rotation-days
+    value: 30
   - name: removal-policy
     value: DESTROY
 ```
@@ -75,5 +83,6 @@ parameters:
     "CredentialsSecretArn": "arn:aws:secretsmanager:*:*:*",
     "DatabaseHostname": "*.*.rds.amazonaws.com",
     "DatabasePort": "3306",
+    "SecurityGroupId": "sg-061e67210cc11f841,
 }
 ```
