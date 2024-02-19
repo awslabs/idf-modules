@@ -1559,58 +1559,58 @@ class Eks(Stack):  # type: ignore
                     namespace="kyverno",
                 )
 
-            if eks_addons_config.get("deploy_calico"):
-                with open(os.path.join(project_dir, "network-policies/default-allow-kyverno.json"), "r") as f:
-                    default_allow_kyverno_policy_file = f.read()
+                if eks_addons_config.get("deploy_calico"):
+                    with open(os.path.join(project_dir, "network-policies/default-allow-kyverno.json"), "r") as f:
+                        default_allow_kyverno_policy_file = f.read()
 
-                allow_kyverno_policy = eks_cluster.add_manifest(
-                    "default-allow-kyverno", json.loads(default_allow_kyverno_policy_file)
+                    allow_kyverno_policy = eks_cluster.add_manifest(
+                        "default-allow-kyverno", json.loads(default_allow_kyverno_policy_file)
+                    )
+
+                    allow_kyverno_policy.node.add_dependency(kyverno_chart)
+
+                if "kyverno_policies" in eks_addons_config.get("deploy_kyverno"):
+                    all_policies = eks_addons_config.get("deploy_kyverno")["kyverno_policies"]
+                    for policy_type, policies in all_policies.items():
+                        for policy in policies:
+                            f = open(
+                                os.path.join(project_dir, "kyverno-policies", policy_type, f"{policy}.yaml"),
+                                "r",
+                            ).read()
+                            manifest_yaml = list(yaml.load_all(f, Loader=yaml.FullLoader))
+                            previous_manifest = None
+                            for value in manifest_yaml:
+                                manifest_name = value["metadata"]["name"]
+                                manifest = eks_cluster.add_manifest(manifest_name, value)
+                                if previous_manifest is None:
+                                    manifest.node.add_dependency(kyverno_chart)
+                                else:
+                                    manifest.node.add_dependency(previous_manifest)
+                                previous_manifest = manifest
+
+                kyverno_policy_reporter_chart = eks_cluster.add_helm_chart(
+                    "kyverno-policy-reporter",
+                    chart=get_chart_release(str(eks_version), KYVERNO_POLICY_REPORTER),
+                    version=get_chart_version(str(eks_version), KYVERNO_POLICY_REPORTER),
+                    repository=get_chart_repo(str(eks_version), KYVERNO_POLICY_REPORTER),
+                    release="policy-reporter",
+                    namespace="policy-reporter",
+                    values=deep_merge(
+                        {
+                            "kyvernoPlugin": {"enabled": True},
+                            "ui": {
+                                "enabled": True,
+                                "plugins": {"kyverno": True},
+                            },
+                        },
+                        get_chart_values(
+                            str(eks_version),
+                            KYVERNO_POLICY_REPORTER,
+                        ),
+                    ),
                 )
 
-                allow_kyverno_policy.node.add_dependency(kyverno_chart)
-
-            if "kyverno_policies" in eks_addons_config.get("deploy_kyverno"):
-                all_policies = eks_addons_config.get("deploy_kyverno")["kyverno_policies"]
-                for policy_type, policies in all_policies.items():
-                    for policy in policies:
-                        f = open(
-                            os.path.join(project_dir, "kyverno-policies", policy_type, f"{policy}.yaml"),
-                            "r",
-                        ).read()
-                        manifest_yaml = list(yaml.load_all(f, Loader=yaml.FullLoader))
-                        previous_manifest = None
-                        for value in manifest_yaml:
-                            manifest_name = value["metadata"]["name"]
-                            manifest = eks_cluster.add_manifest(manifest_name, value)
-                            if previous_manifest is None:
-                                manifest.node.add_dependency(kyverno_chart)
-                            else:
-                                manifest.node.add_dependency(previous_manifest)
-                            previous_manifest = manifest
-
-            kyverno_policy_reporter_chart = eks_cluster.add_helm_chart(
-                "kyverno-policy-reporter",
-                chart=get_chart_release(str(eks_version), KYVERNO_POLICY_REPORTER),
-                version=get_chart_version(str(eks_version), KYVERNO_POLICY_REPORTER),
-                repository=get_chart_repo(str(eks_version), KYVERNO_POLICY_REPORTER),
-                release="policy-reporter",
-                namespace="policy-reporter",
-                values=deep_merge(
-                    {
-                        "kyvernoPlugin": {"enabled": True},
-                        "ui": {
-                            "enabled": True,
-                            "plugins": {"kyverno": True},
-                        },
-                    },
-                    get_chart_values(
-                        str(eks_version),
-                        KYVERNO_POLICY_REPORTER,
-                    ),
-                ),
-            )
-
-            kyverno_policy_reporter_chart.node.add_dependency(kyverno_chart)
+                kyverno_policy_reporter_chart.node.add_dependency(kyverno_chart)
 
         # Outputs
         self.eks_cluster = eks_cluster
