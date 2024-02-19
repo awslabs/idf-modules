@@ -25,8 +25,14 @@ create() {
     echo Pulling $image
     docker pull $image
     # Setting connection with AWS ECR
-    aws ecr describe-repositories --repository-names $TARGET_REPOSITORY_NAME || aws ecr create-repository --repository-name $TARGET_REPOSITORY_NAME --image-scanning-configuration scanOnPush=true
-    sleep 10
+    DESCRIBE_REPO=$(aws ecr describe-repositories --repository-names $TARGET_REPOSITORY_NAME )
+    if [ $check_caller_id_status -ne 0 ]; then
+        echo "$TARGET_REPOSITORY_NAME not found in ECR. Creating..."
+        aws ecr create-repository --repository-name $TARGET_REPOSITORY_NAME --image-scanning-configuration scanOnPush=true
+        sleep 10
+    else
+        echo "$TARGET_REPOSITORY_NAME found in ECR"
+    fi
     aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
     # Tagging and pushing Docker images according to https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-pull-ecr-image.html
     docker tag $image $TARGET_ECR_TAG
