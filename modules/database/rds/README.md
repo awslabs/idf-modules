@@ -83,6 +83,6 @@ parameters:
     "CredentialsSecretArn": "arn:aws:secretsmanager:*:*:*",
     "DatabaseHostname": "*.*.rds.amazonaws.com",
     "DatabasePort": "3306",
-    "SecurityGroupId": "sg-061e67210cc11f841,
+    "SecurityGroupId": "sg-061e67210cc11f841",
 }
 ```
