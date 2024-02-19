@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### **Added**
 
 - added Opensearch serverless module
+- added RDS database module with unit tests
 
 ### **Changed**
 

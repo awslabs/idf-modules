@@ -3,7 +3,8 @@
 ## Description
 
 This module will create a RDS database instance tied to the provided VPC.
-The database will also come with automatic credentials rotation for the admin user.
+The password for the database admin will be automatically generated and stored in SecretsManager.
+SecretsManager is set up to automatically rotate the credentials every 90 days.
 
 ## Inputs/Outputs
 

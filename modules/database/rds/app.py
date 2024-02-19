@@ -105,6 +105,7 @@ cdk.CfnOutput(
             "CredentialsSecretArn": template_stack.db_credentials_secret.secret_arn,
             "DatabaseHostname": template_stack.database.instance_endpoint.hostname,
             "DatabasePort": template_stack.database.instance_endpoint.port,
+            "SecurityGroupId": template_stack.sg_rds.security_group_id,
         }
     ),
 )

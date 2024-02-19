@@ -89,7 +89,7 @@ class RDSDatabaseStack(cdk.Stack):
         ]
 
         # Create security group for database
-        sg_rds = ec2.SecurityGroup(
+        self.sg_rds = ec2.SecurityGroup(
             self,
             "Security Group",
             vpc=vpc,
@@ -105,7 +105,7 @@ class RDSDatabaseStack(cdk.Stack):
             engine=_get_db_instance_engine(engine),
             instance_type=ec2.InstanceType(instance_type),
             vpc=vpc,
-            security_groups=[sg_rds],
+            security_groups=[self.sg_rds],
             vpc_subnets=ec2.SubnetSelection(subnets=private_subnets),
             multi_az=True,
             storage_encrypted=True,
