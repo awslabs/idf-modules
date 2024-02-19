@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### **Added**
 
 - added Opensearch serverless module
+- updated replication module to only pull when an image hasn't been replicated already
 
 ### **Changed**
 
