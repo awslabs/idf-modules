@@ -14,8 +14,10 @@ deploy:
           if ! aws s3api head-bucket --bucket "${S3_BUCKET_NAME}"; then
             if [ ${AWS_DEFAULT_REGION} == "us-east-1" ]; then
               aws s3api create-bucket --bucket "${S3_BUCKET_NAME}" --region "${AWS_DEFAULT_REGION}"
+              sleep 15
             else
               aws s3api create-bucket --bucket "${S3_BUCKET_NAME}" --region "${AWS_DEFAULT_REGION}" --create-bucket-configuration LocationConstraint=${AWS_DEFAULT_REGION}
+              sleep 15
             fi
           fi
         - python3 get-list-of-eks-images.py --eks-version ${SEEDFARMER_PARAMETER_EKS_VERSION} --versions-directory data/eks_dockerimage-replication/versions --update-helm-repos --registry-prefix "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${AWS_CODESEEDER_NAME}-"
