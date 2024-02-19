@@ -36,7 +36,8 @@ create() {
 }
 
 destroy() {
-    echo "Sorry... not working"
+    echo "WARNING: The destroy workflow removes the ECR repositories which we were created during replication"
+    python delete-repos.py
 }
 
 $1
