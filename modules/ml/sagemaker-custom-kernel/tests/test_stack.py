@@ -28,6 +28,13 @@ def test_synthesize_stack(stack_defaults):
     dep_name = "test-deployment"
     mod_name = "test-module"
     app_prefix = f"{project_name}-{dep_name}-{mod_name}"
+    sagemaker_image_name = "echo-kernel"
+    ecr_repo_name = "repo"
+    app_image_config_name = "conf"
+    custom_kernel_name = "echo-kernel"
+    kernel_user_uid = 1000
+    kernel_user_gid = 100
+    mount_path = "/root"
 
     stack = stack.CustomKernelStack(
         app,
@@ -37,8 +44,18 @@ def test_synthesize_stack(stack_defaults):
             region=os.environ["CDK_DEFAULT_REGION"],
         ),
         app_prefix=app_prefix,
+        sagemaker_image_name=sagemaker_image_name,
+        ecr_repo_name=ecr_repo_name,
+        app_image_config_name=app_image_config_name,
+        custom_kernel_name=custom_kernel_name,
+        kernel_user_uid=int(kernel_user_uid),
+        kernel_user_gid=int(kernel_user_gid),
+        mount_path=mount_path,
     )
 
     template = Template.from_stack(stack)
 
-    template.resource_count_is("AWS::IAM::Role", 1)
+    template.resource_count_is("AWS::IAM::Role", 2)
+    template.resource_count_is("AWS::SageMaker::Image", 1)
+    template.resource_count_is("AWS::SageMaker::ImageVersion", 1)
+    template.resource_count_is("AWS::SageMaker::AppImageConfig", 1)

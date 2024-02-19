@@ -15,6 +15,10 @@ app_prefix = f"{project_name}-{deployment_name}-{module_name}"
 
 DEFAULT_APP_IMAGE_CONFIG_NAME = f"{project_name}-{deployment_name}-app-config"
 DEFAULT_SAGEMAKER_IMAGE_NAME = "echo-kernel"
+DEFAULT_CUSTOM_KERNEL_NAME = "echo-kernel"
+DEFAULT_USER_UID = 1000
+DEFAULT_USER_GID = 100
+DEFAULT_KERNEL_USER_HOME_MOUNT_PATH = "/home/sagemaker-user"
 
 
 def _param(name: str) -> str:
@@ -24,6 +28,13 @@ def _param(name: str) -> str:
 sagemaker_image_name = os.getenv(_param("SAGEMAKER_IMAGE_NAME"), DEFAULT_SAGEMAKER_IMAGE_NAME)
 ecr_repo_name = os.getenv(_param("ECR_REPO_NAME"))  # type: ignore
 app_image_config_name = os.getenv(_param("APP_IMAGE_CONFIG_NAME"), DEFAULT_APP_IMAGE_CONFIG_NAME)
+custom_kernel_name = os.getenv(_param("CUSTOM_KERNEL_NAME"), DEFAULT_CUSTOM_KERNEL_NAME)
+kernel_user_uid = os.getenv(_param("KERNEL_USER_UID"), DEFAULT_USER_UID)
+kernel_user_gid = os.getenv(_param("KERNEL_USER_GID"), DEFAULT_USER_GID)
+mount_path = os.getenv(_param("KERNEL_USER_HOME_MOUNT_PATH"), DEFAULT_KERNEL_USER_HOME_MOUNT_PATH)
+sm_studio_domain_id = os.getenv(_param("STUDIO_DOMAIN_ID"))
+sm_studio_domain_name = os.getenv(_param("STUDIO_DOMAIN_NAME"))
+
 
 if not ecr_repo_name:
     raise Exception("Missing input parameter ecr-repo-name")
@@ -42,6 +53,11 @@ stack = CustomKernelStack(
     env=environment,
     sagemaker_image_name=sagemaker_image_name,
     ecr_repo_name=ecr_repo_name,
+    app_image_config_name=app_image_config_name,
+    custom_kernel_name=custom_kernel_name,
+    kernel_user_uid=int(kernel_user_uid),
+    kernel_user_gid=int(kernel_user_gid),
+    mount_path=mount_path,
 )
 
 CfnOutput(

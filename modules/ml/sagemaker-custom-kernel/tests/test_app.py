@@ -15,6 +15,7 @@ def stack_defaults():
     os.environ["CDK_DEFAULT_ACCOUNT"] = "111111111111"
     os.environ["CDK_DEFAULT_REGION"] = "us-east-1"
     os.environ["SEEDFARMER_PARAMETER_SAGEMAKER_IMAGE_NAME"] = "echo-kernel"
+    os.environ["SEEDFARMER_PARAMETER_ECR_REPO_NAME"] = "repo"
     # Unload the app import so that subsequent tests don't reuse
     if "app" in sys.modules:
         del sys.modules["app"]
@@ -24,10 +25,8 @@ def test_app(stack_defaults):
     import app  # noqa: F401
 
 
-def test_sagemaker_image_name(stack_defaults):
-    del os.environ["SEEDFARMER_PARAMETER_SAGEMAKER_IMAGE_NAME"]
+def test_sagemaker_ecr_repo_name(stack_defaults):
+    del os.environ["SEEDFARMER_PARAMETER_ECR_REPO_NAME"]
 
     with pytest.raises(Exception):
         import app  # noqa: F401
-
-        assert os.environ["SEEDFARMER_PARAMETER_SAGEMAKER_IMAGE_NAME"] == "default"

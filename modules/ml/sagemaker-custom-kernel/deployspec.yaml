@@ -13,7 +13,7 @@ deploy:
         - cdk deploy --require-approval never --progress events --app "python app.py" --outputs-file ./cdk-exports.json
         - cat cdk-exports.json
         # Create SageMaker Kernel Image
-        - python scripts/create_kernel.py
+        - python scripts/update_domain.py
         # Export metadata
         - seedfarmer metadata convert -f cdk-exports.json || true
 destroy:
