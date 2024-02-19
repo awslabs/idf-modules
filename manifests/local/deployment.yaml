@@ -3,7 +3,7 @@ nameGenerator:
   suffix:
     valueFrom:
       envVariable: GLOBAL_CUSTOM_DEPLOYMENT_NAME_IDENTIFIER
-toolchainRegion: us-east-1
+toolchainRegion: us-west-2
 groups:
   - name: networking
     path: manifests/local/networking-modules.yaml
@@ -26,6 +26,6 @@ targetAccountMappings:
         envVariable: PRIMARY_ACCOUNT
     default: true
     regionMappings:
-      - region: us-east-1
+      - region: us-west-2
         default: true
 

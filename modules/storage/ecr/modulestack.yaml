@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: This stack deploys a Module specific IAM permissions
+
+Parameters:
+  ProjectName:
+    Type: String
+    Description: The name of the project
+  DeploymentName:
+    Type: String
+    Description: The name of the deployment
+  ModuleName:
+    Type: String
+    Description: The name of the Module
+  RoleName:
+    Type: String
+    Description: The name of the IAM Role
+  RepositoryName:
+    Type: String
+    Description: The name of the ECR Repository
+    Default: ""
+
+Conditions:
+  CustomRepositoryName: !Not [!Equals [!Ref RepositoryName, ""]]
+
+Resources:
+  Policy:
+    Type: "AWS::IAM::Policy"
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - "ecr:*Repository"
+              - "ecr:*LifecyclePolicy"
+            Effect: Allow
+            Resource:
+              - !If [
+                CustomRepositoryName,
+                !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${RepositoryName}",
+                !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${ProjectName}-${DeploymentName}-${ModuleName}*"
+              ]
+        Version: 2012-10-17
+      PolicyName: "idf-modulespecific-policy"
+      Roles: [!Ref RoleName]

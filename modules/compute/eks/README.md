@@ -21,6 +21,7 @@ Storage:
 
 - EBS CSI Driver
 - EFS CSI Driver
+- S3 CSI Driver
 - FSX Lustre Driver
 
 Secrets:
@@ -73,6 +74,7 @@ Security:
 - `deploy_aws_ebs_csi`: Deploys the [AWS EBS](https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html) Driver. Default behavior is set to False
 - `deploy_aws_efs_csi`: Deploys the [AWS EFS](https://docs.aws.amazon.com/eks/latest/userguide/efs-csi.html). Default behavior is set to False
 - `deploy_aws_fsx_csi`: Deploys the [AWS FSX](https://docs.aws.amazon.com/eks/latest/userguide/fsx-csi.html). Default behavior is set to False
+- `deploy_aws_s3_csi`: Deploys the [Amazon S3](https://docs.aws.amazon.com/eks/latest/userguide/s3-csi.html). Default behavior is set to False
 - `deploy_cluster_autoscaler`: Deploys the [Cluster Autoscaler](https://docs.aws.amazon.com/eks/latest/userguide/autoscaling.html) to scale EKS Workers
 - `deploy_metrics_server`: Deploys the [Metrics server](https://docs.aws.amazon.com/eks/latest/userguide/metrics-server.html) and HPA for scaling out/in pods. Default behavior is set to False
 - `deploy_secretsmanager_csi`: Deploys [Secrets Manager CSI driver](https://docs.aws.amazon.com/secretsmanager/latest/userguide/integrating_csi_driver.html) to interact with Secrets mounted as files. Default behavior is set to False
@@ -113,6 +115,7 @@ EKS integrates with AWS Identity and Access Management (IAM) to control access t
 - `EksClusterOpenIdConnectIssuer`: EKS Cluster's OPEN ID Issuer
 - `CNIMetricsHelperRoleName`: Name of role created for CNIMetricHelper SA
 - `EksClusterMasterRoleArn` - the masterrole used for cluster creation
+- `EksNodeRoleArn` - the role assigned to nodes when nodes are spinning up in node groups.
 
 #### Output Example
 
@@ -124,7 +127,8 @@ EKS integrates with AWS Identity and Access Management (IAM) to control access t
   "EksOidcArn": "arn:aws:iam::XXXXXXXX:oidc-provider/oidc.eks.us-west-2.amazonaws.com/id/XXXXXXXX",
   "EksClusterOpenIdConnectIssuer": "oidc.eks.us-west-2.amazonaws.com/id/098FBE7B04A9C399E4A3534FF1C288C6",
   "CNIMetricsHelperRoleName": "idf-dataservice-core-eks-CNIMetricsHelperRole",
-  "EksClusterMasterRoleArn" : "arn:aws:iam::XXXXXXXX:role/idf-local-core-eks-us-east-1-masterrole"
+  "EksClusterMasterRoleArn" : "arn:aws:iam::XXXXXXXX:role/idf-local-core-eks-us-east-1-masterrole",
+  "EksNodeRoleArn": "arn:aws:iam::XXXXXXXX:role/idf-local-core-eks-us-east-1-noderole"
 }
 
 ```

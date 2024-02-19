@@ -110,6 +110,7 @@ parameters:
       # Storage drivers
       deploy_aws_ebs_csi: True 
       deploy_aws_efs_csi: True 
+      deploy_aws_s3_csi: True
       # Autoscaling
       deploy_cluster_autoscaler: True 
       deploy_metrics_server: True 
