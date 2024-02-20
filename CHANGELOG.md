@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - added Opensearch serverless module
 - updated replication module to avoid docker pull rate limits and resource creation race conditions
+- added RDS database module
 
 ### **Changed**
 
