@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### **Removed**
 
+- removed SageMaker Studio module that moved to [MLOps Modules](https://github.com/awslabs/mlops-modules)
+
 =======
 
 =======
