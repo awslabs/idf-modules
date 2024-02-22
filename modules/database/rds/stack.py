@@ -139,4 +139,12 @@ class RDSDatabaseStack(cdk.Stack):
                     reason="Retention policy was explicitely set to DESTROY",
                 ),
             )
+        if credential_rotation_days == 0:
+            nag_supressions.append(
+                cdk_nag.NagPackSuppression(
+                    id="AwsSolutions-SMG4",
+                    reason="Rotation was not enabled",
+                ),
+            )
+
         cdk_nag.NagSuppressions.add_stack_suppressions(self, suppressions=nag_supressions)
