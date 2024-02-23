@@ -119,7 +119,7 @@ class RDSDatabaseStack(cdk.Stack):
 
         # Adds an ingress rule which allows resources in the VPC's CIDR to access the database.
         self.database.connections.allow_default_port_from(
-            other=ec2.Peer.ipv4("10.0.0.0/24"),
+            other=ec2.Peer.ipv4(vpc.vpc_cidr_block),
             description="Allows resources in the VPC CIDR to access the database",
         )
 
