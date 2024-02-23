@@ -16,7 +16,7 @@ from aws_cdk import aws_ec2 as ec2
 from aws_cdk import aws_eks as eks
 from aws_cdk import aws_iam as iam
 from aws_cdk import aws_kms as kms
-from aws_cdk.lambda_layer_kubectl_v23 import KubectlV23Layer
+from aws_cdk.lambda_layer_kubectl_v29 import KubectlV29Layer
 from cdk_nag import NagSuppressions
 from constructs import Construct, IConstruct
 
@@ -192,7 +192,7 @@ class Eks(Stack):  # type: ignore
             else eks.EndpointAccess.PUBLIC,
             version=eks.KubernetesVersion.of(str(eks_version)),
             # Work around until CDK team makes kubectl upto date https://github.com/aws/aws-cdk/issues/23376
-            kubectl_layer=KubectlV23Layer(self, "Kubectlv23Layer"),
+            kubectl_layer=KubectlV29Layer(self, "Kubectlv29Layer"),
             default_capacity=0,
             secrets_encryption_key=secrets_key if eks_compute_config.get("eks_secrets_envelope_encryption") else None,
             cluster_logging=[
@@ -1559,58 +1559,58 @@ class Eks(Stack):  # type: ignore
                     namespace="kyverno",
                 )
 
-            if eks_addons_config.get("deploy_calico"):
-                with open(os.path.join(project_dir, "network-policies/default-allow-kyverno.json"), "r") as f:
-                    default_allow_kyverno_policy_file = f.read()
+                if eks_addons_config.get("deploy_calico"):
+                    with open(os.path.join(project_dir, "network-policies/default-allow-kyverno.json"), "r") as f:
+                        default_allow_kyverno_policy_file = f.read()
 
-                allow_kyverno_policy = eks_cluster.add_manifest(
-                    "default-allow-kyverno", json.loads(default_allow_kyverno_policy_file)
+                    allow_kyverno_policy = eks_cluster.add_manifest(
+                        "default-allow-kyverno", json.loads(default_allow_kyverno_policy_file)
+                    )
+
+                    allow_kyverno_policy.node.add_dependency(kyverno_chart)
+
+                if "kyverno_policies" in eks_addons_config.get("deploy_kyverno"):
+                    all_policies = eks_addons_config.get("deploy_kyverno")["kyverno_policies"]
+                    for policy_type, policies in all_policies.items():
+                        for policy in policies:
+                            f = open(
+                                os.path.join(project_dir, "kyverno-policies", policy_type, f"{policy}.yaml"),
+                                "r",
+                            ).read()
+                            manifest_yaml = list(yaml.load_all(f, Loader=yaml.FullLoader))
+                            previous_manifest = None
+                            for value in manifest_yaml:
+                                manifest_name = value["metadata"]["name"]
+                                manifest = eks_cluster.add_manifest(manifest_name, value)
+                                if previous_manifest is None:
+                                    manifest.node.add_dependency(kyverno_chart)
+                                else:
+                                    manifest.node.add_dependency(previous_manifest)
+                                previous_manifest = manifest
+
+                kyverno_policy_reporter_chart = eks_cluster.add_helm_chart(
+                    "kyverno-policy-reporter",
+                    chart=get_chart_release(str(eks_version), KYVERNO_POLICY_REPORTER),
+                    version=get_chart_version(str(eks_version), KYVERNO_POLICY_REPORTER),
+                    repository=get_chart_repo(str(eks_version), KYVERNO_POLICY_REPORTER),
+                    release="policy-reporter",
+                    namespace="policy-reporter",
+                    values=deep_merge(
+                        {
+                            "kyvernoPlugin": {"enabled": True},
+                            "ui": {
+                                "enabled": True,
+                                "plugins": {"kyverno": True},
+                            },
+                        },
+                        get_chart_values(
+                            str(eks_version),
+                            KYVERNO_POLICY_REPORTER,
+                        ),
+                    ),
                 )
 
-                allow_kyverno_policy.node.add_dependency(kyverno_chart)
-
-            if "kyverno_policies" in eks_addons_config.get("deploy_kyverno"):
-                all_policies = eks_addons_config.get("deploy_kyverno")["kyverno_policies"]
-                for policy_type, policies in all_policies.items():
-                    for policy in policies:
-                        f = open(
-                            os.path.join(project_dir, "kyverno-policies", policy_type, f"{policy}.yaml"),
-                            "r",
-                        ).read()
-                        manifest_yaml = list(yaml.load_all(f, Loader=yaml.FullLoader))
-                        previous_manifest = None
-                        for value in manifest_yaml:
-                            manifest_name = value["metadata"]["name"]
-                            manifest = eks_cluster.add_manifest(manifest_name, value)
-                            if previous_manifest is None:
-                                manifest.node.add_dependency(kyverno_chart)
-                            else:
-                                manifest.node.add_dependency(previous_manifest)
-                            previous_manifest = manifest
-
-            kyverno_policy_reporter_chart = eks_cluster.add_helm_chart(
-                "kyverno-policy-reporter",
-                chart=get_chart_release(str(eks_version), KYVERNO_POLICY_REPORTER),
-                version=get_chart_version(str(eks_version), KYVERNO_POLICY_REPORTER),
-                repository=get_chart_repo(str(eks_version), KYVERNO_POLICY_REPORTER),
-                release="policy-reporter",
-                namespace="policy-reporter",
-                values=deep_merge(
-                    {
-                        "kyvernoPlugin": {"enabled": True},
-                        "ui": {
-                            "enabled": True,
-                            "plugins": {"kyverno": True},
-                        },
-                    },
-                    get_chart_values(
-                        str(eks_version),
-                        KYVERNO_POLICY_REPORTER,
-                    ),
-                ),
-            )
-
-            kyverno_policy_reporter_chart.node.add_dependency(kyverno_chart)
+                kyverno_policy_reporter_chart.node.add_dependency(kyverno_chart)
 
         # Outputs
         self.eks_cluster = eks_cluster
@@ -1638,5 +1638,6 @@ class Eks(Stack):  # type: ignore
                     "id": "AwsSolutions-KMS5",
                     "reason": "The KMS Symmetric key does not have automatic key rotation enabled",
                 },
+                {"id": "AwsSolutions-L1", "reason": "Suppress error caused by python_3_12 release in December"},
             ],
         )
