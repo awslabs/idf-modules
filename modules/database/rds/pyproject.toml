@@ -1,6 +1,6 @@
 [tool.black]
 line-length = 120
-target-version = ["py36", "py37", "py38", "py39"]
+target-version = ["py37", "py38", "py39"]
 exclude = '''
 /(
     \.eggs
@@ -29,7 +29,17 @@ py_version = 38
 skip_gitignore = false
 
 [tool.pytest.ini_options]
-addopts = "-v --cov=. --cov-report term --cov-config=coverage.ini --cov-fail-under=80"
+addopts = "-v --cov=. --cov-report term"
 pythonpath = [
   "."
 ]
+
+[tool.coverage.run]
+branch = true
+omit = [
+  "tests/*"
+]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 80.0
