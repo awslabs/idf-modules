@@ -18,6 +18,7 @@ def stack_defaults() -> None:
     os.environ["SEEDFARMER_PARAMETER_REMOVAL_POLICY"] = "DESTROY"
     os.environ["SEEDFARMER_PARAMETER_VPC_ID"] = "vpc-12345"
     os.environ["SEEDFARMER_PARAMETER_SUBNET_IDS"] = json.dumps(["subnet-12345", "subnet-67890"])
+    os.environ["SEEDFARMER_PARAMETER_DATABASE_NAME"] = "test"
     os.environ["SEEDFARMER_PARAMETER_ENGINE"] = "mysql"
     os.environ["SEEDFARMER_PARAMETER_ENGINE_VERSION"] = "8.0.35"
     os.environ["SEEDFARMER_PARAMETER_ADMIN_USERNAME"] = "admin"
@@ -44,6 +45,7 @@ def test_project_deployment_name_length() -> None:
     [
         "SEEDFARMER_PARAMETER_VPC_ID",
         "SEEDFARMER_PARAMETER_SUBNET_IDS",
+        "SEEDFARMER_PARAMETER_DATABASE_NAME",
         "SEEDFARMER_PARAMETER_ENGINE",
         "SEEDFARMER_PARAMETER_ADMIN_USERNAME",
     ],

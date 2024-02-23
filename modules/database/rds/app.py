@@ -37,6 +37,7 @@ subnet_ids: list[str] = json.loads(_get_env("SUBNET_IDS", required=True))  # typ
 engine: str = _get_env("ENGINE", required=True)  # type: ignore[assignment]
 engine_version: str = _get_env("ENGINE_VERSION", required=True)  # type: ignore[assignment]
 username: str = _get_env("ADMIN_USERNAME", required=True)  # type: ignore[assignment]
+database_name: str = _get_env("DATABASE_NAME", required=True)  # type: ignore[assignment]
 
 port: str | None = _get_env("PORT", required=False)
 instance_type: str = _get_env("INSTANCE_TYPE", required=False, default="t2.small")  # type: ignore[assignment]
@@ -93,6 +94,7 @@ template_stack = RDSDatabaseStack(
     ),
     vpc_id=vpc_id,
     subnet_ids=subnet_ids,
+    database_name=database_name,
     engine=engine,
     engine_version=engine_version,
     username=username,

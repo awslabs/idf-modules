@@ -14,6 +14,7 @@ The module can also set up SecretsManager to automatically rotate the credential
 
 - `vpc-id`: the ID of the VPC to launch the RDS instance in
 - `private-subnet-ids`: Subnet IDs to launch the RDS instance in
+- `database-name`: Name of the database
 - `engine`: database engine (`mysql` or `postgresql`)
 - `engine-version`: engine version
 - `admin-username`: admin username for the RDS instance
