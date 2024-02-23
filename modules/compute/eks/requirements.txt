@@ -46,7 +46,7 @@ constructs==10.3.0
     #   aws-cdk-lambda-layer-kubectl-v29
     #   aws-cdk-lib
     #   cdk-nag
-cryptography==42.0.3
+cryptography==42.0.4
     # via moto
 deepmerge==1.1.0
     # via -r requirements.in
