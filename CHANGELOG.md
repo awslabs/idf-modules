@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### **Changed**
 
-- added `database-name` parameter to RDS module & fix VPC CIDR block issue
+- added `database-name` and `accessible-from-vpc` parameters to RDS module
 
 ### **Removed**
 

@@ -44,6 +44,7 @@ instance_type: str = _get_env("INSTANCE_TYPE", required=False, default="t2.small
 credential_rotation_days: int = int(
     _get_env("CREDENTIAL_ROTATION_DAYS", required=False, default="0"),  # type: ignore[arg-type]
 )
+is_accessible_from_vpc = json.loads(_get_env("ACCESSIBLE_FROM_VPC", required=False, default="false"))
 
 
 def _parse_removal_policy(value: str) -> cdk.RemovalPolicy:
@@ -99,6 +100,7 @@ template_stack = RDSDatabaseStack(
     engine_version=engine_version,
     username=username,
     credential_rotation_days=credential_rotation_days,
+    is_accessible_from_vpc=is_accessible_from_vpc,
     port=int(port) if port else None,
     removal_policy=removal_policy,
     instance_type=instance_type,

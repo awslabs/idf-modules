@@ -48,6 +48,7 @@ class RDSDatabaseStack(cdk.Stack):
         credential_rotation_days: int,
         instance_type: str,
         removal_policy: cdk.RemovalPolicy,
+        is_accessible_from_vpc: bool = False,
         port: int | None = None,
         stack_description: str | None = None,
         **kwargs: Any,
@@ -117,11 +118,12 @@ class RDSDatabaseStack(cdk.Stack):
             removal_policy=removal_policy,
         )
 
-        # Adds an ingress rule which allows resources in the VPC's CIDR to access the database.
-        self.database.connections.allow_default_port_from(
-            other=ec2.Peer.ipv4(vpc.vpc_cidr_block),
-            description="Allows resources in the VPC CIDR to access the database",
-        )
+        if is_accessible_from_vpc:
+            # Adds an ingress rule which allows resources in the VPC's CIDR to access the database.
+            self.database.connections.allow_default_port_from(
+                other=ec2.Peer.ipv4(vpc.vpc_cidr_block),
+                description="Allows resources in the VPC CIDR to access the database",
+            )
 
         # Set up CDK nag
         cdk.Aspects.of(self).add(cdk_nag.AwsSolutionsChecks(log_ignores=True))
