@@ -44,7 +44,9 @@ instance_type: str = _get_env("INSTANCE_TYPE", required=False, default="t2.small
 credential_rotation_days: int = int(
     _get_env("CREDENTIAL_ROTATION_DAYS", required=False, default="0"),  # type: ignore[arg-type]
 )
-is_accessible_from_vpc = json.loads(_get_env("ACCESSIBLE_FROM_VPC", required=False, default="false"))
+is_accessible_from_vpc = json.loads(
+    _get_env("ACCESSIBLE_FROM_VPC", required=False, default="false"),  # type: ignore[arg-type]
+)
 
 
 def _parse_removal_policy(value: str) -> cdk.RemovalPolicy:
