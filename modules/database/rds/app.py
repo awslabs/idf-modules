@@ -37,11 +37,15 @@ subnet_ids: list[str] = json.loads(_get_env("SUBNET_IDS", required=True))  # typ
 engine: str = _get_env("ENGINE", required=True)  # type: ignore[assignment]
 engine_version: str = _get_env("ENGINE_VERSION", required=True)  # type: ignore[assignment]
 username: str = _get_env("ADMIN_USERNAME", required=True)  # type: ignore[assignment]
+database_name: str = _get_env("DATABASE_NAME", required=True)  # type: ignore[assignment]
 
 port: str | None = _get_env("PORT", required=False)
 instance_type: str = _get_env("INSTANCE_TYPE", required=False, default="t2.small")  # type: ignore[assignment]
 credential_rotation_days: int = int(
     _get_env("CREDENTIAL_ROTATION_DAYS", required=False, default="0"),  # type: ignore[arg-type]
+)
+is_accessible_from_vpc = json.loads(
+    _get_env("ACCESSIBLE_FROM_VPC", required=False, default="false"),  # type: ignore[arg-type]
 )
 
 
@@ -93,10 +97,12 @@ template_stack = RDSDatabaseStack(
     ),
     vpc_id=vpc_id,
     subnet_ids=subnet_ids,
+    database_name=database_name,
     engine=engine,
     engine_version=engine_version,
     username=username,
     credential_rotation_days=credential_rotation_days,
+    is_accessible_from_vpc=is_accessible_from_vpc,
     port=int(port) if port else None,
     removal_policy=removal_policy,
     instance_type=instance_type,

@@ -14,6 +14,7 @@ The module can also set up SecretsManager to automatically rotate the credential
 
 - `vpc-id`: the ID of the VPC to launch the RDS instance in
 - `private-subnet-ids`: Subnet IDs to launch the RDS instance in
+- `database-name`: Name of the database
 - `engine`: database engine (`mysql` or `postgresql`)
 - `engine-version`: engine version
 - `admin-username`: admin username for the RDS instance
@@ -27,7 +28,10 @@ The module can also set up SecretsManager to automatically rotate the credential
   - the value can also explicitely be set to 0 to remove the rotation
 - `port`: database port
   - if absent, default for the engine will be used
-- `removal-policy`: the retention policy to put on the EFS service
+- `accessible-from-vpc`: whether a rule will be added to the RDS security group which will allow all inbound connections from the VPC
+  - defaults to `false`
+  - if `false`, any consumers of this module will need to modify the RDS instance's security group to add an inbound rule
+- `removal-policy`: the retention policy to put on the RDS instance
   - defaults to `RETAIN`
   - supports `DESTROY` and `RETAIN` only
 - `solution-id`: a unique identifier for this deployment (must be used with `solution-description`)

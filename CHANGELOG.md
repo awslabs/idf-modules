@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### **Changed**
 
+- added `database-name` and `accessible-from-vpc` parameters to RDS module
+
 ### **Removed**
 
 - removed SageMaker Studio module that moved to [MLOps Modules](https://github.com/awslabs/mlops-modules)

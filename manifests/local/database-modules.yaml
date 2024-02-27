@@ -32,6 +32,8 @@ parameters:
         group: networking
         name: basic-networking
         key: PrivateSubnetIds
+  - name: database-name
+    value: test
   - name: engine
     value: mysql
   - name: engine-version
@@ -61,6 +63,8 @@ parameters:
         group: networking
         name: basic-networking
         key: PrivateSubnetIds
+  - name: database-name
+    value: test
   - name: engine
     value: postgresql
   - name: engine-version
