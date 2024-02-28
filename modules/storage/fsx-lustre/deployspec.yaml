@@ -10,9 +10,9 @@ deploy:
       - cdk deploy --require-approval never --progress events --app "python app.py" --outputs-file ./cdk-exports.json
       # Export metadata
       - seedfarmer metadata convert -f cdk-exports.json || true
-      - export SEEDFARMER_MODULE_METADATA=$(cat $SEEDFARMER_MODULE_METADATA)
-      - export FSX_LUSTRE_FILE_SYSTEM_ID=$(echo ${SEEDFARMER_MODULE_METADATA} | jq -r ".FSxLustreFileSystemId")
-      - export FSX_LUSTRE_FS_DEPLOYMENT_TYPE=$(echo ${SEEDFARMER_MODULE_METADATA} | jq -r ".FSxLustreFileSystemDeploymentType")
+      - export SF_MODULE_METADATA=$(< SEEDFARMER_MODULE_METADATA)
+      - export FSX_LUSTRE_FILE_SYSTEM_ID=$(echo ${SF_MODULE_METADATA} | jq -r ".FSxLustreFileSystemId")
+      - export FSX_LUSTRE_FS_DEPLOYMENT_TYPE=$(echo ${SF_MODULE_METADATA} | jq -r ".FSxLustreFileSystemDeploymentType")
       - |
         if [ "${FSX_LUSTRE_FS_DEPLOYMENT_TYPE}" = "PERSISTENT_2" ]; then
           aws fsx create-data-repository-association \
