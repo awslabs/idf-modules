@@ -20,7 +20,8 @@ deploy:
             --file-system-path /ns1/${SEEDFARMER_PARAMETER_DATA_BUCKET_NAME}/ \
             --data-repository-path s3://${SEEDFARMER_PARAMETER_DATA_BUCKET_NAME}/ \
             --batch-import-meta-data-on-create \
-            --s3 '{"AutoImportPolicy":{"Events":["NEW","CHANGED","DELETED"]},"AutoExportPolicy":{"Events":["NEW","CHANGED","DELETED"]}}'
+            --s3 '{"AutoImportPolicy":{"Events":["NEW","CHANGED","DELETED"]},"AutoExportPolicy":{"Events":["NEW","CHANGED","DELETED"]}}' \
+            || true
         fi
 
     post_build:
