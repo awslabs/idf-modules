@@ -31,6 +31,7 @@ class FsxFileSystem(Stack):
         export_path: Optional[str],
         import_path: Optional[str],
         file_system_type_version: Optional[str],
+        import_policy: Optional[str],
         **kwargs: Any,
     ) -> None:
         # Env vars
@@ -87,12 +88,16 @@ class FsxFileSystem(Stack):
             file_system_type_version=file_system_type_version if file_system_type_version else None,
             lustre_configuration=fsx.CfnFileSystem.LustreConfigurationProperty(
                 deployment_type=fs_deployment_type,
-                import_path=import_path,
-                export_path=export_path,
+                import_path=import_path if fs_deployment_type not in ["PERSISTENT_1", "PERSISTENT_2"] else None,
+                export_path=export_path if fs_deployment_type not in ["PERSISTENT_1", "PERSISTENT_2"] else None,
                 per_unit_storage_throughput=storage_throughput,
                 data_compression_type="LZ4",
+                auto_import_policy=import_policy
+                if fs_deployment_type not in ["PERSISTENT_1", "PERSISTENT_2"]
+                else None,
             ),
         )
+        # Fsx Linking a Persistent 2 file system to an S3 bucket using the LustreConfiguration is not supported
 
         Aspects.of(self).add(AwsSolutionsChecks())
 

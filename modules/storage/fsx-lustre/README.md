@@ -40,6 +40,8 @@ Persistent file systems are designed for longer-term storage and workloads. The 
   - For `PERSISTENT_1` SSD storage: 50, 100, 200 MB/s/TiB.
   - For `PERSISTENT_1` HDD storage: 12, 40 MB/s/TiB.
   - For `PERSISTENT_2` SSD storage: 125, 250, 500, 1000 MB/s/TiB.
+- `import_policy` - must be one of `NEW`or `NEW_CHANGED` or `NEW_CHANGED_DELETED`
+  - this does not support types of `SCRATCH_1`
 
 ### Input Example
 Stand-alone module manifest example:

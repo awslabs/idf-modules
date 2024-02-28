@@ -43,6 +43,7 @@ def test_synthesize_stack(stack_defaults):
         import_path=None,
         stack_description="Tesing",
         file_system_type_version="2.15",
+        import_policy="NEW",
         env=cdk.Environment(
             account=os.environ["CDK_DEFAULT_ACCOUNT"],
             region=os.environ["CDK_DEFAULT_REGION"],

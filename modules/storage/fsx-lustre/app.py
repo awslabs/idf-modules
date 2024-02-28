@@ -30,6 +30,7 @@ data_bucket_name = os.getenv(_param("DATA_BUCKET_NAME"), None)
 storage_throughput = os.getenv(_param("STORAGE_THROUGHPUT"), None)
 storage_throughput = int(storage_throughput) if storage_throughput else None  # type: ignore
 fsx_version = os.getenv(_param("FSX_VERSION"), "2.12")
+import_policy = os.getenv(_param("IMPORT_POLICY"), "NONE")
 
 if not vpc_id:
     raise ValueError("missing input parameter vpc-id")
@@ -49,6 +50,13 @@ if "SCRATCH" in fs_deployment_type and storage_throughput is not None:
 
 if "PERSISTENT" in fs_deployment_type and storage_throughput is None:
     raise ValueError(f"The storage throughput must be specified for Lustre fs_deployment_type={fs_deployment_type}")
+
+
+if import_policy.upper() not in ["NONE", "NEW", "NEW_CHANGED", "NEW_CHANGED_DELETED"]:
+    raise ValueError("import_policy must be one of NEW, NEW_CHANGED, NEW_CHANGED_DELETED")
+
+if import_policy.upper() not in ["NONE"] and "SCRATCH_1" in fs_deployment_type:
+    raise ValueError("SCRATCH_1 does not support Import Policy")
 
 
 def fix_paths(p: str) -> str:
@@ -88,6 +96,7 @@ stack = FsxFileSystem(
     storage_throughput=storage_throughput,  # type: ignore
     file_system_type_version=fsx_version,
     stack_description=generate_description(),
+    import_policy=import_policy,
     env=Environment(account=os.environ["CDK_DEFAULT_ACCOUNT"], region=os.environ["CDK_DEFAULT_REGION"]),
 )
 

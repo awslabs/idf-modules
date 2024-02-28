@@ -21,7 +21,8 @@ def stack_defaults():
     os.environ["SEEDFARMER_PARAMETER_IMPORT_PATH"] = "somepathin/"
     os.environ["SEEDFARMER_PARAMETER_EXPORT_PATH"] = "somepathout/"
     os.environ["SEEDFARMER_PARAMETER_DATA_BUCKET_NAME"] = "thbucketname"
-    os.environ["SEEDFARMER_PARAMETER_STORAGE_THROUGHPUT"] = "50"
+    os.environ["SEEDFARMER_PARAMETER_STORAGE_THROUGHPUT"] = "125"
+    os.environ["SEEDFARMER_PARAMETER_IMPORT_POLICY"] = "NEW"
 
     # Unload the app import so that subsequent tests don't reuse
     if "app" in sys.modules:
@@ -92,6 +93,7 @@ def test_throughput_persistent_validation(stack_defaults):
 
 def test_throughput_scratch_validation(stack_defaults):
     os.environ["SEEDFARMER_PARAMETER_FS_DEPLOYMENT_TYPE"] = "SCRATCH_1"
+    os.environ["SEEDFARMER_PARAMETER_IMPORT_POLICY"] = "NONE"
     import app  # noqa: F811 F401
 
 
@@ -109,3 +111,16 @@ def test_fixpaths(stack_defaults):
 
     assert without_path == "/missingleading/missing"
     assert with_path == "/has/leading/"
+
+
+def test_wrong_policy_storage_missing(stack_defaults):
+    os.environ["SEEDFARMER_PARAMETER_FS_DEPLOYMENT_TYPE"] = "SCRATCH_1"
+    os.environ["SEEDFARMER_PARAMETER_IMPORT_POLICY"] = "NEW"
+    with pytest.raises(ValueError):
+        import app  # noqa: F811 F401
+
+
+def test_wrong_policy_Storage(stack_defaults):
+    os.environ["SEEDFARMER_PARAMETER_IMPORT_POLICY"] = "SOMETHING"
+    with pytest.raises(ValueError):
+        import app  # noqa: F811 F401
