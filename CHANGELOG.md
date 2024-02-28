@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### **Added**
 
 ### **Changed**
-- modified `fsx-luster` module to auto-import data if configured
+- modified `fsx-lustre` module to auto-import data if configured
 
 ### **Removed**
 
