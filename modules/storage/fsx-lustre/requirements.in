@@ -1,2 +1,2 @@
-aws-cdk-lib==2.82.0
+aws-cdk-lib==2.130.0
 cdk-nag==2.12.39

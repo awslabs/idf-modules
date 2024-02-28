@@ -3,7 +3,7 @@ deploy:
   phases:
     install:
       commands:
-      - npm install -g aws-cdk@2.82.0
+      - npm install -g aws-cdk@2.130.0
       - pip install -r requirements.txt
     build:
       commands:
@@ -12,8 +12,6 @@ deploy:
       - seedfarmer metadata convert -f cdk-exports.json || true
       - export SEEDFARMER_MODULE_METADATA=$(cat $SEEDFARMER_MODULE_METADATA)
       - export FSX_LUSTRE_FILE_SYSTEM_ID=$(echo ${SEEDFARMER_MODULE_METADATA} | jq -r ".FSxLustreFileSystemId")
-      - export FSX_LUSTRE_DNS_NAME=$(echo ${SEEDFARMER_MODULE_METADATA} | jq -r ".FSxLustreAttrDnsName")
-      - export FSX_LUSTRE_MOUNT_NAME=$(echo ${SEEDFARMER_MODULE_METADATA} | jq -r ".FSxLustreMountName")
       - export FSX_LUSTRE_FS_DEPLOYMENT_TYPE=$(echo ${SEEDFARMER_MODULE_METADATA} | jq -r ".FSxLustreFileSystemDeploymentType")
       - |
         if [ "${FSX_LUSTRE_FS_DEPLOYMENT_TYPE}" = "PERSISTENT_2" ]; then
@@ -33,7 +31,7 @@ destroy:
   phases:
     install:
       commands:
-      - npm install -g aws-cdk@2.82.0
+      - npm install -g aws-cdk@2.130.0
       - pip install -r requirements.txt
     pre_build:
       commands:
