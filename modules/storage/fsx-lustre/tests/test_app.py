@@ -23,7 +23,7 @@ def stack_defaults():
     os.environ["SEEDFARMER_PARAMETER_DATA_BUCKET_NAME"] = "thbucketname"
     os.environ["SEEDFARMER_PARAMETER_STORAGE_THROUGHPUT"] = "125"
     os.environ["SEEDFARMER_PARAMETER_IMPORT_POLICY"] = "NEW"
-
+    os.environ["SEEDFARMER_PARAMETER_STORAGE_CAPACITY"] = "1200"
     # Unload the app import so that subsequent tests don't reuse
     if "app" in sys.modules:
         del sys.modules["app"]
@@ -124,3 +124,62 @@ def test_wrong_policy_Storage(stack_defaults):
     os.environ["SEEDFARMER_PARAMETER_IMPORT_POLICY"] = "SOMETHING"
     with pytest.raises(ValueError):
         import app  # noqa: F811 F401
+
+
+def test_invalid_deployment_type(stack_defaults):
+    os.environ["SEEDFARMER_PARAMETER_FS_DEPLOYMENT_TYPE"] = "PERSISTENT_100"
+    with pytest.raises(ValueError):
+        import app  # noqa: F811 F401
+
+
+def test_invalid_persistent_increment_1(stack_defaults):
+    os.environ["SEEDFARMER_PARAMETER_FS_DEPLOYMENT_TYPE"] = "PERSISTENT_2"
+    os.environ["SEEDFARMER_PARAMETER_STORAGE_CAPACITY"] = "1201"
+    with pytest.raises(ValueError):
+        import app  # noqa: F811 F401
+
+
+def test_invalid_persistent_increment_2(stack_defaults):
+    os.environ["SEEDFARMER_PARAMETER_FS_DEPLOYMENT_TYPE"] = "PERSISTENT_2"
+    os.environ["SEEDFARMER_PARAMETER_STORAGE_CAPACITY"] = "4801"
+    with pytest.raises(ValueError):
+        import app  # noqa: F811 F401
+
+
+def test_invalid_persistent_increment_scratch_1(stack_defaults):
+    os.environ["SEEDFARMER_PARAMETER_FS_DEPLOYMENT_TYPE"] = "SCRATCH_1"
+    os.environ["SEEDFARMER_PARAMETER_STORAGE_CAPACITY"] = "1201"
+    with pytest.raises(ValueError):
+        import app  # noqa: F811 F401
+    os.environ["SEEDFARMER_PARAMETER_STORAGE_CAPACITY"] = "2401"
+    with pytest.raises(ValueError):
+        import app  # noqa: F811 F401
+    os.environ["SEEDFARMER_PARAMETER_STORAGE_CAPACITY"] = "7201"
+    with pytest.raises(ValueError):
+        import app  # noqa: F811 F401
+
+
+def test_valid_persistent_increment_scratch_1(stack_defaults):
+    del os.environ["SEEDFARMER_PARAMETER_IMPORT_POLICY"]
+    os.environ["SEEDFARMER_PARAMETER_FS_DEPLOYMENT_TYPE"] = "SCRATCH_1"
+    os.environ["SEEDFARMER_PARAMETER_STORAGE_CAPACITY"] = "1200"
+    import app  # noqa: F811 F401
+
+    os.environ["SEEDFARMER_PARAMETER_STORAGE_CAPACITY"] = "2400"
+    import app  # noqa: F811 F401
+
+    os.environ["SEEDFARMER_PARAMETER_STORAGE_CAPACITY"] = "7200"
+    import app  # noqa: F811 F401
+
+
+def test_valid_persistent_increment_persistent_1(stack_defaults):
+    os.environ["SEEDFARMER_PARAMETER_FSX_VERSION"] = "2.15"
+    os.environ["SEEDFARMER_PARAMETER_FS_DEPLOYMENT_TYPE"] = "PERSISTENT_2"
+    os.environ["SEEDFARMER_PARAMETER_STORAGE_CAPACITY"] = "1200"
+    import app  # noqa: F811 F401
+
+    os.environ["SEEDFARMER_PARAMETER_STORAGE_CAPACITY"] = "2400"
+    import app  # noqa: F811 F401
+
+    os.environ["SEEDFARMER_PARAMETER_STORAGE_CAPACITY"] = "4800"
+    import app  # noqa: F811 F401

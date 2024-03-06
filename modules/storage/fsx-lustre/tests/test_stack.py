@@ -38,6 +38,7 @@ def test_synthesize_stack(stack_defaults):
         fs_deployment_type="PERSISTENT_2",
         private_subnet_ids=["subnet-1234", "subnet-5678"],
         storage_throughput=50,
+        storage_capacity=2400,
         data_bucket_name="mybucket",
         export_path=None,
         import_path=None,
