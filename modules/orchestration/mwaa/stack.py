@@ -40,7 +40,6 @@ class MWAAStack(Stack):  # type: ignore
         stack_description: str,
         **kwargs: Any,
     ) -> None:
-
         # CDK Env Vars
         account: str = aws_cdk.Aws.ACCOUNT_ID
         region: str = aws_cdk.Aws.REGION
