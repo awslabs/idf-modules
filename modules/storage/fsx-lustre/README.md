@@ -9,6 +9,12 @@ Amazon FSx also integrates with Amazon S3, making it easy for you to process clo
 
 Amazon FSx for Lustre uses parallel data transfer techniques to transfer data to and from S3 at up to hundreds of GB/s. Use Amazon FSx for Lustre for workloads where speed matters.
 
+### WARNING
+Currently, this module does not support Windows File Server as the L2 CDK constructs do not support it.  As this module is written with the CDKv2 constructs, Windows support as been omitted in this module.
+REF: https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_fsx-readme.html:
+_The L2 construct for the FSx for Windows File Server has not yet been implemented. To instantiate an FSx for Windows file system, the L1 constructs can be used as defined by CloudFormation._
+
+
 ## Inputs/Outputs
 Amazon FSx for Lustre provides two deployment options: `scratch` and `persistent`.
 
@@ -40,6 +46,9 @@ Persistent file systems are designed for longer-term storage and workloads. The 
   - For `PERSISTENT_1` SSD storage: 50, 100, 200 MB/s/TiB.
   - For `PERSISTENT_1` HDD storage: 12, 40 MB/s/TiB.
   - For `PERSISTENT_2` SSD storage: 125, 250, 500, 1000 MB/s/TiB.
+- `storage_capacity`: the amount (in GB) of storage for a newly created filesystem, **defaults to 1200**, with the following guidelines:
+  - For `SCRATCH_2` , `PERSISTENT_2` and `PERSISTENT_1`  the valid values are 1200 GiB, 2400 GiB, and increments of 2400 GiB
+  - For `SCRATCH_1` valid values are 1200 GiB, 2400 GiB, and increments of 3600 GiB.
 - `import_policy` - must be one of `NEW`or `NEW_CHANGED` or `NEW_CHANGED_DELETED`
   - this does not support types of `SCRATCH_1`
 
@@ -59,7 +68,17 @@ parameters:
   - name: fs_deployment_type
     value: PERSISTENT_2
   - name: storage_throughput
-    value: 250
+    value: 125
+  - name: export_path
+    value: "/fsx/export/"
+  - name: import_path
+    value: "/fsx/import/"
+  - name: fsx_version 
+    value: "2.15"
+  - name: import_policy
+    value: "NEW_CHANGED_DELETED"
+  - name: storage_capacity
+    value: 1200
 ```
 
 Module manifest leveraging the `networking` module:
@@ -92,10 +111,11 @@ parameters:
 ```json
 {
   "FSxLustreAttrDnsName": "fs-05d205d87c763d71e.fsx.us-east-1.amazonaws.com",
-  "FSxLustreFileSystemDeploymentType": "PERSISTENT_1",
+  "FSxLustreFileSystemDeploymentType": "PERSISTENT_2",
   "FSxLustreFileSystemId": "fs-05d205d87c763d71e",
   "FSxLustreMountName": "frinzbev",
   "FSxLustreSecurityGroup": "sg-0ca5da2aebca3459b",
-  "FSxLustreVersion": "2.12"
+  "FSxLustreVersion": "2.15",
+  "FSxLustreStorageCapacity": 1200
 }
 ```

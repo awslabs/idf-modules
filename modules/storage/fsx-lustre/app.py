@@ -31,6 +31,7 @@ storage_throughput = os.getenv(_param("STORAGE_THROUGHPUT"), None)
 storage_throughput = int(storage_throughput) if storage_throughput else None  # type: ignore
 fsx_version = os.getenv(_param("FSX_VERSION"), "2.12")
 import_policy = os.getenv(_param("IMPORT_POLICY"), "NONE")
+storage_capacity = int(os.getenv(_param("STORAGE_CAPACITY"), 1200))
 
 if not vpc_id:
     raise ValueError("missing input parameter vpc-id")
@@ -42,6 +43,9 @@ if fsx_version == "2.10":
     if fs_deployment_type == "PERSISTENT_2" and data_bucket_name is not None and export_path is not None:
         raise ValueError("File system deployment type `PERSISTENT_2` does not support an S3 export path")
 
+if fs_deployment_type not in ["SCRATCH_1", "SCRATCH_2", "PERSISTENT_2", "PERSISTENT_1"]:
+    raise ValueError("We only suppprt deployment types of SCRATCH_1, SCRATCH_2, PERSISTENT_2, PERSISTENT_1")
+
 if "SCRATCH" in fs_deployment_type and storage_throughput is not None:
     _logger.warning(
         f"The storage throughput can not be specified for fs_deployment_type={fs_deployment_type}. Setting to None"
@@ -51,6 +55,17 @@ if "SCRATCH" in fs_deployment_type and storage_throughput is not None:
 if "PERSISTENT" in fs_deployment_type and storage_throughput is None:
     raise ValueError(f"The storage throughput must be specified for Lustre fs_deployment_type={fs_deployment_type}")
 
+
+if fs_deployment_type in ["SCRATCH_2", "PERSISTENT_2", "PERSISTENT_1"]:
+    if storage_capacity not in [1200, 2400] and (storage_capacity % 2400) != 0:
+        raise ValueError(
+            f"{fs_deployment_type} storage_capacity must be 1200, 2400 or an increment of 2400 - see README"
+        )
+else:
+    if storage_capacity not in [1200, 2400] and (storage_capacity % 3600) != 0:
+        raise ValueError(
+            f"{fs_deployment_type} storage_capacity must be 1200, 2400 or an increment of 3600 - see README"
+        )
 
 if import_policy.upper() not in ["NONE", "NEW", "NEW_CHANGED", "NEW_CHANGED_DELETED"]:
     raise ValueError("import_policy must be one of NEW, NEW_CHANGED, NEW_CHANGED_DELETED")
@@ -94,6 +109,7 @@ stack = FsxFileSystem(
     import_path=fix_paths(import_path),  # type: ignore
     export_path=fix_paths(export_path),  # type: ignore
     storage_throughput=storage_throughput,  # type: ignore
+    storage_capacity=storage_capacity,
     file_system_type_version=fsx_version,
     stack_description=generate_description(),
     import_policy=import_policy,
@@ -112,7 +128,8 @@ CfnOutput(
             "FSxLustreSecurityGroup": stack.fsx_security_group.security_group_id,
             "FSxLustreMountName": stack.fsx_filesystem.attr_lustre_mount_name,
             "FSxLustreFileSystemDeploymentType": fsx_lustre_fs_deployment_type,
-            "FSxLustreVersion": fsx_version,
+            "FSxLustreVersion": stack.fsx_filesystem.file_system_type_version,
+            "FSxLustreStorageCapacity": stack.fsx_filesystem.storage_capacity,
         }
     ),
 )
