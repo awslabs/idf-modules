@@ -22,6 +22,8 @@ deploy:
         fi
       - export UNIQUE_REQUIREMENTS_FILE="${REQUIREMENTS_FILE}-$(date +%s)"
       - echo "Moving ${REQUIREMENTS_FILE} to ${UNIQUE_REQUIREMENTS_FILE}"
+      - echo "Creating Plugins Zip"
+      - zip plugins/plugins.zip plugins/** -r
       - mv ${REQUIREMENTS_FILE} ${UNIQUE_REQUIREMENTS_FILE}
       - cdk deploy --require-approval never --progress events --app "python app.py" --outputs-file ./cdk-exports.json
       # Export metadata

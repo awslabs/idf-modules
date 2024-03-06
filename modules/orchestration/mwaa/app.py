@@ -3,7 +3,6 @@
 
 import json
 import os
-import shutil
 
 import aws_cdk
 from aws_cdk import App, CfnOutput
@@ -54,9 +53,6 @@ def generate_description() -> str:
 
 
 app = App()
-
-# zip plugin
-shutil.make_archive("plugins/plugins", "zip", "plugins/")
 
 optional_args = {}
 if dag_bucket_name:
