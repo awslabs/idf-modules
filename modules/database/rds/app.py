@@ -6,6 +6,7 @@ import json
 import os
 
 import aws_cdk as cdk
+import cdk_nag
 
 from stack import RDSDatabaseStack
 
@@ -121,5 +122,7 @@ cdk.CfnOutput(
         }
     ),
 )
+
+cdk.Aspects.of(template_stack).add(cdk_nag.AwsSolutionsChecks(log_ignores=True))
 
 app.synth()

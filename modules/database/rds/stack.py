@@ -125,30 +125,38 @@ class RDSDatabaseStack(cdk.Stack):
                 description="Allows resources in the VPC CIDR to access the database",
             )
 
-        # Set up CDK nag
-        cdk.Aspects.of(self).add(cdk_nag.AwsSolutionsChecks(log_ignores=True))
-
-        nag_supressions: list[cdk_nag.NagPackSuppression] = []
+        # Set up CDK nag suppressions
         if port is None:
-            nag_supressions.append(
-                cdk_nag.NagPackSuppression(
-                    id="AwsSolutions-RDS11",
-                    reason="Default port will be returned as a module output",
-                ),
+            cdk_nag.NagSuppressions.add_resource_suppressions(
+                self.database,
+                suppressions=[
+                    cdk_nag.NagPackSuppression(
+                        id="AwsSolutions-RDS11",
+                        reason="Default port will be returned as a module output",
+                    ),
+                ],
             )
         if removal_policy == cdk.RemovalPolicy.DESTROY:
-            nag_supressions.append(
-                cdk_nag.NagPackSuppression(
-                    id="AwsSolutions-RDS10",
-                    reason="Retention policy was explicitely set to DESTROY",
-                ),
+            cdk_nag.NagSuppressions.add_resource_suppressions(
+                self.database,
+                suppressions=[
+                    cdk_nag.NagPackSuppression(
+                        id="AwsSolutions-RDS10",
+                        reason="Retention policy was explicitely set to DESTROY",
+                    ),
+                    cdk_nag.NagPackSuppression(
+                        id="AwsSolutions-RDS15",
+                        reason="Retention policy was explicitely set to DESTROY",
+                    ),
+                ],
             )
         if credential_rotation_days == 0:
-            nag_supressions.append(
-                cdk_nag.NagPackSuppression(
-                    id="AwsSolutions-SMG4",
-                    reason="Rotation was not enabled",
-                ),
+            cdk_nag.NagSuppressions.add_resource_suppressions(
+                self.db_credentials_secret,
+                suppressions=[
+                    cdk_nag.NagPackSuppression(
+                        id="AwsSolutions-SMG4",
+                        reason="Rotation was not enabled",
+                    ),
+                ],
             )
-
-        cdk_nag.NagSuppressions.add_stack_suppressions(self, suppressions=nag_supressions)
