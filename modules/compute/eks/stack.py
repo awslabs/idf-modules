@@ -381,7 +381,6 @@ class Eks(Stack):  # type: ignore
                         ),
                     ),
                 )
-
                 nodegroup = eks_cluster.add_nodegroup_capacity(
                     f"cluster-default-{ng}",
                     capacity_type=node_capacity_type,
@@ -395,6 +394,16 @@ class Eks(Stack):  # type: ignore
                     release_version=get_ami_version(str(eks_version)),
                     subnets=ec2.SubnetSelection(subnets=self.dataplane_subnets),
                     node_role=self.node_role,
+                    taints=[
+                        eks.TaintSpec(
+                            key=taint.get("key"),
+                            value=taint.get("value"),
+                            effect=eks.TaintEffect(taint.get("effect").upper()),
+                        )
+                        for taint in ng.get("eks_node_taints")
+                    ]
+                    if ng.get("eks_node_taints")
+                    else None,
                 )
 
                 nodegroup.role.add_managed_policy(
