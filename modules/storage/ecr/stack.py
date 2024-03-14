@@ -23,7 +23,7 @@ class EcrStack(Stack):
         image_tag_mutability: str,
         lifecycle_max_image_count: Optional[str],
         lifecycle_max_days: Optional[str],
-        removal_policy: RemovalPolicy = RemovalPolicy.RETAIN,
+        removal_policy: Optional[str],
         **kwargs: Optional[Any],
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)
@@ -33,7 +33,7 @@ class EcrStack(Stack):
             f"{repository_name}",
             repository_name=repository_name,
             image_tag_mutability=IMAGE_MUTABILITY[image_tag_mutability],
-            removal_policy=removal_policy,
+            removal_policy=RemovalPolicy.DESTROY if removal_policy in ["DESTROY"] else RemovalPolicy.RETAIN,
         )
         self.lifecycle_max_days = lifecycle_max_days
         self.lifecycle_max_image_count = lifecycle_max_image_count

@@ -18,6 +18,9 @@ None
 - `image-tag-mutability`: Image tag mutability. Defaults to `"IMMUTABLE"`. Possible values: `"IMMUTABLE"` or `"MUTABLE"`
 - `lifecycle-max-days`: Max days to store the images in ECR. Defaults to `None`, (no removal of images)
 - `lifecycle-max-image-count`: Max images to store the images in ECR. Defaults to `None`, (no removal of images)
+- `removal-policy` - the retention policy to put on the EFS service
+  - defaults to `RETAIN`
+  - supports `DESTROY` and `RETAIN` only
 
 ### Module Metadata Outputs
 

@@ -14,6 +14,7 @@ def stack_defaults():
     os.environ["SEEDFARMER_MODULE_NAME"] = "test-module"
     os.environ["CDK_DEFAULT_ACCOUNT"] = "111111111111"
     os.environ["CDK_DEFAULT_REGION"] = "us-east-1"
+    os.environ["SEEDFARMER_REMOVAL_POLICY"] = "DESTROY"
 
     # Unload the app import so that subsequent tests don't reuse
     if "app" in sys.modules:

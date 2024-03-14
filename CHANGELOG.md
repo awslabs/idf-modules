@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - made the `storage-capacity` configurable on the `fsx-lustre` module
 - in `mwaa` module, moving creation of plugins.zip to the deployspec since shutil errors out in python 3.11.6
 - fix the CDK nag suppressions in the `rds` module
+- adding removal-policy support for `ecr` module
 
 ### **Removed**
 
