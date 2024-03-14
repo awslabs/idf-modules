@@ -31,6 +31,7 @@ def test_synthesize_stack(stack_defaults, repository_name):
     app_prefix = f"{project_name}-{dep_name}-{mod_name}"
     image_tag_mutability = "IMMUTABLE"
     lifecycle = None
+    removal_policy = "DESTROY"
 
     stack = stack.EcrStack(
         scope=app,
@@ -39,6 +40,7 @@ def test_synthesize_stack(stack_defaults, repository_name):
         image_tag_mutability=image_tag_mutability,
         lifecycle_max_image_count=lifecycle,
         lifecycle_max_days=lifecycle,
+        removal_policy=removal_policy,
         env=cdk.Environment(
             account=os.environ["CDK_DEFAULT_ACCOUNT"],
             region=os.environ["CDK_DEFAULT_REGION"],
