@@ -31,7 +31,7 @@ repository_name = os.getenv(_param("REPOSITORY_NAME"), DEFAULT_REPOSITORY_NAME)
 image_tag_mutability = os.getenv(_param("IMAGE_TAG_MUTABILITY"), DEFAULT_IMAGE_MUTABILITY)
 lifecycle_max_image_count = os.getenv(_param("LIFECYCLE_MAX_IMAGE_COUNT"), DEFAULT_LIFECYCLE)
 lifecycle_max_days = os.getenv(_param("LIFECYCLE_MAX_DAYS"), DEFAULT_LIFECYCLE)
-removal_policy = os.getenv("SEEDFARMER_REMOVAL_POLICY", "DESTROY")
+removal_policy = os.getenv(_param("REMOVAL_POLICY", "DESTROY"))
 
 if removal_policy not in ["DESTROY", "RETAIN"]:
     raise ValueError("The only REMOVAL_POLICY values accepted are 'DESTROY' and 'RETAIN' ")
