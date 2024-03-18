@@ -13,11 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### **Added**
 
 ### **Changed**
+
 - made the `storage-capacity` configurable on the `fsx-lustre` module
 - in `mwaa` module, moving creation of plugins.zip to the deployspec since shutil errors out in python 3.11.6
 - fix the CDK nag suppressions in the `rds` module
 - adding removal-policy support for `ecr` module
 - added taint support (`eks_node_taints`) for node groups
+- set Pillow version to 10.2.0 as per bot recommendation
 
 ### **Removed**
 
@@ -49,7 +51,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - added Opensearch serverless module
 - updated replication module to avoid docker pull rate limits and resource creation race conditions
 - added RDS database module
-- added support for Elastic Kubernetes cluster 1.26 version
 
 ### **Changed**
 
