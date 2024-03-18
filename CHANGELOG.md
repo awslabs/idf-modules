@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - fix the CDK nag suppressions in the `rds` module
 - adding removal-policy support for `ecr` module
 - added taint support (`eks_node_taints`) for node groups
+- set Pillow version to 10.2.0 as per bot recommendation
 
 ### **Removed**
 
