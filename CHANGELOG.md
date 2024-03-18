@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - updated replication module to avoid docker pull rate limits and resource creation race conditions
 - added RDS database module
 - added support for Elastic Kubernetes cluster 1.26 version
+- added support for Elastic Kubernetes cluster 1.29 version
 
 ### **Changed**
 
