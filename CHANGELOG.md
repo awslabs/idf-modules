@@ -12,6 +12,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### **Added**
 
+### **Changed**
+
+### **Removed**
+
+=======
+
+=======
+
+## v1.5.0 (2024-03-19)
+
+### **Added**
+
 - added support for Elastic Kubernetes cluster 1.26 version
 - added support for Elastic Kubernetes cluster 1.29 version
 
