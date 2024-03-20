@@ -24,7 +24,7 @@ def stack_defaults() -> None:
 RDS_ENGINE_SETTINGS = {
     "mysql": {
         "engine_version": "8.0.35",
-        "instance_type": "t2.small",
+        "instance_type": "t3.small",
     },
     "postgresql": {
         "engine_version": "14.5",

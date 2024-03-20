@@ -41,7 +41,7 @@ username: str = _get_env("ADMIN_USERNAME", required=True)  # type: ignore[assign
 database_name: str = _get_env("DATABASE_NAME", required=True)  # type: ignore[assignment]
 
 port: str | None = _get_env("PORT", required=False)
-instance_type: str = _get_env("INSTANCE_TYPE", required=False, default="t2.small")  # type: ignore[assignment]
+instance_type: str = _get_env("INSTANCE_TYPE", required=False, default="t3.small")  # type: ignore[assignment]
 credential_rotation_days: int = int(
     _get_env("CREDENTIAL_ROTATION_DAYS", required=False, default="0"),  # type: ignore[arg-type]
 )
