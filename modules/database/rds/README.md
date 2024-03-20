@@ -64,7 +64,7 @@ parameters:
   - name: engine-version
     value: 8.0.35
   - name: instance-type
-    value: t2.small
+    value: t3.small
   - name: admin-username
     value: admin
   - name: credential-rotation-days
