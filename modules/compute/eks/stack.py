@@ -10,7 +10,7 @@ from typing import Any, Dict, List, Optional, cast
 
 import cdk_nag
 import yaml
-from aws_cdk import Aspects, RemovalPolicy, Stack, Tags
+from aws_cdk import Aspects, CfnJson, RemovalPolicy, Stack, Tags
 from aws_cdk import aws_aps as aps
 from aws_cdk import aws_ec2 as ec2
 from aws_cdk import aws_eks as eks
@@ -549,6 +549,43 @@ class Eks(Stack):  # type: ignore
                 cluster_name=eks_cluster.cluster_name,
             )
             s3_addon.node.add_dependency(eks_cluster)
+
+        # AWS Cloudwatch Observability Driver
+        # https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-setup-EKS-addon.html
+        if eks_addons_config.get("deploy_cloudwatch_observability_addon"):
+            # IRSA for CW Addon
+            cw_obs_role = iam.Role(
+                self,
+                "CWSARole",
+                assumed_by=iam.FederatedPrincipal(
+                    eks_cluster.open_id_connect_provider.open_id_connect_provider_arn,
+                    assume_role_action="sts:AssumeRoleWithWebIdentity",
+                    conditions={
+                        "StringEquals": CfnJson(
+                            self,
+                            "CWSARoleProvider",
+                            value={f"{eks_cluster.cluster_open_id_connect_issuer}:aud": "sts.amazonaws.com"},
+                        )
+                    },
+                ),
+                managed_policies=[
+                    iam.ManagedPolicy.from_managed_policy_arn(
+                        self,
+                        "CloudWatchAgentServerPolicy",
+                        managed_policy_arn="arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy",
+                    )
+                ],
+            )
+
+            cw_obs_addon = eks.CfnAddon(
+                self,
+                "cw-obs-addon",
+                addon_name="amazon-cloudwatch-observability",
+                resolve_conflicts="OVERWRITE",
+                cluster_name=eks_cluster.cluster_name,
+                service_account_role_arn=cw_obs_role.role_arn,
+            )
+            cw_obs_addon.node.add_dependency(eks_cluster)
 
         # AWS EBS CSI Driver
         if eks_addons_config.get("deploy_aws_ebs_csi"):

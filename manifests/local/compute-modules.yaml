@@ -39,7 +39,7 @@ parameters:
 name: eks
 path: modules/compute/eks/
 dataFiles:
-  - filePath: data/eks_dockerimage-replication/versions/1.25.yaml
+  - filePath: data/eks_dockerimage-replication/versions/1.29.yaml
   - filePath: data/eks_dockerimage-replication/versions/default.yaml
 parameters:
   # Use the below parameter if you want to use replicated container images from account's specific ECR repo(s)
@@ -118,12 +118,13 @@ parameters:
       deploy_secretsmanager_csi: True 
       deploy_external_secrets: False
       # Monitoring/Logging/Tracing
-      deploy_adot: True
-      deploy_cloudwatch_container_insights_metrics: True 
-      deploy_cloudwatch_container_insights_logs: True
+      deploy_cloudwatch_observability_addon: True
+      deploy_adot: False
+      deploy_cloudwatch_container_insights_metrics: False 
+      deploy_cloudwatch_container_insights_logs: False
       cloudwatch_container_insights_logs_retention_days: 7
-      deploy_amp: True
-      deploy_grafana_for_amp: True
+      deploy_amp: False
+      deploy_grafana_for_amp: False
       # Reboot agent
       deploy_kured: True
       # Network level segmentation
