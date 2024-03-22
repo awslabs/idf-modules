@@ -57,6 +57,18 @@ Security:
 - `controlplane-subnet-ids`: The controlplane subnets that the EKS Cluster should be deployed in. These subnets should have internet connectivity enabled via NATG
 - `dataplane-subnet-ids`: The dataplane subnets can be either private subnets (NATG enabled) or in isolated subnets(link local route only) depending on the compliance required to achieve
 - `eks-compute` and `eks_nodegroup_config`: List of EKS Managed NodeGroup Configurations to use with the preferred EC2 instance types. The framework would automatically encrypt the root volume
+  - `eks_nodegroup_config` allows list of nodegroups to be deployed. Following are the supported attributes:
+
+    ```yaml
+          eks_ng_name: Declare the Node group name here
+          eks_node_quantity: Declare the Node group desired size here
+          eks_node_max_quantity: Declare the Node group maximum size here
+          eks_node_min_quantity: Declare the Node group minimum size here
+          eks_node_disk_size: Declare the Node group EBS volume disk size here
+          eks_node_instance_type: Declare the Node group desired instance type here
+          use_gpu_ami: Enable if you want to deploy GPU instances in the node group
+      ```
+
 - `eks-version`: The EKS Cluster version to lock the version to
 - `eks-addons`: List of EKS addons to deploy on the EKS Cluster
 

@@ -381,9 +381,13 @@ class Eks(Stack):  # type: ignore
                         ),
                     ),
                 )
+
                 nodegroup = eks_cluster.add_nodegroup_capacity(
                     f"cluster-default-{ng}",
                     capacity_type=node_capacity_type,
+                    ami_type=eks.NodegroupAmiType.AL2_X86_64_GPU
+                    if ng.get("use_gpu_ami")
+                    else eks.NodegroupAmiType.AL2_X86_64,
                     desired_size=ng.get("eks_node_quantity"),
                     min_size=ng.get("eks_node_min_quantity"),
                     max_size=ng.get("eks_node_max_quantity"),
