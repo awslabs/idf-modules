@@ -94,6 +94,7 @@ parameters:
           eks_node_min_quantity: 1
           eks_node_disk_size: 20
           eks_node_instance_type: "m5.xlarge"
+          use_gpu_ami: True
       eks_node_spot: False
       eks_api_endpoint_private: False
       eks_secrets_envelope_encryption: True
