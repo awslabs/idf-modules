@@ -78,6 +78,7 @@ class Eks(Stack):  # type: ignore
         eks_addons_config: Optional[Dict[Any, Any]],
         custom_subnet_ids: Optional[List[str]],
         codebuild_sg_id: Optional[str],
+        mountpoint_buckets: Optional[List[str]],
         replicated_ecr_images_metadata: Optional[Dict[Any, Any]],
         **kwargs: Any,
     ) -> None:
@@ -545,12 +546,58 @@ class Eks(Stack):  # type: ignore
 
         # AWS S3 CSI Driver
         if eks_addons_config.get("deploy_aws_s3_csi"):
+
+            if mountpoint_buckets:
+                arns = [f"arn:aws:s3:::{bucket}" for bucket in mountpoint_buckets]
+                arns_with_paths = [f"arn:aws:s3:::{bucket}/*" for bucket in mountpoint_buckets]
+            else:
+                arns = [f"arn:aws:s3:::{project_name}*"]
+                arns_with_paths = [f"arn:aws:s3:::{project_name}*/*"]
+
+            # IRSA for S3 Addon
+            s3_addon_role = iam.Role(
+                self,
+                "S3Role",
+                assumed_by=iam.FederatedPrincipal(
+                    eks_cluster.open_id_connect_provider.open_id_connect_provider_arn,
+                    assume_role_action="sts:AssumeRoleWithWebIdentity",
+                    conditions={
+                        "StringEquals": CfnJson(
+                            self,
+                            "S3RoleProvider",
+                            value={f"{eks_cluster.cluster_open_id_connect_issuer}:aud": "sts.amazonaws.com"},
+                        )
+                    },
+                ),
+                inline_policies={
+                    "mpfullbucketaccess": iam.PolicyDocument(
+                        statements=[
+                            iam.PolicyStatement(
+                                effect=iam.Effect.ALLOW,
+                                resources=arns,
+                                actions=["s3:ListBucket"],
+                            )
+                        ],
+                    ),
+                    "mpfullobjectaccess": iam.PolicyDocument(
+                        statements=[
+                            iam.PolicyStatement(
+                                effect=iam.Effect.ALLOW,
+                                resources=arns_with_paths,
+                                actions=["s3:GetObject", "s3:PutObject", "s3:AbortMultipartUpload", "s3:DeleteObject"],
+                            )
+                        ],
+                    ),
+                },
+            )
+
             s3_addon = eks.CfnAddon(
                 self,
                 "s3-addon",
                 addon_name="aws-mountpoint-s3-csi-driver",
                 resolve_conflicts="OVERWRITE",
                 cluster_name=eks_cluster.cluster_name,
+                service_account_role_arn=s3_addon_role.role_arn,
             )
             s3_addon.node.add_dependency(eks_cluster)
 

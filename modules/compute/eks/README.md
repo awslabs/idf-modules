@@ -36,6 +36,7 @@ Scaling:
 Monitoring/Logging/Alerting:
 
 - Cloudwatch Container Insights (Metrics & logs)
+- CloudWatch Observability Addon (deploys metrics and logging drivers using EKS Managed Addon)
 
 Networking:
 
@@ -74,6 +75,7 @@ Security:
 
 #### Optional
 
+- `mountpoint-buckets`: An optional list of bucket(s) that you want to mount with your application. IAM Permissions to the bucket(s) will be configured by the EKS module.
 - `custom-subnet-ids`: The custom subnets for assigning IP addresses to the pods. Usually used when there is a limited number of IP addresses available in the primary CIDR subnets. Refer to [custom networking](https://docs.aws.amazon.com/eks/latest/userguide/cni-custom-network.html) for feature details 
 - `eks_admin_role_name`: The Admin Role to be mapped to the `systems:masters` group of RBAC
 - `eks_poweruser_role_name`: The PowerUser Role to be mapped to the `poweruser-group` group of RBAC

@@ -67,16 +67,18 @@ parameters:
         group: networking
         name: basic-networking
         key: PrivateSubnetIds
-  # - name: custom-subnet-ids
-  #   value: ["subnet-0132ecb9b627b1c57", "subnet-0f2c81d12cba7ca69"]
   - name: eks-admin-role-name
     value: Admin
   - name: eks-poweruser-role-name
     value: PowerUser
   - name: eks-read-only-role-name
     value: ReadOnly
+  - name: mountpoint-buckets
+    value: 
+      - "test-bucket1"
+      - "test-bucket2"
   - name: eks-version
-    # value: 1.25
+    # value: 1.29
     valueFrom:
       envVariable: GLOBAL_EKS_VERSION
   - name: eks-compute
@@ -88,12 +90,14 @@ parameters:
           eks_node_min_quantity: 1
           eks_node_disk_size: 20
           eks_node_instance_type: "m5.large"
-        - eks_ng_name: ng2
-          eks_node_quantity: 2
-          eks_node_max_quantity: 5
-          eks_node_min_quantity: 1
-          eks_node_disk_size: 20
-          eks_node_instance_type: "m5.xlarge"
+        - eks_ng_name: ng-gpu
+          eks_node_quantity: 1
+          eks_node_max_quantity: 2
+          eks_node_min_quantity: 0
+          eks_node_disk_size: 100
+          eks_node_instance_type: "g4dn.xlarge"
+          eks_node_labels:
+            usage: gpu
           use_gpu_ami: True
       eks_node_spot: False
       eks_api_endpoint_private: False
@@ -115,7 +119,7 @@ parameters:
       # Autoscaling
       deploy_cluster_autoscaler: True 
       deploy_metrics_server: True 
-      # Secrets management
+      # # Secrets management
       deploy_secretsmanager_csi: True 
       deploy_external_secrets: False
       # Monitoring/Logging/Tracing

@@ -34,6 +34,7 @@ custom_subnet_ids = (  # type: ignore
 eks_version = os.getenv(_param("EKS_VERSION"), "")  # required
 eks_compute_config = json.loads(os.getenv(_param("EKS_COMPUTE"), ""))  # required
 eks_addons_config = json.loads(os.getenv(_param("EKS_ADDONS"), ""))  # required
+mountpoint_buckets = json.loads(os.getenv(_param("MOUNTPOINT_BUCKETS"), "[]"))  # optional
 
 if not vpc_id:
     raise ValueError("missing input parameter vpc-id")
@@ -65,6 +66,7 @@ stack = Eks(
     eks_compute_config=eks_compute_config,
     eks_addons_config=eks_addons_config,
     custom_subnet_ids=custom_subnet_ids,
+    mountpoint_buckets=mountpoint_buckets,
     codebuild_sg_id=json.loads(os.getenv(_param("CODEBUILD_SG_ID")))[0]
     if os.getenv(_param("CODEBUILD_SG_ID"))
     else None,
