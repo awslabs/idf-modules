@@ -34,7 +34,7 @@ custom_subnet_ids = (  # type: ignore
 eks_version = os.getenv(_param("EKS_VERSION"), "")  # required
 eks_compute_config = json.loads(os.getenv(_param("EKS_COMPUTE"), ""))  # required
 eks_addons_config = json.loads(os.getenv(_param("EKS_ADDONS"), ""))  # required
-mountpoint_buckets = json.loads(os.getenv(_param("MOUNTPOINT_BUCKETS"), ""))  # optional
+mountpoint_buckets = json.loads(os.getenv(_param("MOUNTPOINT_BUCKETS"), "[]"))  # optional
 
 if not vpc_id:
     raise ValueError("missing input parameter vpc-id")

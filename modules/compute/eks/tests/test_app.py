@@ -18,7 +18,7 @@ def stack_defaults():
     os.environ["SEEDFARMER_PARAMETER_VPC_ID"] = "vpc-12345"
     os.environ["SEEDFARMER_PARAMETER_DATAPLANE_SUBNET_IDS"] = '["subnet-12345", "subnet-54321"]'
     os.environ["SEEDFARMER_PARAMETER_CONTROLPLANE_SUBNET_IDS"] = '["subnet-12345", "subnet-54321"]'
-    os.environ["SEEDFARMER_PARAMETER_EKS_VERSION"] = "1.25"
+    os.environ["SEEDFARMER_PARAMETER_EKS_VERSION"] = "1.29"
     os.environ[
         "SEEDFARMER_PARAMETER_EKS_COMPUTE"
     ] = '{"eks_nodegroup_config": [{"eks_ng_name": "ng1", "eks_node_quantity": 2, "eks_node_max_quantity": 5, "eks_node_min_quantity": 1, "eks_node_disk_size": 20, "eks_node_instance_type": "m5.large"}, {"eks_ng_name": "ng2", "eks_node_quantity": 2, "eks_node_max_quantity": 5, "eks_node_min_quantity": 1, "eks_node_disk_size": 20, "eks_node_instance_type": "m5.xlarge"}], "eks_node_spot": "False", "eks_api_endpoint_private": "False", "eks_secrets_envelope_encryption": "True"}'  # noqa: E501
@@ -108,6 +108,8 @@ def test_eks_addons(stack_defaults):
             "deploy_metrics_server": "True",
             "deploy_secretsmanager_csi": "True",
             "deploy_external_secrets": "False",
+            "deploy_cloudwatch_observability_addon": "True",
+            "deploy_aws_s3_csi": "True",
             "deploy_cloudwatch_container_insights_metrics": "True",
             "deploy_cloudwatch_container_insights_logs": "True",
             "cloudwatch_container_insights_logs_retention_days": 7,
