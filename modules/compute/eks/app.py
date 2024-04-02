@@ -92,7 +92,6 @@ CfnOutput(
             "EksClusterSecurityGroupId": stack.eks_cluster.cluster_security_group.security_group_id,
             "EksOidcArn": stack.eks_cluster.open_id_connect_provider.open_id_connect_provider_arn,
             "EksClusterOpenIdConnectIssuer": stack.eks_cluster.cluster_open_id_connect_issuer,
-            "CNIMetricsHelperRoleName": stack.cni_metrics_role_name,
             # Cluster Master role created as a part of this stack gets added to RBAC system:masters group
             "EksClusterMasterRoleArn": stack.eks_cluster_masterrole.role_arn,
             "EksNodeRoleArn": stack.node_role.role_arn,

@@ -154,8 +154,6 @@ class Eks(Stack):  # type: ignore
                 f"arn:aws:cloudformation:{self.region}:{self.account}:stack/eksctl-{project_name}-{deployment_name}*",
             ],
         }
-        cni_metrics_role_name = f"{project_name}-{deployment_name}-{module_name}-CNIMetricsHelperRole"
-        self.cni_metrics_role_name = cni_metrics_role_name[:60]
         cluster_admin_policy_statement_json_3 = {
             "Effect": "Allow",
             "Action": [
@@ -169,7 +167,6 @@ class Eks(Stack):  # type: ignore
             "Resource": [
                 f"arn:aws:iam::{self.account}:role/AmazonEKSVPCCNIMetricsHelperRole",
                 f"arn:aws:iam::{self.account}:policy/AmazonEKSVPCCNIMetricsHelperPolicy",
-                f"arn:aws:iam::{self.account}:role/{self.cni_metrics_role_name}",
             ],
         }
         cluster_admin_role.add_to_principal_policy(iam.PolicyStatement.from_json(cluster_admin_policy_statement_json_1))
@@ -1553,24 +1550,6 @@ class Eks(Stack):  # type: ignore
 
         # Deploy the RoleBinding manifest to the EKS cluster for admin role
         eks_cluster.add_manifest("poweruser_role_binding_manifest", poweruser_role_binding_manifest)
-
-        # Create a PodDisruptionBudget for IDF Jobs
-        # eks_cluster.add_manifest(
-        #     "idf-job-pdb",
-        #     {
-        #         "apiVersion": "policy/v1",
-        #         "kind": "PodDisruptionBudget",
-        #         "metadata": {
-        #             "name": "idf-job-pdb",
-        #         },
-        #         "spec": {
-        #             "minAvailable": 1,
-        #             "selector": {
-        #                 "matchLabels": {"app": "idf-job"},
-        #             },
-        #         },
-        #     },
-        # )
 
         if eks_addons_config.get("deploy_kured"):
             # https://kubereboot.github.io/charts/
