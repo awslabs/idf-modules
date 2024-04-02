@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### **Added**
 
+### **Changed**
+
+### **Removed**
+
+=======
+
+=======
+
+## v1.6.0 (2024-04-02)
+
+### **Added**
+
 - added support for AWS CloudWatch Observability Managed Addon
 - added support for GPU AMIs using `use_gpu_ami` flag
 - made `mountpoint for s3` driver configurable to work with s3 buckets on fly
