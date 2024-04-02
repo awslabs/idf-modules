@@ -127,7 +127,6 @@ EKS integrates with AWS Identity and Access Management (IAM) to control access t
 - `EksClusterSecurityGroupId`: The EKS Cluster's SecurityGroup ID
 - `EksOidcArn`: The EKS Cluster's OIDC Arn
 - `EksClusterOpenIdConnectIssuer`: EKS Cluster's OPEN ID Issuer
-- `CNIMetricsHelperRoleName`: Name of role created for CNIMetricHelper SA
 - `EksClusterMasterRoleArn` - the masterrole used for cluster creation
 - `EksNodeRoleArn` - the role assigned to nodes when nodes are spinning up in node groups.
 
@@ -140,7 +139,6 @@ EKS integrates with AWS Identity and Access Management (IAM) to control access t
   "EksClusterSecurityGroupId": "sg-XXXXXXXXXXXXXX",
   "EksOidcArn": "arn:aws:iam::XXXXXXXX:oidc-provider/oidc.eks.us-west-2.amazonaws.com/id/XXXXXXXX",
   "EksClusterOpenIdConnectIssuer": "oidc.eks.us-west-2.amazonaws.com/id/098FBE7B04A9C399E4A3534FF1C288C6",
-  "CNIMetricsHelperRoleName": "idf-dataservice-core-eks-CNIMetricsHelperRole",
   "EksClusterMasterRoleArn" : "arn:aws:iam::XXXXXXXX:role/idf-local-core-eks-us-east-1-masterrole",
   "EksNodeRoleArn": "arn:aws:iam::XXXXXXXX:role/idf-local-core-eks-us-east-1-noderole"
 }
