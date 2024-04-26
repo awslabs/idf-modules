@@ -17,6 +17,7 @@ DEFAULT_REPOSITORY_NAME = f"{app_prefix}-ecr"
 DEFAULT_IMAGE_MUTABILITY = "IMMUTABLE"
 DEFAULT_LIFECYCLE = None  # No lifecycle policy
 DEFAULT_REMOVAL_POLICY = "DESTROY"
+DEFAULT_ENCRYPTION = "AES256"
 
 
 def _param(name: str) -> str:
@@ -33,9 +34,15 @@ image_tag_mutability = os.getenv(_param("IMAGE_TAG_MUTABILITY"), DEFAULT_IMAGE_M
 lifecycle_max_image_count = os.getenv(_param("LIFECYCLE_MAX_IMAGE_COUNT"), DEFAULT_LIFECYCLE)
 lifecycle_max_days = os.getenv(_param("LIFECYCLE_MAX_DAYS"), DEFAULT_LIFECYCLE)
 removal_policy = os.getenv(_param("REMOVAL_POLICY"), DEFAULT_REMOVAL_POLICY)
+image_scan_on_push = bool(os.getenv(_param("IMAGE_SCAN_ON_PUSH"), False))
+encryption = os.getenv(_param("ENCRYPTION"), DEFAULT_ENCRYPTION)
+kms_key_arn = os.getenv(_param("KMS_KEY_ARN"), None)
 
 if removal_policy not in ["DESTROY", "RETAIN"]:
     raise ValueError("The only REMOVAL_POLICY values accepted are 'DESTROY' and 'RETAIN' ")
+
+if encryption not in ["AES256", "KMS"]:
+    raise ValueError("The only ENCRYPTION values accepted are 'AES256' and 'KMS' ")
 
 app = cdk.App()
 stack = EcrStack(
@@ -46,6 +53,9 @@ stack = EcrStack(
     lifecycle_max_image_count=lifecycle_max_image_count,
     lifecycle_max_days=lifecycle_max_days,
     removal_policy=removal_policy,
+    image_scan_on_push=image_scan_on_push,
+    encryption=encryption,
+    kms_key_arn=kms_key_arn,
     env=environment,
 )
 metadata = {
