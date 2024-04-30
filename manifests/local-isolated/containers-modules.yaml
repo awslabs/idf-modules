@@ -1,7 +1,11 @@
-name: ecr-repository
-path: modules/containers/ecr/
+name: ecr
+path: modules/storage/ecr/
 parameters:
   - name: repository_name
-    value: "ecr-repository"
-  - name: "image_tag_mutability"
+    value: "ecr-repository-1"
+  - name: image_tag_mutability
     value: "MUTABLE"
+  - name: image_scan_on_push
+    value: True
+  - name: encryption
+    value: "KMS_MANAGED"

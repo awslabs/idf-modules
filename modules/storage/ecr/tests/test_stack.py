@@ -32,6 +32,9 @@ def test_synthesize_stack(stack_defaults, repository_name):
     image_tag_mutability = "IMMUTABLE"
     lifecycle = None
     removal_policy = "DESTROY"
+    image_scan_on_push = True
+    encryption = "KMS_MANAGED"
+    kms_key_arn = None
 
     stack = stack.EcrStack(
         scope=app,
@@ -41,6 +44,9 @@ def test_synthesize_stack(stack_defaults, repository_name):
         lifecycle_max_image_count=lifecycle,
         lifecycle_max_days=lifecycle,
         removal_policy=removal_policy,
+        image_scan_on_push=image_scan_on_push,
+        encryption=encryption,
+        kms_key_arn=kms_key_arn,
         env=cdk.Environment(
             account=os.environ["CDK_DEFAULT_ACCOUNT"],
             region=os.environ["CDK_DEFAULT_REGION"],
