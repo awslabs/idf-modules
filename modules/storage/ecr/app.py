@@ -41,7 +41,7 @@ kms_key_arn = os.getenv(_param("KMS_KEY_ARN"), None)
 if removal_policy not in ["DESTROY", "RETAIN"]:
     raise ValueError("The only REMOVAL_POLICY values accepted are 'DESTROY' and 'RETAIN' ")
 
-if encryption not in ["AES256", "KMS"]:
+if encryption not in ["AES256", "KMS_MANAGED", "KMS_CUSTOM"]:
     raise ValueError("The only ENCRYPTION values accepted are 'AES256' and 'KMS' ")
 
 app = cdk.App()

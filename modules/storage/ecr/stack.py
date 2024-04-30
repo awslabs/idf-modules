@@ -15,7 +15,8 @@ IMAGE_MUTABILITY = {
 }
 ENCRYPTION = {
     "AES256": ecr.RepositoryEncryption.AES_256,
-    "KMS": ecr.RepositoryEncryption.KMS,
+    "KMS_MANAGED": ecr.RepositoryEncryption.KMS,
+    "KMS_CUSTOM": ecr.RepositoryEncryption.KMS,
 }
 
 
@@ -45,7 +46,7 @@ class EcrStack(Stack):
             image_scan_on_push=image_scan_on_push,
             encryption=ENCRYPTION[encryption],
             encryption_key=kms.Key.from_key_arn(self, "Key", key_arn=kms_key_arn)
-            if kms_key_arn
+            if encryption == "KMS_CUSTOM" and kms_key_arn
             else None,  # use AWS-managed KMS key if not provided
         )
         self.lifecycle_max_days = lifecycle_max_days

@@ -24,8 +24,8 @@ None
   - supports `DESTROY` and `RETAIN` only
 - `encryption` - encryption mode
   - defaults to `AES256`
-  - supports `AES256` and `KMS` only
-- `kms-key-arn` - KMS key ARN to use for encryption. If `encryption` is `KMS` and no key ARN provided, use AWS-managed KMS key
+  - supports `AES256`, `KMS_MANAGED` (use AWS-managed KMS key) and `KMS_CUSTOM` (use customer-managed KMS key) only
+- `kms-key-arn` - KMS key ARN to use for encryption. Only used if `encryption` is `KMS_CUSTOM`. 
 
 ### Module Metadata Outputs
 

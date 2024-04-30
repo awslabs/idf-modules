@@ -8,4 +8,4 @@ parameters:
   - name: image_scan_on_push
     value: True
   - name: encryption
-    value: "KMS"
+    value: "KMS_MANAGED"

@@ -33,7 +33,7 @@ def test_synthesize_stack(stack_defaults, repository_name):
     lifecycle = None
     removal_policy = "DESTROY"
     image_scan_on_push = True
-    encryption = "KMS"
+    encryption = "KMS_MANAGED"
     kms_key_arn = None
 
     stack = stack.EcrStack(
