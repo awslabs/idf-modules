@@ -4,7 +4,7 @@ charts:
   alb_controller:
     version: 1.7.0
   aws_vpc_cni:
-    version: 1.2.8
+    version: 1.18.0
   calico:
     version: 3.25.1
   cert_manager:
