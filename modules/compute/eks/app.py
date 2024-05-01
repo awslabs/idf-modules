@@ -94,6 +94,7 @@ CfnOutput(
             "EksClusterOpenIdConnectIssuer": stack.eks_cluster.cluster_open_id_connect_issuer,
             # Cluster Master role created as a part of this stack gets added to RBAC system:masters group
             "EksClusterMasterRoleArn": stack.eks_cluster_masterrole.role_arn,
+            "EksHandlerRoleArn": stack.eks_cluster.kubectl_lambda_role.role_arn,
             "EksNodeRoleArn": stack.node_role.role_arn,
         }
     ),
