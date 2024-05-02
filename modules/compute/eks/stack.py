@@ -233,7 +233,7 @@ class Eks(Stack):  # type: ignore
         kube_proxy_addon.node.add_dependency(eks_cluster)
 
         # Adopting the existing aws-node resources to Helm to fix errors related to `helm ownership errors`
-        patch_types = ["DaemonSet", "ClusterRole", "ClusterRoleBinding"]
+        patch_types = ["DaemonSet", "ClusterRole", "ClusterRoleBinding", "ServiceAccount"]
         patches = []
         for kind in patch_types:
             patch = eks.KubernetesPatch(
@@ -254,11 +254,34 @@ class Eks(Stack):  # type: ignore
                 restore_patch={},
                 patch_type=eks.PatchType.STRATEGIC,
             )
+
             # We don't want to clean this up on Delete - it is a one-time patch to let the Helm Chart own the resources
             patch_resource = patch.node.find_child("Resource")
             patch_resource.apply_removal_policy(RemovalPolicy.RETAIN)
             # Keep track of all the patches to set dependencies down below
             patches.append(patch)
+
+        # since 1.14 chart, ConfigMap object needs to be patched
+        cm_patch = eks.KubernetesPatch(
+            self,
+            "Patch-" + "ConfigMap",
+            cluster=eks_cluster,
+            resource_name="ConfigMap" + "/amazon-vpc-cni",
+            resource_namespace="kube-system",
+            apply_patch={
+                "metadata": {
+                    "annotations": {
+                        "meta.helm.sh/release-name": "aws-vpc-cni",
+                        "meta.helm.sh/release-namespace": "kube-system",
+                    },
+                    "labels": {"app.kubernetes.io/managed-by": "Helm"},
+                }
+            },
+            restore_patch={},
+            patch_type=eks.PatchType.STRATEGIC,
+        )
+        cm_patch_resource = cm_patch.node.find_child("Resource")
+        cm_patch_resource.apply_removal_policy(RemovalPolicy.RETAIN)
 
         # Create the Service Account
         sg_pods_service_account = eks_cluster.add_service_account(
@@ -319,6 +342,12 @@ class Eks(Stack):  # type: ignore
                         },
                         "env": {"DISABLE_TCP_EARLY_DEMUX": True},
                     },
+                    "nodeAgent": {
+                        "image": {
+                            "region": self.region,
+                            "account": "602401143452",
+                        },
+                    },
                     "image": {"region": self.region, "account": "602401143452"},
                     "env": {"ENABLE_POD_ENI": True},
                     "serviceAccount": {"create": False, "name": "aws-node-helm"},
@@ -331,6 +360,9 @@ class Eks(Stack):  # type: ignore
 
         # This depends both on the service account and the patches to the existing CNI resources having been done first
         vpc_cni_chart.node.add_dependency(sg_pods_service_account)
+        vpc_cni_chart.node.add_dependency(cm_patch)
+        for patch in patches:
+            vpc_cni_chart.node.add_dependency(patch)
 
         # Node role for all nodes
         self.node_role = iam.Role(
