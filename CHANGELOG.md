@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### **Changed**
 
 - upgraded `vpc-cni` version to `1.18.0` to support EKS 1.29 version
+- EKS README.md doc fixes
 
 ### **Removed**
 
