@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### **Added**
 
+### **Changed**
+
+### **Removed**
+
+=======
+
+=======
+
+## v1.6.0 (2024-05-02)
+
+### **Added**
+
 - added KMS/AES encryption and image scan on push to `ecr` module
 - exporting `kubectl lambda iam role arn` for running kubectl calls from the downstream stacks
 
