@@ -260,32 +260,28 @@ class Eks(Stack):  # type: ignore
             patch_resource.apply_removal_policy(RemovalPolicy.RETAIN)
             # Keep track of all the patches to set dependencies down below
             patches.append(patch)
-        
-        ###
-        cm_patch = eks.KubernetesPatch(
-                self,
-                "Patch-" + "ConfigMap",
-                cluster=eks_cluster,
-                resource_name="ConfigMap" + "/amazon-vpc-cni",
-                resource_namespace="kube-system",
-                apply_patch={
-                    "metadata": {
-                        "annotations": {
-                            "meta.helm.sh/release-name": "aws-vpc-cni",
-                            "meta.helm.sh/release-namespace": "kube-system",
-                        },
-                        "labels": {"app.kubernetes.io/managed-by": "Helm"},
-                    }
-                },
-                restore_patch={},
-                patch_type=eks.PatchType.STRATEGIC,
-            )
 
-        # We don't want to clean this up on Delete - it is a one-time patch to let the Helm Chart own the resources
+        # since 1.14 chart, ConfigMap object needs to be patched
+        cm_patch = eks.KubernetesPatch(
+            self,
+            "Patch-" + "ConfigMap",
+            cluster=eks_cluster,
+            resource_name="ConfigMap" + "/amazon-vpc-cni",
+            resource_namespace="kube-system",
+            apply_patch={
+                "metadata": {
+                    "annotations": {
+                        "meta.helm.sh/release-name": "aws-vpc-cni",
+                        "meta.helm.sh/release-namespace": "kube-system",
+                    },
+                    "labels": {"app.kubernetes.io/managed-by": "Helm"},
+                }
+            },
+            restore_patch={},
+            patch_type=eks.PatchType.STRATEGIC,
+        )
         cm_patch_resource = cm_patch.node.find_child("Resource")
         cm_patch_resource.apply_removal_policy(RemovalPolicy.RETAIN)
-
-        ###
 
         # Create the Service Account
         sg_pods_service_account = eks_cluster.add_service_account(
