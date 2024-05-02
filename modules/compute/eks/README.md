@@ -139,7 +139,8 @@ EKS integrates with AWS Identity and Access Management (IAM) to control access t
   "EksClusterSecurityGroupId": "sg-XXXXXXXXXXXXXX",
   "EksOidcArn": "arn:aws:iam::XXXXXXXX:oidc-provider/oidc.eks.us-west-2.amazonaws.com/id/XXXXXXXX",
   "EksClusterOpenIdConnectIssuer": "oidc.eks.us-west-2.amazonaws.com/id/098FBE7B04A9C399E4A3534FF1C288C6",
-  "EksClusterMasterRoleArn" : "arn:aws:iam::XXXXXXXX:role/idf-local-core-eks-us-east-1-masterrole",
+  "EksClusterMasterRoleArn": "arn:aws:iam::XXXXXXXX:role/idf-local-core-eks-us-east-1-masterrole",
+  "EksHandlerRoleArn": "arn:aws:iam::XXXXXXXX:role/idf-clusterKubectlHandlerRole",
   "EksNodeRoleArn": "arn:aws:iam::XXXXXXXX:role/idf-local-core-eks-us-east-1-noderole"
 }
 
