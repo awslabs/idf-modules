@@ -1,0 +1,34 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.9
+  pre_build:
+    commands:
+      - rm .python-version
+      - pip install -r requirements.txt
+      - pip install pyyaml
+  build:
+    commands:
+      - ACCOUNT_ID=$(aws sts get-caller-identity --output text --query Account)
+      - aws s3 cp s3://${ARTIFACTS_BUCKET} . --recursive
+      - manifests=$(python artifacts/bin/create_manifest_list.py ${MANIFEST_PATHS})
+      - rm seedfarmer.yaml
+      - "echo project: ${SEEDFARMER_PROJECT_NAME} > seedfarmer.yaml"
+      - echo $manifests
+      - for manifest in $manifests;
+        do
+            echo "deploying manifest ${manifest}";
+            python artifacts/bin/manifest-update.py ${manifest} ${AWS_REGION} ${AWS_REGION} ${ACCOUNT_ID};
+            cat deployment.yaml;
+            seedfarmer apply deployment.yaml;
+            echo "manifest deployed successfully";
+            export DEPLOYMENT_NAME=$(python artifacts/bin/get_manifest_deployment_name.py deployment.yaml);
+            echo $DEPLOYMENT_NAME;
+            echo "deployment name ${DEPLOYMENT_NAME}";
+            seedfarmer destroy ${DEPLOYMENT_NAME};
+        done
+  post_build:
+    commands:
+      - echo Build completed on `date`
