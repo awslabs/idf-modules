@@ -46,7 +46,7 @@ targetAccountMappings:
     accountId: 123456789101
     default: true
     parametersGlobal:
-      dockerCredentialsSecret: aws-addf-docker-credentials
+      dockerCredentialsSecret: aws-idf-docker-credentials
     regionMappings:
       - region: us-west-2
         default: true
@@ -77,7 +77,7 @@ parameters:
 
 1. Bootstrap account. 
 ```bash
-seedfarmer bootstrap toolchain --project addf --trusted-principal ${ROLE_ARN} --region ${AWS_REGION} --as-target
+seedfarmer bootstrap toolchain --project idf --trusted-principal ${ROLE_ARN} --region ${AWS_REGION} --as-target
 ```
 
 2. Deploy Manifest
@@ -114,8 +114,8 @@ push code to the repo and branch specified in your module to start the integrati
 
 ```json
 {
-  "ADDFIntegrationTestPipeline": "addf-prod-integration-tests-Pipeline",
-  "ADDFIntegrationTestAlertsTopic": "addf-prod-integration-tests-AlertsTopic",
+  "IntegrationTestPipeline": "idf-prod-integration-tests-Pipeline",
+  "IntegrationTestAlertsTopic": "idf-prod-integration-tests-AlertsTopic",
 }
 
 ```
