@@ -161,8 +161,7 @@ class IntegrationTestsInfrastructure(cdk.Stack):
 
         self.alerts_topic = sns.Topic(
             self,
-            "Slack Alerts Topic",
-            topic_name="seedfarmer-integration-tests-slack-alerts",
+            "Integration Tests Alerts Topic",
         )
 
         rule = notifications.NotificationRule(

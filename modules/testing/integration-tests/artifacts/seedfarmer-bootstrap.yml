@@ -6,11 +6,11 @@ phases:
       python: 3.9
   pre_build:
     commands:
-      - rm .python-version
+      - rm .python-version || true
       - pip install -r requirements.txt
   build:
     commands:
-      - rm seedfarmer.yaml
+      - rm seedfarmer.yaml || true
       - "echo project: ${SEEDFARMER_PROJECT_NAME} > seedfarmer.yaml"
       - seedfarmer bootstrap toolchain --project ${SEEDFARMER_PROJECT_NAME} --trusted-principal ${PRINCIPAL_ROLE} --as-target
       - aws s3 cp s3://${ARTIFACTS_BUCKET} . --recursive
