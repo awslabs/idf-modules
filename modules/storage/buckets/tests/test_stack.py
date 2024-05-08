@@ -48,3 +48,17 @@ def test_synthesize_stack(stack_defaults):
 
     template.resource_count_is("AWS::S3::Bucket", 2)
     template.resource_count_is("AWS::S3::BucketPolicy", 2)
+
+
+def test_bucket_hash():
+    import stack
+
+    assert (
+        len(
+            stack.bucket_hash(
+                bucket_name="bucket-name-over-max-123456789123456789123456789123456789123456789123456789",
+                module_name="unit-tests",
+            )
+        )
+        <= 63
+    )
