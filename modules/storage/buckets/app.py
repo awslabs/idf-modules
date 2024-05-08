@@ -21,14 +21,10 @@ buckets_retention = os.getenv("SEEDFARMER_PARAMETER_RETENTION_TYPE", "RETAIN")
 app = App()
 
 if len(f"{project_name}-{deployment_name}") > 36:
-    raise ValueError(
-        "This module cannot support a project+deployment name character length greater than 35"
-    )
+    raise ValueError("This module cannot support a project+deployment name character length greater than 35")
 
 if buckets_retention not in ["DESTROY", "RETAIN"]:
-    raise ValueError(
-        "The only RETENTION_TYPE values accepted are 'DESTROY' and 'RETAIN' "
-    )
+    raise ValueError("The only RETENTION_TYPE values accepted are 'DESTROY' and 'RETAIN' ")
 
 
 if buckets_encryption_type not in ["SSE", "KMS"]:

@@ -50,10 +50,7 @@ def test_project_deployment_name_length(stack_defaults):
 
     with pytest.raises(Exception) as e:
         import app  # noqa: F401
-    assert (
-        "module cannot support a project+deployment name character length greater than"
-        in str(e)
-    )
+    assert "module cannot support a project+deployment name character length greater than" in str(e)
 
 
 def test_invalid_retention_type(stack_defaults):
@@ -61,9 +58,7 @@ def test_invalid_retention_type(stack_defaults):
 
     with pytest.raises(Exception) as e:
         import app  # noqa: F401
-    assert "The only RETENTION_TYPE values accepted are 'DESTROY' and 'RETAIN'" in str(
-        e
-    )
+    assert "The only RETENTION_TYPE values accepted are 'DESTROY' and 'RETAIN'" in str(e)
 
 
 def test_invalid_encryption_type(stack_defaults):

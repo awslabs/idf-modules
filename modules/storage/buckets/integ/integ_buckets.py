@@ -32,11 +32,7 @@ integration.IntegTest(
     diff_assets=True,
     stack_update_workflow=True,
     cdk_command_options=cas.CdkCommands(
-        deploy=cas.DeployCommand(
-            args=cas.DeployOptions(
-                require_approval=cas.RequireApproval.NEVER, json=True
-            )
-        ),
+        deploy=cas.DeployCommand(args=cas.DeployOptions(require_approval=cas.RequireApproval.NEVER, json=True)),
         destroy=cas.DestroyCommand(args=cas.DestroyOptions(force=True)),
     ),
 )

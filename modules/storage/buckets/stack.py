@@ -16,9 +16,7 @@ from constructs import Construct, IConstruct
 _logger: logging.Logger = logging.getLogger(__name__)
 
 
-def bucket_hash(
-    bucket_name: str, module_name: str, max_length: Optional[int] = 62
-) -> str:
+def bucket_hash(bucket_name: str, module_name: str, max_length: Optional[int] = 62) -> str:
     if len(bucket_name) > max_length:
         return bucket_name[:max_length]
 
