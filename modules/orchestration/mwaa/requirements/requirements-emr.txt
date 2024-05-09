@@ -1,4 +1,4 @@
-Pillow~=10.2.0
+Pillow~=10.3.0
 awscli~=1.22.80
 airflow-kubernetes-job-operator~=2.0.4
 apache-airflow[package-extra]==2.5.1
