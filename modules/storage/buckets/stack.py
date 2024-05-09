@@ -20,7 +20,10 @@ def bucket_hash(bucket_name: str, module_name: str, max_length: Optional[int] = 
     if len(bucket_name) > max_length:
         return bucket_name[:max_length]
 
-    return f"{bucket_name}-{hashlib.sha1(module_name.encode('UTF-8'), usedforsecurity=False).hexdigest()[: (max_length-1) - len(bucket_name)]}"
+    return f"""
+    {bucket_name}-{hashlib.sha1(module_name.encode('UTF-8'), usedforsecurity=False)
+    .hexdigest()[: (max_length-1) - len(bucket_name)]}
+    """
 
 
 class BucketsStack(Stack):  # type: ignore
