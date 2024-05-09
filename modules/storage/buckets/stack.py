@@ -3,7 +3,7 @@
 
 import hashlib
 import logging
-from typing import Any, cast
+from typing import Any, Optional, cast, no_type_check
 
 import aws_cdk
 import aws_cdk.aws_iam as aws_iam
@@ -14,6 +14,14 @@ from cdk_nag import NagPackSuppression, NagSuppressions
 from constructs import Construct, IConstruct
 
 _logger: logging.Logger = logging.getLogger(__name__)
+
+
+@no_type_check
+def bucket_hash(bucket_name: str, module_name: str, max_length: Optional[int] = 60) -> str:
+    if len(bucket_name) > max_length:
+        return bucket_name[:max_length]
+
+    return f"{bucket_name}-{hashlib.sha1(module_name.encode('UTF-8'), usedforsecurity=False).hexdigest()[: (max_length-1) - len(bucket_name)]}"  # noqa: E501
 
 
 class BucketsStack(Stack):  # type: ignore
@@ -30,7 +38,6 @@ class BucketsStack(Stack):  # type: ignore
         stack_description: str,
         **kwargs: Any,
     ) -> None:
-
         # CDK Env Vars
         account: str = aws_cdk.Aws.ACCOUNT_ID
         region: str = aws_cdk.Aws.REGION
@@ -42,15 +49,15 @@ class BucketsStack(Stack):  # type: ignore
         super().__init__(scope, id, description=stack_description, **kwargs)
         Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=full_dep_mod)
 
-        artifact_bucket_name = f"{project_name}-{deployment_name}-artifacts-bucket-{hash}"
-        unique_ab = (
-            hashlib.sha1(module_name.encode("UTF-8"), usedforsecurity=False).hexdigest()  # type: ignore[call-arg]
-        )[: (60 - len(artifact_bucket_name))]
+        artifact_bucket_name = bucket_hash(
+            bucket_name=f"{project_name}-{deployment_name}-artifacts-bucket-{hash}",
+            module_name=module_name,
+        )
 
         artifacts_bucket = aws_s3.Bucket(
             self,
             id="artifacts-bucket",
-            bucket_name=f"{artifact_bucket_name}-{unique_ab}",
+            bucket_name=artifact_bucket_name,
             removal_policy=aws_cdk.RemovalPolicy.RETAIN
             if buckets_retention.upper() == "RETAIN"
             else aws_cdk.RemovalPolicy.DESTROY,
@@ -64,15 +71,15 @@ class BucketsStack(Stack):  # type: ignore
             event_bridge_enabled=True,
         )
 
-        log_bucket_name = f"{project_name}-{deployment_name}-logs-bucket-{hash}"
-        unique_log = (
-            hashlib.sha1(module_name.encode("UTF-8"), usedforsecurity=False).hexdigest()  # type: ignore[call-arg]
-        )[: (60 - len(log_bucket_name))]
+        log_bucket_name = bucket_hash(
+            bucket_name=f"{project_name}-{deployment_name}-logs-bucket-{hash}",
+            module_name=module_name,
+        )
 
         logs_bucket = aws_s3.Bucket(
             self,
             id="logs-bucket",
-            bucket_name=f"{log_bucket_name}-{unique_log}",
+            bucket_name=log_bucket_name,
             removal_policy=aws_cdk.RemovalPolicy.RETAIN
             if buckets_retention.upper() == "RETAIN"
             else aws_cdk.RemovalPolicy.DESTROY,
