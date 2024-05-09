@@ -16,14 +16,14 @@ from constructs import Construct, IConstruct
 _logger: logging.Logger = logging.getLogger(__name__)
 
 
-def bucket_hash(bucket_name: str, module_name: str, max_length: Optional[int] = 62) -> str:
-    if len(bucket_name) > max_length:
+def bucket_hash(bucket_name: str, module_name: str, max_length: Optional[int] = 60) -> str:
+    if len(bucket_name) > max_length:  # type: ignore[operand]
         return bucket_name[:max_length]
 
     return f"""
-    {bucket_name}-{hashlib.sha1(module_name.encode('UTF-8'), usedforsecurity=False)
-    .hexdigest()[: (max_length-1) - len(bucket_name)]}
-    """
+    {bucket_name}-{hashlib.sha1(module_name.encode('UTF-8'), usedforsecurity=False) 
+    .hexdigest()[: (max_length-1) - len(bucket_name)]} 
+    """  # type: ignore
 
 
 class BucketsStack(Stack):  # type: ignore
