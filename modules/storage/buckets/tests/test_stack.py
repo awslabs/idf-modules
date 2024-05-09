@@ -62,3 +62,5 @@ def test_bucket_hash():
         )
         <= 63
     )
+
+    assert stack.bucket_hash(bucket_name="my-bucket", module_name="foobar").startswith("my-bucket-")

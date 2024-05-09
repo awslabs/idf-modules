@@ -3,7 +3,7 @@
 
 import hashlib
 import logging
-from typing import Any, Optional, cast
+from typing import Any, Optional, cast, no_type_check
 
 import aws_cdk
 import aws_cdk.aws_iam as aws_iam
@@ -16,14 +16,12 @@ from constructs import Construct, IConstruct
 _logger: logging.Logger = logging.getLogger(__name__)
 
 
+@no_type_check
 def bucket_hash(bucket_name: str, module_name: str, max_length: Optional[int] = 60) -> str:
-    if len(bucket_name) > max_length:  # type: ignore[operand]
+    if len(bucket_name) > max_length:
         return bucket_name[:max_length]
 
-    return f"""
-    {bucket_name}-{hashlib.sha1(module_name.encode('UTF-8'), usedforsecurity=False)
-    .hexdigest()[: (max_length-1) - len(bucket_name)]}
-    """  # type: ignore
+    return f"{bucket_name}-{hashlib.sha1(module_name.encode('UTF-8'), usedforsecurity=False).hexdigest()[: (max_length-1) - len(bucket_name)]}"  # noqa: E501
 
 
 class BucketsStack(Stack):  # type: ignore
