@@ -28,6 +28,10 @@ parameters:
 ### Deployment
 It is recommended that you do not deploy your integration test module in the same region/account you deploy the rest of your modules to. Use a different target region and/or account to avoid resource conflicts during invocations of the integration tests pipeline.
 
+
+#### Considerations
+This module can only be deployed in parallel if all modules use are using generic environment variables e.g. `SEEDFARMER_PARAMETER_*`. If you are using modules with non-generic variables this module can instead be deployed as a standalone deployment using `cdk deploy`.
+
 **Account mapping alias must be one of `["integ","integration","integ-tests", "integration-tests",]` for the integration test to work properly**
 
 [Example deployment manifest using an alias for integration tests region](../../../manifests/example-integration-tests/deployment.yaml):
@@ -37,8 +41,8 @@ name: example-integration-tests
 toolchainRegion: us-west-2
 forceDependencyRedeploy: True
 groups:
-  - name: optionals
-    path: manifests/example-integration-tests/optional-modules.yaml
+  - name: core
+    path: manifests/example-integration-tests/core-modules.yaml
   - name: integration
     path: manifests/example-integration-tests/integration-test.yaml
 targetAccountMappings:
@@ -86,7 +90,7 @@ seedfarmer apply manifests/example-integration-tests/deployment.yaml
 ```
 
 3. Once the stack is deployed... ![Integ Stack](./images/integ_stack_deployed.png)
-push code to the repo and branch specified in your module to start the integration test.
+you can push to the repo and branch specified in your integration testing module manifest to start the integration test.
 
 
 
