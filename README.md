@@ -14,6 +14,10 @@ All modules in this repository adhere to the module strutucture defined in the t
 - [Module Development](https://seed-farmer.readthedocs.io/en/latest/module_development.html)
 - [Module Manifest Guide](https://seed-farmer.readthedocs.io/en/latest/manifests.html)
 
+#### Industry-Specific SeedFarmer Module Repositories
+- [ADDF](https://github.com/awslabs/autonomous-driving-data-framework): A collection of modules for Scene Detection, Simulation (mock), Visualization, Compute, Storage, Centralized logging, etc.
+- [AiOps](https://github.com/awslabs/aiops-modules): A collection of modules for use-cases in the Artificial Intelligence & Machine Learning spaces. 
+
 ## Modules supported by IDF
 
 ### Networking Modules
