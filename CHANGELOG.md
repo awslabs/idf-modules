@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## UNRELEASED
 
 ### **Added**
+- feat: Adds Integration Tests Module
 
 ### **Changed**
 - fix: `storage/buckets` Correct issues with bucket names above character limit

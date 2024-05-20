@@ -1,0 +1,8 @@
+---
+name: buckets
+path: git::https://github.com/awslabs/idf-modules.git//modules/storage/buckets/?ref=main
+parameters:
+  - name: encryption-type
+    value: SSE
+  - name: retention-policy
+    value: DESTROY
