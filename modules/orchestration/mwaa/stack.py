@@ -74,6 +74,7 @@ class MWAAStack(Stack):  # type: ignore
                 versioned=True,
                 bucket_name=f"{dep_mod}-{account}-{region}",
                 removal_policy=aws_cdk.RemovalPolicy.DESTROY,
+                auto_delete_objects=True,
                 encryption=aws_s3.BucketEncryption.KMS_MANAGED,
                 block_public_access=aws_s3.BlockPublicAccess.BLOCK_ALL,
                 enforce_ssl=True,
