@@ -43,6 +43,7 @@ class EcrStack(Stack):
             repository_name=repository_name,
             image_tag_mutability=IMAGE_MUTABILITY[image_tag_mutability],
             removal_policy=RemovalPolicy.DESTROY if removal_policy in ["DESTROY"] else RemovalPolicy.RETAIN,
+            auto_delete_images=True if removal_policy in ["DESTROY"] else False,
             image_scan_on_push=image_scan_on_push,
             encryption=ENCRYPTION[encryption],
             encryption_key=kms.Key.from_key_arn(self, "Key", key_arn=kms_key_arn)
