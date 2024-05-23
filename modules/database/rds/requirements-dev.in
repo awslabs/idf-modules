@@ -1,13 +1,11 @@
 awscli
-black
 cfn-lint
 check-manifest
-flake8
-isort
 mypy
 pip-tools
 pydot
 pyroma
 pytest
+ruff
 types-PyYAML
 types-setuptools
