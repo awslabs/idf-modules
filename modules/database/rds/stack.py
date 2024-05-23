@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from typing import Any, cast
+from typing import Any, Literal, cast
 
 import aws_cdk as cdk
 import cdk_nag
@@ -41,7 +41,7 @@ class RDSDatabaseStack(cdk.Stack):
         module_name: str,
         vpc_id: str,
         subnet_ids: list[str],
-        engine: str,
+        engine: Literal["mysql", "postgresql"],
         engine_version: str,
         database_name: str,
         username: str,
