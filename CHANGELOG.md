@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - chore: mwaa dags bucket auto delete objects
 - set Pillow version to 10.3.0 as per bot recommendation
 - `storage/ecr` set `auto_delete_images` to `True` when removal policy is **DESTROY**
+- refactored `fix.sh` script to use `ruff` instead of `black` and `isort`
 
 ### **Removed**
 

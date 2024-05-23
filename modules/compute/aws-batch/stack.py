@@ -117,7 +117,6 @@ class AwsBatch(Stack):
                     instance_types = []
                     ebs_config = batchenv.get("ebs_config", {})
                     if ebs_config:
-
                         launch_template_name = f"{deployment_name}-{module_name}-storage-template"
 
                         ec2.CfnLaunchTemplate(

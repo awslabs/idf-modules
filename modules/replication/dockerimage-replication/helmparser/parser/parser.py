@@ -5,6 +5,7 @@
 
 import os
 from functools import reduce
+from typing import Any, Dict
 
 import yaml
 
@@ -173,8 +174,12 @@ def get_workloads(versions_dir: str, eks_version: str) -> dict:  # type: ignore
 
 
 def parse_value(
-    workload: dict, values: dict, image_name: str, image_data: dict, value_name: str  # type: ignore
-) -> str:  # type: ignore
+    workload: Dict[str, Any],
+    values: Dict[str, Any],
+    image_name: str,
+    image_data: Dict[str, Any],
+    value_name: str,
+) -> str:
     """Parses value from the Helm charts based on versions file
 
     Args:

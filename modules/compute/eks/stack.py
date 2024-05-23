@@ -575,7 +575,6 @@ class Eks(Stack):  # type: ignore
 
         # AWS S3 CSI Driver
         if eks_addons_config.get("deploy_aws_s3_csi"):
-
             if mountpoint_buckets:
                 arns = [f"arn:aws:s3:::{bucket}" for bucket in mountpoint_buckets]
                 arns_with_paths = [f"arn:aws:s3:::{bucket}/*" for bucket in mountpoint_buckets]

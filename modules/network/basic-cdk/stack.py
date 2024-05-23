@@ -25,7 +25,6 @@ class NetworkingStack(Stack):  # type: ignore
         stack_description: str,
         **kwargs: Any,
     ) -> None:
-
         super().__init__(scope, id, description=stack_description, **kwargs)
         dep_mod = f"{project_name}-{deployment_name}-{module_name}"
         # Stitch the below with `hash` to make it unique
@@ -92,17 +91,23 @@ class NetworkingStack(Stack):  # type: ignore
             subnet_configuration = [
                 ec2.SubnetConfiguration(name="Public", subnet_type=ec2.SubnetType.PUBLIC, cidr_mask=24),
                 ec2.SubnetConfiguration(
-                    name="Private", subnet_type=ec2.SubnetType.PRIVATE_WITH_NAT, cidr_mask=24  # type: ignore
+                    name="Private",
+                    subnet_type=ec2.SubnetType.PRIVATE_WITH_NAT,
+                    cidr_mask=24,  # type: ignore
                 ),
             ]
         else:
             subnet_configuration = [
                 ec2.SubnetConfiguration(name="Public", subnet_type=ec2.SubnetType.PUBLIC, cidr_mask=24),
                 ec2.SubnetConfiguration(
-                    name="Private", subnet_type=ec2.SubnetType.PRIVATE_WITH_NAT, cidr_mask=24  # type: ignore
+                    name="Private",
+                    subnet_type=ec2.SubnetType.PRIVATE_WITH_NAT,
+                    cidr_mask=24,  # type: ignore
                 ),
                 ec2.SubnetConfiguration(
-                    name="Isolated", subnet_type=ec2.SubnetType.PRIVATE_ISOLATED, cidr_mask=24  # type: ignore
+                    name="Isolated",
+                    subnet_type=ec2.SubnetType.PRIVATE_ISOLATED,
+                    cidr_mask=24,  # type: ignore
                 ),
             ]
 
@@ -137,7 +142,6 @@ class NetworkingStack(Stack):  # type: ignore
             Tags.of(subnet).add(tag, "1")
 
     def _create_vpc_endpoints(self) -> None:
-
         # Creating Gateway Endpoints
         vpc_gateway_endpoints = {
             "s3": ec2.GatewayVpcEndpointAwsService.S3,
