@@ -129,9 +129,9 @@ def main() -> None:
                         tag = parser.parse_value(parsed_charts[workload], values, image_name, v, k)
 
                         custom_chart_values[workload]["values"] = parser.add_branch_to_dict(
-                            custom_chart_values[workload]["values"],
+                            custom_chart_values[workload]["values"],  # type: ignore[arg-type]
                             v,
-                            tag,  # type: ignore
+                            tag,
                         )
 
                         continue
@@ -141,9 +141,9 @@ def main() -> None:
                     # set value to empty, e.g. digest as it will be different after push to ECR
                     if k == "remove":
                         custom_chart_values[workload]["values"] = parser.add_branch_to_dict(
-                            custom_chart_values[workload]["values"],
+                            custom_chart_values[workload]["values"],  # type: ignore[arg-type]
                             v,
-                            "",  # type: ignore
+                            "",
                         )
                         continue
 

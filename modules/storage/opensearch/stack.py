@@ -36,7 +36,6 @@ class OpenSearchStack(Stack):  # type: ignore
         stack_description: str,
         **kwargs: Any,
     ) -> None:
-
         super().__init__(scope, id, description=stack_description, **kwargs)
 
         dep_mod = f"{project_name}-{deployment_name}-{module_name}"
