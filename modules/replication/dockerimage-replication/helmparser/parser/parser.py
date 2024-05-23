@@ -173,7 +173,11 @@ def get_workloads(versions_dir: str, eks_version: str) -> dict:  # type: ignore
 
 
 def parse_value(
-    workload: dict, values: dict, image_name: str, image_data: dict, value_name: str  # type: ignore
+    workload: dict,
+    values: dict,
+    image_name: str,
+    image_data: dict,
+    value_name: str,  # type: ignore
 ) -> str:  # type: ignore
     """Parses value from the Helm charts based on versions file
 
