@@ -37,7 +37,7 @@ class ModuleSettings(BaseSettings):
     admin_username: str
     database_name: str
 
-    port: Optional[int] = Field(default=None, ge=0)
+    port: Optional[int] = Field(default=None, ge=1, le=65535)
     instance_type: str = Field(default="ml.m5.large")
     credential_rotation_days: int = Field(default=0, ge=0)
     is_accessible_from_vpc: bool = Field(default=False)

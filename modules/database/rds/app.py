@@ -2,12 +2,18 @@
 # SPDX-License-Identifier: Apache-2.0
 import aws_cdk as cdk
 import cdk_nag
+from pydantic import ValidationError
 
 from settings import ApplicationSettings
 from stack import RDSDatabaseStack
 
 app = cdk.App()
-app_settings = ApplicationSettings()
+
+try:
+    app_settings = ApplicationSettings()
+except ValidationError as e:
+    print(e)
+    raise e
 
 template_stack = RDSDatabaseStack(
     scope=app,
