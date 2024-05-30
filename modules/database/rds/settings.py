@@ -6,7 +6,7 @@ from abc import ABC
 from typing import List, Optional
 
 import aws_cdk as cdk
-from pydantic import Field, computed_field, field_validator, model_validator
+from pydantic import Field, computed_field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing_extensions import Literal
 
