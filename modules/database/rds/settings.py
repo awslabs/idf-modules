@@ -1,8 +1,7 @@
 """Defines the stack settings."""
 
-from __future__ import annotations
-
 from abc import ABC
+from typing import List, Optional
 
 import aws_cdk as cdk
 from pydantic import Field, computed_field, field_validator, model_validator
@@ -31,22 +30,22 @@ class ModuleSettings(EnvBaseSettings):
     model_config = SettingsConfigDict(env_prefix="SEEDFARMER_PARAMETER_")
 
     vpc_id: str
-    subnet_ids: list[str]
+    subnet_ids: List[str]
 
     engine: Literal["mysql", "postgresql"]
     engine_version: str
     admin_username: str
     database_name: str
 
-    port: int | None = Field(default=None, ge=1, le=65535)
+    port: Optional[int] = Field(default=None, ge=1, le=65535)
     instance_type: str = Field(default="ml.m5.large")
     credential_rotation_days: int = Field(default=0, ge=0)
     is_accessible_from_vpc: bool = Field(default=False)
     removal_policy: cdk.RemovalPolicy = Field(default="RETAIN")
 
-    solution_id: str | None = Field(default=None)
-    solution_name: str | None = Field(default=None)
-    solution_version: str | None = Field(default=None)
+    solution_id: Optional[str] = Field(default=None)
+    solution_name: Optional[str] = Field(default=None)
+    solution_version: Optional[str] = Field(default=None)
 
     @field_validator("removal_policy", mode="before")
     @classmethod
