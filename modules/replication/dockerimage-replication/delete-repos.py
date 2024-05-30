@@ -26,7 +26,6 @@ def cleanup_ecr_repos(prefix: str) -> None:
 
 
 def cleanup_ssm_params(path: str) -> None:
-
     paginator = SSM_CLIENT.get_paginator("get_parameters_by_path")
 
     response_iterator = paginator.paginate(Path=path)

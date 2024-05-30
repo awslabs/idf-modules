@@ -6,6 +6,7 @@ import logging
 import os
 
 from aws_cdk import App, CfnOutput, Environment
+
 from stack import FsxFileSystem
 
 LOGGING_FORMAT = "[%(asctime)s][%(filename)-13s:%(lineno)3d] %(message)s"

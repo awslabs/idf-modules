@@ -1,6 +1,7 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
+import json
 import os
 import sys
 
@@ -16,10 +17,23 @@ def stack_defaults():
     os.environ["CDK_DEFAULT_REGION"] = "us-east-1"
     os.environ["SEEDFARMER_PARAMETER_RETENTION_TYPE"] = "DESTROY"
     os.environ["SEEDFARMER_PARAMETER_VPC_ID"] = "vpc-12345"
-    os.environ["SEEDFARMER_PARAMETER_PRIVATE_SUBNET_IDS"] = '["subnet-12345", "subnet-54321"]'
-    os.environ[
-        "SEEDFARMER_PARAMETER_BATCH_COMPUTE"
-    ] = '{"batch_compute_config": [{"env_name": "ng1", "compute_type": "ON_DEMAND", "max_vcpus": 4800, "desired_vcpus": 0, "order": 1, "instance_types": ["m5.xlarge"]}, {"env_name": "ng2", "max_vcpus": 4800, "desired_vcpus": 0, "compute_type": "SPOT", "order": 1}, {"env_name": "ng3", "max_vcpus": 4800, "desired_vcpus": 0, "compute_type": "FARGATE", "order": 1}]}'  # type: ignore
+    os.environ["SEEDFARMER_PARAMETER_PRIVATE_SUBNET_IDS"] = json.dumps(["subnet-12345", "subnet-54321"])
+    os.environ["SEEDFARMER_PARAMETER_BATCH_COMPUTE"] = json.dumps(
+        {
+            "batch_compute_config": [
+                {
+                    "env_name": "ng1",
+                    "compute_type": "ON_DEMAND",
+                    "max_vcpus": 4800,
+                    "desired_vcpus": 0,
+                    "order": 1,
+                    "instance_types": ["m5.xlarge"],
+                },
+                {"env_name": "ng2", "max_vcpus": 4800, "desired_vcpus": 0, "compute_type": "SPOT", "order": 1},
+                {"env_name": "ng3", "max_vcpus": 4800, "desired_vcpus": 0, "compute_type": "FARGATE", "order": 1},
+            ]
+        }
+    )
     # Unload the app import so that subsequent tests don't reuse
     if "app" in sys.modules:
         del sys.modules["app"]

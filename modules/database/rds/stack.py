@@ -53,7 +53,6 @@ class RDSDatabaseStack(cdk.Stack):
         stack_description: str | None = None,
         **kwargs: Any,
     ) -> None:
-
         super().__init__(scope, id, description=stack_description, **kwargs)
 
         self.project_name = project_name

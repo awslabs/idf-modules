@@ -26,7 +26,6 @@ class EFSFileStorage(Stack):  # type: ignore
         efs_removal_policy: str,
         **kwargs: Any,
     ) -> None:
-
         super().__init__(
             scope,
             id,

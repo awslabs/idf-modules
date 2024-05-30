@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 """Logging module"""
+
 import logging
 
 stream_handler = logging.StreamHandler()
