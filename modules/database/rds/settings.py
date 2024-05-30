@@ -1,5 +1,7 @@
 """Defines the stack settings."""
 
+from __future__ import annotations
+
 from abc import ABC
 from typing import List, Optional
 
@@ -41,23 +43,11 @@ class ModuleSettings(EnvBaseSettings):
     instance_type: str = Field(default="ml.m5.large")
     credential_rotation_days: int = Field(default=0, ge=0)
     is_accessible_from_vpc: bool = Field(default=False)
-    removal_policy: cdk.RemovalPolicy = Field(default="RETAIN")
+    removal_policy: cdk.RemovalPolicy = Field(default=cdk.RemovalPolicy.RETAIN)
 
     solution_id: Optional[str] = Field(default=None)
     solution_name: Optional[str] = Field(default=None)
     solution_version: Optional[str] = Field(default=None)
-
-    @field_validator("removal_policy", mode="before")
-    @classmethod
-    def transform_removal_policy(cls, value: str) -> cdk.RemovalPolicy:
-        value = value.upper()
-
-        if value == "DESTROY":
-            return cdk.RemovalPolicy.DESTROY
-        if value == "RETAIN":
-            return cdk.RemovalPolicy.RETAIN
-
-        raise ValueError(f"Invalid removal policy {value}")
 
     @computed_field  # type: ignore
     @property
