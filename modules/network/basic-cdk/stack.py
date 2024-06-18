@@ -12,7 +12,6 @@ from constructs import Construct, IConstruct
 
 _logger: logging.Logger = logging.getLogger(__name__)
 
-
 class NetworkingStack(Stack):  # type: ignore
     def __init__(
         self,
@@ -22,6 +21,7 @@ class NetworkingStack(Stack):  # type: ignore
         deployment_name: str,
         module_name: str,
         internet_accessible: bool,
+        local_zones: List[str],
         stack_description: str,
         **kwargs: Any,
     ) -> None:
@@ -32,7 +32,7 @@ class NetworkingStack(Stack):  # type: ignore
         # used to tag AWS resources. Tag Value length cant exceed 256 characters
         full_dep_mod = dep_mod[:256] if len(dep_mod) > 256 else dep_mod
         Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=full_dep_mod)
-        self.vpc: ec2.Vpc = self._create_vpc(internet_accessible=internet_accessible)
+        self.vpc: ec2.Vpc = self._create_vpc(internet_accessible=internet_accessible, local_zones=local_zones)
 
         self.internet_accessible = internet_accessible
 
@@ -55,7 +55,7 @@ class NetworkingStack(Stack):  # type: ignore
             self.nodes_subnets = self.isolated_subnets
         else:
             self.nodes_subnets = self.private_subnets
-
+        
         self._vpc_security_group = ec2.SecurityGroup(
             self, "vpc-sg", vpc=cast(ec2.IVpc, self.vpc), allow_all_outbound=False
         )
@@ -86,7 +86,7 @@ class NetworkingStack(Stack):  # type: ignore
 
         NagSuppressions.add_stack_suppressions(self, suppressions)
 
-    def _create_vpc(self, internet_accessible: bool) -> ec2.Vpc:
+    def _create_vpc(self, internet_accessible: bool, local_zones: List[str]) -> ec2.Vpc:
         if internet_accessible:
             subnet_configuration = [
                 ec2.SubnetConfiguration(name="Public", subnet_type=ec2.SubnetType.PUBLIC, cidr_mask=24),
@@ -122,6 +122,19 @@ class NetworkingStack(Stack):  # type: ignore
             nat_gateways=1,
             subnet_configuration=subnet_configuration,
         )
+
+        self.local_zone_subnets = []
+        for idx, lz in enumerate(local_zones):
+            idx = 8 + idx
+            lz_subnet = ec2.Subnet(
+                self, 
+                id=f'LZ-{lz}',
+                availability_zone=lz,
+                vpc_id=vpc.vpc_id,
+                cidr_block=f'10.0.{idx}.0/24'
+            )
+            self.local_zone_subnets.append(lz_subnet)
+
 
         # Enabling VPC Flow logs
         vpc.add_flow_log(

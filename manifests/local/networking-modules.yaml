@@ -4,3 +4,9 @@ targetAccount: primary
 parameters:
   - name: internet-accessible
     value: true
+  - name: local-zones
+    value: 
+      us-east-1: 
+        - us-east-1-bos-1a
+      eu-central-1: 
+        - eu-central-1-ham-1a

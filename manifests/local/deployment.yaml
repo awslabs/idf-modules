@@ -7,16 +7,16 @@ toolchainRegion: us-west-2
 groups:
   - name: networking
     path: manifests/local/networking-modules.yaml
-  - name: storage
-    path: manifests/local/storage-modules.yaml
+  # - name: storage
+  #   path: manifests/local/storage-modules.yaml
   # - name: replication
   #   path: manifests/local/replicator-modules.yaml
   - name: compute
     path: manifests/local/compute-modules.yaml
-  - name: database
-    path: manifests/local/database-modules.yaml
-  - name: orchestration
-    path: manifests/local/orchestration-modules.yaml
+  # - name: database
+  #   path: manifests/local/database-modules.yaml
+  # - name: orchestration
+  #   path: manifests/local/orchestration-modules.yaml
 targetAccountMappings:
   - alias: primary
     parametersGlobal:
@@ -26,6 +26,6 @@ targetAccountMappings:
         envVariable: PRIMARY_ACCOUNT
     default: true
     regionMappings:
-      - region: us-west-2
+      - region: us-east-1
         default: true
 

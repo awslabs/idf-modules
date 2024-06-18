@@ -14,6 +14,9 @@ deployment_name = os.getenv("SEEDFARMER_DEPLOYMENT_NAME", "")
 module_name = os.getenv("SEEDFARMER_MODULE_NAME", "")
 
 internet_accessible = json.loads(os.getenv("SEEDFARMER_PARAMETER_INTERNET_ACCESSIBLE", "true"))
+local_zones = json.loads(os.getenv("SEEDFARMER_PARAMETER_LOCAL_ZONES", {}))
+region = os.environ["CDK_DEFAULT_REGION"]
+local_zones_for_region = local_zones.get(region, [])
 
 app = App()
 
@@ -39,6 +42,7 @@ stack = NetworkingStack(
     module_name=module_name,
     internet_accessible=internet_accessible,
     stack_description=generate_description(),
+    local_zones=local_zones_for_region,
     env=aws_cdk.Environment(
         account=os.environ["CDK_DEFAULT_ACCOUNT"],
         region=os.environ["CDK_DEFAULT_REGION"],
@@ -54,6 +58,7 @@ CfnOutput(
             "PublicSubnetIds": stack.public_subnets.subnet_ids,
             "PrivateSubnetIds": stack.private_subnets.subnet_ids,
             "IsolatedSubnetIds": stack.isolated_subnets.subnet_ids if not stack.internet_accessible else [],
+            "LocalZoneSubnetIds": [x.subnet_id for x in stack.local_zone_subnets],
         }
     ),
 )
