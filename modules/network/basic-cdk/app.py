@@ -13,17 +13,26 @@ project_name = os.getenv("SEEDFARMER_PROJECT_NAME", "")
 deployment_name = os.getenv("SEEDFARMER_DEPLOYMENT_NAME", "")
 module_name = os.getenv("SEEDFARMER_MODULE_NAME", "")
 
-internet_accessible = json.loads(os.getenv("SEEDFARMER_PARAMETER_INTERNET_ACCESSIBLE", "true"))
+if len(f"{project_name}-{deployment_name}") > 36:
+    raise ValueError("This module cannot support a project+deployment name character length greater than 35")
+
+
+def _param(name: str) -> str:
+    return f"SEEDFARMER_PARAMETER_{name}"
+
+
+internet_accessible = json.loads(os.getenv(_param("INTERNET_ACCESSIBLE"), "true"))
+local_zones = json.loads(os.getenv(_param("LOCAL_ZONES"), "[]"))
 
 app = App()
 
 
 def generate_description() -> str:
-    soln_id = os.getenv("SEEDFARMER_PARAMETER_SOLUTION_ID", None)
-    soln_name = os.getenv("SEEDFARMER_PARAMETER_SOLUTION_NAME", None)
-    soln_version = os.getenv("SEEDFARMER_PARAMETER_SOLUTION_VERSION", None)
+    soln_id = os.getenv(_param("SOLUTION_ID"), None)
+    soln_name = os.getenv(_param("SOLUTION_NAME"), None)
+    soln_version = os.getenv(_param("SOLUTION_VERSION"), None)
 
-    desc = "IDF - Networking Module"
+    desc = f"{project_name} - Networking Module"
     if soln_id and soln_name and soln_version:
         desc = f"({soln_id}) {soln_name}. Version {soln_version}"
     elif soln_id and soln_name:
@@ -38,6 +47,7 @@ stack = NetworkingStack(
     deployment_name=deployment_name,
     module_name=module_name,
     internet_accessible=internet_accessible,
+    local_zones=local_zones,
     stack_description=generate_description(),
     env=aws_cdk.Environment(
         account=os.environ["CDK_DEFAULT_ACCOUNT"],
@@ -54,6 +64,12 @@ CfnOutput(
             "PublicSubnetIds": stack.public_subnets.subnet_ids,
             "PrivateSubnetIds": stack.private_subnets.subnet_ids,
             "IsolatedSubnetIds": stack.isolated_subnets.subnet_ids if not stack.internet_accessible else [],
+            "LocalZonePrivateSubnetIds": [s.subnet_id for s in stack.local_zone_private_subnets if local_zones]
+            if hasattr(stack, "local_zone_private_subnets") and local_zones
+            else [],
+            "LocalZonePublicSubnetIds": [s.subnet_id for s in stack.local_zone_public_subnets if local_zones]
+            if hasattr(stack, "local_zone_public_subnets") and local_zones
+            else [],
         }
     ),
 )
