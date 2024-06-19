@@ -247,6 +247,10 @@ class NetworkingStack(Stack):  # type: ignore
             "codebuild_endpoint": ec2.InterfaceVpcEndpointAwsService("codebuild"),
             "emr-containers": ec2.InterfaceVpcEndpointAwsService("emr-containers"),
             "databrew": ec2.InterfaceVpcEndpointAwsService("databrew"),
+            "bedrock": ec2.InterfaceVpcEndpointAwsService("bedrock"),
+            "bedrock_agent": ec2.InterfaceVpcEndpointAwsService("bedrock-agent"),
+            "bedrock_agent_runtime": ec2.InterfaceVpcEndpointAwsService("bedrock-agent-runtime"),
+            "bedrock_runtime": ec2.InterfaceVpcEndpointAwsService("bedrock-runtime"),
         }
 
         for name, interface_service in vpc_interface_endpoints.items():
