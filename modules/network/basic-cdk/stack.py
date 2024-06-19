@@ -24,6 +24,8 @@ class NetworkingStack(Stack):  # type: ignore
         project_name: str,
         deployment_name: str,
         module_name: str,
+        vpc_cidr: Optional[str],
+        cidr_mask: Optional[int],
         internet_accessible: bool,
         local_zones: Optional[List[str]],
         stack_description: str,
@@ -37,10 +39,11 @@ class NetworkingStack(Stack):  # type: ignore
         full_dep_mod = dep_mod[:256] if len(dep_mod) > 256 else dep_mod
         Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=full_dep_mod)
 
-        self.vpc: ec2.Vpc = self._create_vpc(internet_accessible=internet_accessible, local_zones=local_zones)
+        self.vpc: ec2.Vpc = self._create_vpc(
+            internet_accessible=internet_accessible, local_zones=local_zones, vpc_cidr=vpc_cidr, cidr_mask=cidr_mask
+        )
 
         self.internet_accessible = internet_accessible
-
         self.public_subnets = (
             self.vpc.select_subnets(subnet_type=ec2.SubnetType.PUBLIC)
             if self.vpc.public_subnets
@@ -73,14 +76,20 @@ class NetworkingStack(Stack):  # type: ignore
         # Add suppressions
         self._add_suppressions()
 
-    def _create_vpc(self, internet_accessible: bool, local_zones: Optional[List[str]]) -> ec2.Vpc:
+    def _create_vpc(
+        self,
+        internet_accessible: bool,
+        local_zones: Optional[List[str]],
+        vpc_cidr: Optional[str],
+        cidr_mask: Optional[int],
+    ) -> ec2.Vpc:
         subnet_configuration = self._get_subnet_configuration(internet_accessible)
         nat = ec2.NatProvider.gateway()
         vpc = ec2.Vpc(
             scope=self,
             id="vpc",
             default_instance_tenancy=ec2.DefaultInstanceTenancy.DEFAULT,
-            cidr=VPC_CIDR,
+            cidr=vpc_cidr,
             enable_dns_hostnames=True,
             enable_dns_support=True,
             max_azs=3,

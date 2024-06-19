@@ -21,6 +21,8 @@ def _param(name: str) -> str:
     return f"SEEDFARMER_PARAMETER_{name}"
 
 
+vpc_cidr = os.getenv(_param("VPC_CIDR"), "10.0.0.0/16")
+cidr_mask = int(os.getenv(_param("CIDR_MASK"), "24"))
 internet_accessible = json.loads(os.getenv(_param("INTERNET_ACCESSIBLE"), "true"))
 local_zones = json.loads(os.getenv(_param("LOCAL_ZONES"), "[]"))
 
@@ -46,6 +48,8 @@ stack = NetworkingStack(
     project_name=project_name,
     deployment_name=deployment_name,
     module_name=module_name,
+    vpc_cidr=vpc_cidr,
+    cidr_mask=cidr_mask,
     internet_accessible=internet_accessible,
     local_zones=local_zones,
     stack_description=generate_description(),
