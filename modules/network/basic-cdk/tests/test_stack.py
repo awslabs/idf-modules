@@ -21,6 +21,7 @@ def test_synthesize_stack(stack_defaults):
     project_name = "test-project"
     dep_name = "test-deployment"
     mod_name = "test-module-nointernet"
+    local_zones = ["us-west-XXX-XXX"]
     # Create the Stack.
     network_stack = stack.NetworkingStack(
         scope=app,
@@ -28,7 +29,10 @@ def test_synthesize_stack(stack_defaults):
         project_name=project_name,
         deployment_name=dep_name,
         module_name=mod_name,
+        vpc_cidr="10.0.0.0/16",
+        cidr_mask=24,
         internet_accessible=True,
+        local_zones=local_zones,
         stack_description="Testing",
         env=cdk.Environment(
             account=os.environ["CDK_DEFAULT_ACCOUNT"],
@@ -47,6 +51,7 @@ def test_synthesize_stack_no_internet(stack_defaults):
     project_name = "test-project"
     dep_name = "test-deployment"
     mod_name = "test-module-nointernet"
+    local_zones = ["us-west-XXX-XXX"]
     # Create the Stack.
     network_stack = stack.NetworkingStack(
         scope=app,
@@ -54,7 +59,10 @@ def test_synthesize_stack_no_internet(stack_defaults):
         project_name=project_name,
         deployment_name=dep_name,
         module_name=mod_name,
+        vpc_cidr="10.0.0.0/16",
+        cidr_mask=24,
         internet_accessible=False,
+        local_zones=local_zones,
         stack_description="Testing",
         env=cdk.Environment(
             account=os.environ["CDK_DEFAULT_ACCOUNT"],

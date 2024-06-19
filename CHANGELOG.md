@@ -8,10 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## UNRELEASED
 
 ### **Added**
+
 - feat: Adds Integration Tests Module
 - moved module `integration/fsx-lustre-on-eks` into repo from [ADDF-Modules repo](https://github.com/awslabs/autonomous-driving-data-framework)
+- added support for AWS LocalZone Public and Private Subnets
 
 ### **Changed**
+
 - fix: `storage/buckets` Correct issues with bucket names above character limit
 - chore: mwaa dags bucket auto delete objects
 - set Pillow version to 10.3.0 as per bot recommendation
