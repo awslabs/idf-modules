@@ -14,7 +14,7 @@ This module creates an EKS Cluster with the following features and addons availa
 
 Load balancing:
 
-- ALB Ingress Controller
+- ALB Ingress Controller - recommended
 - Nginx Ingress Controller
 
 Storage:
@@ -30,13 +30,14 @@ Secrets:
 
 Scaling:
 
-- Horizontal Pod Autoscaler (HPA)
-- CLuster Autoscaler (CA)
+- Horizontal Pod Autoscaler (HPA) - recommended
+- Cluster Autoscaler (CA) - recommended
 
 Monitoring/Logging/Alerting:
 
-- Cloudwatch Container Insights (Metrics & logs)
-- CloudWatch Observability Addon (deploys metrics and logging drivers using EKS Managed Addon)
+- Cloudwatch Container Insights (logs)
+- Amazon CloudWatch Observability EKS add-on (deploys metrics and logging drivers using EKS Managed Addon) - recommended
+- Amazon EKS add-on support for ADOT Operator
 
 Networking:
 
@@ -116,9 +117,9 @@ EKS integrates with AWS Identity and Access Management (IAM) to control access t
 
 #### Logging & Monitoring
 
-- We have enabled [CloudWatch Container Insights](https://docs.aws.amazon.com/prescriptive-guidance/latest/implementing-logging-monitoring-cloudwatch/kubernetes-eks-metrics.html) by default as the standard practise for ingesting Cluster metrics to AWS CloudWatch
+- It is recommended to deploy [Amazon CloudWatch Observability EKS add-on](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-setup-EKS-addon.html) which helps collecting infrastructure metrics using CloudWatch agent, helps sending container logs using Fluent Bit and the target is AWS CloudWatch.
 
-- For ingesting application logs, you could either enable `deploy_cloudwatch_container_insights_logs` flag in the above sample to write to AWS CloudWatch or deploy the module `eks-to-opensearch` under `modules/integration/` to write to AWS OpenSearch using fluent-bit logging driver.
+> Note: The EKS module supports the list of monitoring solutions declared in the beginning of the doc.
 
 ### Module Metadata Outputs
 

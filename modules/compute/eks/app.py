@@ -32,8 +32,8 @@ custom_subnet_ids = (  # type: ignore
     json.loads(os.getenv(_param("CUSTOM_SUBNET_IDS"))) if os.getenv(_param("CUSTOM_SUBNET_IDS")) else None
 )
 eks_version = os.getenv(_param("EKS_VERSION"), "")  # required
-eks_compute_config = json.loads(os.getenv(_param("EKS_COMPUTE"), ""))  # required
-eks_addons_config = json.loads(os.getenv(_param("EKS_ADDONS"), ""))  # required
+eks_compute_config = json.loads(os.getenv(_param("EKS_COMPUTE"), "{}"))  # required
+eks_addons_config = json.loads(os.getenv(_param("EKS_ADDONS"), "{}"))  # required
 mountpoint_buckets = json.loads(os.getenv(_param("MOUNTPOINT_BUCKETS"), "[]"))  # optional
 
 if not vpc_id:
