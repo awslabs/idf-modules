@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version of documentation to generate and release, x.y.z'     
+        description: 'Version of codebase to generate metadata for, x.y.z'     
         required: true
 jobs:
   build:
@@ -33,4 +33,4 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install argparse
-          python scripts/generate-module-metadata.py --v 1.0.0 -n ${{ github.event.repository.name }}
+          python scripts/generate-module-metadata.py --v ${RELEASE_VERSION} -n ${{ github.event.repository.name }}
