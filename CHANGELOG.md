@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - moved module `integration/fsx-lustre-on-eks` into repo from [ADDF-Modules repo](https://github.com/awslabs/autonomous-driving-data-framework)
 - added support for AWS LocalZone Public and Private Subnets
 - added support for bedrock endpoints
+- added support for EKS Self Managed node groups with autoscaling
 
 ### **Changed**
 
