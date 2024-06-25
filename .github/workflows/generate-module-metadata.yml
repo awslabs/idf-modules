@@ -29,8 +29,14 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1.7.0
+        with:
+          role-to-assume: ${{ secrets.ROLE_ARN }}
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: us-west-2
       - name: Generate Metadata
         run: |
           python -m pip install --upgrade pip
           pip install argparse
-          python scripts/generate-module-metadata.py --v ${RELEASE_VERSION} -n ${{ github.event.repository.name }}
+          python scripts/generate-module-metadata.py -v ${RELEASE_VERSION} -n ${{ github.event.repository.name }} -b ${{ secrets.BUCKET_NAME }}

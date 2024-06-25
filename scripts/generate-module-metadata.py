@@ -1,13 +1,17 @@
 import argparse
+import boto3
 import glob
+import json
 import os
 from pprint import pprint
 from typing import Dict, List
 
 CWD = os.getcwd()
+s3 = boto3.resource('s3')
 
 parser = argparse.ArgumentParser(description='Generate module metadata')
 parser.add_argument('-v','--version', help='Version', required=True)
+parser.add_argument('-b','--bucket-name', help='S3 Bucket Name', required=True)
 parser.add_argument('-n','--repo-name', help='Repo Name', required=True)
 parser.add_argument('--org-name', help='Github Organization Name', default="awslabs", required=False)
 parser.add_argument('-i','--ignore-regex', help='Regex pattern to ignore from collection', required=False)
@@ -32,15 +36,21 @@ def generate_module_metadata(module_path: str)-> Dict[str, str]:
 def print_metadata(metadata: Dict[str, str]) -> None:
     result = {}
     for k,v in metadata.items():
-        if k is "readme":
+        if k == "readme":
             v = "..."
         result[k] = v
     pprint(result)
+
+def write_metadata_to_s3(key: str, metadata: Dict[str,str]) -> None:
+    path = f"module-metadata/versions/{args.version}/{key}/metadata.json"
+    print(f"[*] writing metadata to path: {path}")
+    object = s3.Object(args.bucket_name, path)
+    object.put(Body=bytes(json.dumps(metadata).encode('UTF-8')))
 
 module_paths = get_all_module_paths(f"{CWD}/modules", 2)
 
 print(f"*** Module Metadata for version {args.version} ***")
 for path in module_paths:
     metadata = generate_module_metadata(path)
-    # write_metadata_to_s3(bucket, metadata['name'], metadata) # To Implement
+    write_metadata_to_s3(metadata['name'], metadata) # To Implement
     print_metadata(metadata)
