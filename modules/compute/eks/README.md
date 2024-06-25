@@ -103,9 +103,11 @@ Security:
 - `deploy_nginx_controller`: Deploys [nginx ingress controller](https://aws.amazon.com/blogs/opensource/network-load-balancer-nginx-ingress-controller-eks/). You can provide `nginx_additional_annotations` which populates Optional list of nginx annotations. Default behavior is set to False
 - `deploy_kyverno`: Deploys [Kyverno policy engine](https://aws.amazon.com/blogs/containers/managing-pod-security-on-amazon-eks-with-kyverno/) which is is a Policy-as-Code (PaC) solution that includes a policy engine designed for Kubernetes. You can provide the list of policies to be enabled using `kyverno_policies` attribute. Default behavior is set to False
 
-### How to launch EKS Cluster in [Private Subnets](./docs/eks-private.md)
+### How to launch EKS Cluster in [Private Subnets](./docs/eks-private/eks-private.md)
 
-### How to launch EKS Cluster in [Isolated Subnets](./docs/eks-isolated.md)
+### How to launch EKS Cluster in [Isolated Subnets](./docs/eks-isolated/eks-isolated.md)
+
+### How to launch EKS Cluster in [Local Zones](./docs/eks-localzones/eks-lz.md)
 
 #### IAM integration
 

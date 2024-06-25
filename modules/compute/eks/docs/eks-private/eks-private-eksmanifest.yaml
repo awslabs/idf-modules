@@ -29,7 +29,7 @@ parameters:
   - name: eks-read-only-role-name
     value: ReadOnly
   - name: eks-version
-    value: 1.25 # Replace the EKS_VERSION inline here or set an env var and load it from `.env` file using below format
+    value: 1.29 # Replace the EKS_VERSION inline here or set an env var and load it from `.env` file using below format
     # valueFrom:
     #   envVariable: GLOBAL_EKS_VERSION
   - name: eks-compute

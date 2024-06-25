@@ -12,6 +12,7 @@ import cdk_nag
 import yaml
 from aws_cdk import Aspects, CfnJson, RemovalPolicy, Stack, Tags
 from aws_cdk import aws_aps as aps
+from aws_cdk import aws_autoscaling as asg
 from aws_cdk import aws_ec2 as ec2
 from aws_cdk import aws_eks as eks
 from aws_cdk import aws_iam as iam
@@ -197,7 +198,15 @@ class Eks(Stack):  # type: ignore
                 node_capacity_type = eks.CapacityType.ON_DEMAND
 
             for ng in eks_compute_config.get("eks_nodegroup_config", [{}]):
-                self._create_managed_node_group(eks_cluster, eks_version, ng, node_capacity_type, vpc_cni_chart)
+                if ng.get("eks_self_managed"):
+                    self._create_self_managed_node_group(
+                        dep_mod,
+                        eks_cluster,
+                        ng,
+                        vpc_cni_chart,
+                    )
+                else:
+                    self._create_managed_node_group(eks_cluster, eks_version, ng, node_capacity_type, vpc_cni_chart)
 
         # AWS Load Balancer Controller
         if eks_addons_config.get("deploy_aws_lb_controller"):
@@ -323,6 +332,57 @@ class Eks(Stack):  # type: ignore
         # Add suppressions
         self._add_suppressions()
 
+    def _create_self_managed_node_group(self, dep_mod, eks_cluster, ng_config, vpc_cni_chart):
+        """
+        Creates a Self Managed Node Group with the specified configuration.
+        """
+        self_managed_nodegroup = eks_cluster.add_auto_scaling_group_capacity(
+            f"self-managed-{ng_config.get('eks_ng_name')}",
+            desired_capacity=ng_config.get("eks_node_quantity"),
+            max_capacity=ng_config.get("eks_node_max_quantity"),
+            min_capacity=ng_config.get("eks_node_min_quantity"),
+            update_policy=None,
+            instance_type=ec2.InstanceType(str(ng_config.get("eks_node_instance_type"))),
+            vpc_subnets=ec2.SubnetSelection(subnets=self.dataplane_subnets),
+            auto_scaling_group_name=f"{dep_mod}-{ng_config.get('eks_ng_name')}",
+            group_metrics=[asg.GroupMetrics.all()],
+            instance_monitoring=asg.Monitoring.DETAILED,
+            signals=asg.Signals.wait_for_all(),
+        )
+
+        self_managed_nodegroup.role.add_managed_policy(
+            iam.ManagedPolicy.from_aws_managed_policy_name("AmazonEKSWorkerNodePolicy")
+        )
+        self_managed_nodegroup.role.add_managed_policy(
+            iam.ManagedPolicy.from_aws_managed_policy_name("AmazonEC2ContainerRegistryReadOnly")
+        )
+
+        launch_config = cast(asg.CfnLaunchConfiguration, self_managed_nodegroup.node.try_find_child("LaunchConfig"))
+        launch_config.metadata_options = asg.CfnLaunchConfiguration.MetadataOptionsProperty(
+            http_tokens="required", http_put_response_hop_limit=2
+        )
+        launch_config.block_device_mappings = [
+            asg.CfnLaunchConfiguration.BlockDeviceMappingProperty(
+                device_name="/dev/xvda",
+                ebs=asg.CfnLaunchConfiguration.BlockDeviceProperty(
+                    encrypted=True, volume_size=ng_config.get("eks_node_disk_size"), volume_type="gp2"
+                ),
+            )
+        ]
+
+        Tags.of(self_managed_nodegroup).add(
+            "k8s.io/cluster-autoscaler/" + eks_cluster.cluster_name,
+            "owned",
+            apply_to_launched_instances=True,
+        )
+
+        Tags.of(self_managed_nodegroup).add(
+            "k8s.io/cluster-autoscaler/enabled",
+            "true",
+            apply_to_launched_instances=True,
+        )
+        self_managed_nodegroup.node.add_dependency(vpc_cni_chart)
+
     def _create_managed_node_group(self, eks_cluster, eks_version, ng_config, node_capacity_type, vpc_cni_chart):
         """
         Creates an Amazon Managed Node Group with the specified configuration.
@@ -376,8 +436,6 @@ class Eks(Stack):  # type: ignore
         )
 
         nodegroup.node.add_dependency(vpc_cni_chart)
-
-        return nodegroup
 
     def _create_eks_cluster(
         self,
@@ -1060,32 +1118,6 @@ class Eks(Stack):  # type: ignore
             ),
         )
         clusterautoscaler_chart.node.add_dependency(clusterautoscaler_service_account)
-
-    # def _extend_vpc_custom_networking(self, custom_subnet_ids):
-    #     """
-    #     Extend VPC CIDR and configure custom subnets for the EKS cluster.
-    #     """
-    #     custom_subnet_ids = get_az_from_subnet(custom_subnet_ids)
-    #     custom_subnets_values = {}
-    #     for subnet_id, subnet_availability_zone in custom_subnet_ids.items():
-    #         custom_subnets_values[subnet_availability_zone] = {"id": subnet_id}
-
-    #     self.custom_subnet_values = {
-    #         "init": {
-    #             "env": {
-    #                 "AWS_VPC_K8S_CNI_CUSTOM_NETWORK_CFG": True,
-    #                 "ENI_CONFIG_LABEL_DEF": "failure-domain.beta.kubernetes.io/zone",
-    #             },
-    #         },
-    #         "env": {
-    #             "AWS_VPC_K8S_CNI_CUSTOM_NETWORK_CFG": True,
-    #             "ENI_CONFIG_LABEL_DEF": "failure-domain.beta.kubernetes.io/zone",
-    #         },
-    #         "eniConfig": {
-    #             "create": True,
-    #             "subnets": custom_subnets_values,
-    #         },
-    #     }
 
     def _deploy_kured(self, eks_cluster, eks_version, replicated_ecr_images_metadata, eks_addons_config):
         """
@@ -1968,6 +2000,10 @@ class Eks(Stack):  # type: ignore
                 {
                     "id": "AwsSolutions-KMS5",
                     "reason": "The KMS Symmetric key does not have automatic key rotation enabled",
+                },
+                {
+                    "id": "AwsSolutions-AS3",
+                    "reason": "The ASG does not have notifications setup",
                 },
                 {"id": "AwsSolutions-L1", "reason": "Suppress error caused by python_3_12 release in December"},
             ],
