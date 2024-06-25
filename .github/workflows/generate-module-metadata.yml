@@ -9,6 +9,11 @@ on:
       version:
         description: 'Version of codebase to generate metadata for, x.y.z'     
         required: true
+
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   build:
     name: Generate Metadata
@@ -30,7 +35,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v1.7.0
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::180024969694:role/githubActionsDeployRole
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
