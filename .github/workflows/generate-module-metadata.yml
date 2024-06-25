@@ -32,7 +32,7 @@ jobs:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1.7.0
         with:
-          role-to-assume: ${{ secrets.ROLE_ARN }}
+          role-to-assume: arn:aws:iam::180024969694:role/githubActionsDeployRole
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: us-west-2
       - name: Generate Metadata
