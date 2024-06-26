@@ -4,30 +4,30 @@
 #
 #    pip-compile requirements.in
 #
-attrs==23.1.0
+attrs==23.2.0
     # via
     #   cattrs
     #   jsii
-aws-cdk-asset-awscli-v1==2.2.190
+aws-cdk-asset-awscli-v1==2.2.202
     # via aws-cdk-lib
-aws-cdk-asset-kubectl-v20==2.1.1
+aws-cdk-asset-kubectl-v20==2.1.2
     # via aws-cdk-lib
-aws-cdk-asset-node-proxy-agent-v5==2.0.164
+aws-cdk-asset-node-proxy-agent-v5==2.0.166
     # via aws-cdk-lib
-aws-cdk-aws-neptune-alpha==2.82.0a0
+aws-cdk-aws-neptune-alpha==2.82.0-alpha.0
     # via -r requirements.in
 aws-cdk-lib==2.82.0
     # via
     #   -r requirements.in
     #   aws-cdk-aws-neptune-alpha
     #   cdk-nag
-boto3==1.24.96
+boto3==1.27.1
     # via -r requirements.in
-botocore==1.27.96
+botocore==1.30.1
     # via
     #   boto3
     #   s3transfer
-cattrs==22.2.0
+cattrs==23.2.3
     # via jsii
 cdk-nag==2.12.29
     # via -r requirements.in
@@ -37,13 +37,15 @@ constructs==10.0.91
     #   aws-cdk-aws-neptune-alpha
     #   aws-cdk-lib
     #   cdk-nag
-importlib-resources==5.12.0
+exceptiongroup==1.2.1
+    # via cattrs
+importlib-resources==6.4.0
     # via jsii
 jmespath==1.0.1
     # via
     #   boto3
     #   botocore
-jsii==1.83.0
+jsii==1.100.0
     # via
     #   aws-cdk-asset-awscli-v1
     #   aws-cdk-asset-kubectl-v20
@@ -62,11 +64,11 @@ publication==0.0.3
     #   cdk-nag
     #   constructs
     #   jsii
-python-dateutil==2.8.2
+python-dateutil==2.9.0.post0
     # via
     #   botocore
     #   jsii
-s3transfer==0.6.1
+s3transfer==0.6.2
     # via boto3
 six==1.16.0
     # via python-dateutil
@@ -78,7 +80,11 @@ typeguard==2.13.3
     #   aws-cdk-aws-neptune-alpha
     #   aws-cdk-lib
     #   jsii
-typing-extensions==4.6.3
-    # via jsii
-urllib3==1.26.18
+typing-extensions==4.12.2
+    # via
+    #   cattrs
+    #   jsii
+urllib3==1.26.19
     # via botocore
+zipp==3.19.2
+    # via importlib-resources
