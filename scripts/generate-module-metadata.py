@@ -42,7 +42,7 @@ def print_metadata(metadata: Dict[str, str]) -> None:
     pprint(result)
 
 def write_metadata_to_s3(key: str, metadata: Dict[str,str]) -> None:
-    path = f"module-metadata/versions/{args.version}/{key}/metadata.json"
+    path = f"module-metadata/{key}/versions/{args.version}/metadata.json"
     print(f"[*] writing metadata to path: {path}")
     object = s3.Object(args.bucket_name, path)
     object.put(Body=bytes(json.dumps(metadata).encode('UTF-8')))
