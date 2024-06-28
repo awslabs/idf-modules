@@ -1,8 +1,8 @@
 ## Introduction
 
-This module provisions EMR on EKS supporting infrastructure which creates EMR Vritual Cluster, K8s Namespace, EMR Job Execution Role which enables any spark applications to use Airflow to trigger spark jobs on EMR on EKS.
+This module provisions EMR on EKS supporting infrastructure which creates EMR Vritual Cluster, K8s Namespace, EMR Job Execution Role. User can trigger spark jobs using Step Functions/Airflow and submit jobs to the EMR Vritual Cluster
 
-> Note: You should be adjusting the required permissions on EMR Job execution role to allow spark driver to write logs to CloudWatch and S3 logging bucket.
+> Note: You should be adjusting the required permissions on EMR Job execution role to allow spark driver to talk to the bucket of your interest.
 
 ## Inputs/Outputs
 
