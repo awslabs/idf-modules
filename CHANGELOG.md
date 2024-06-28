@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - refactored `fix.sh` script to use `ruff` instead of `black` and `isort`
 - refactored eks module, fixed the breaking nginx ingress and made more least privileged
 - fixed `urlib3` version as per dependabot alert
+- bumped seedfarmer version to `4.0.1`
 
 ### **Removed**
 
