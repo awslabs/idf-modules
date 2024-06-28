@@ -40,7 +40,7 @@ parameters:
       moduleMetadata:
         group: networking
         name: basic-networking
-        key: LocalZonePrivateSubnetIds
+        key: PrivateSubnetIds #you can use LocalZonePrivateSubnetIds if deploying on localzones
   - name: eks-cluster-admin-role-arn
     valueFrom:
       moduleMetadata:
