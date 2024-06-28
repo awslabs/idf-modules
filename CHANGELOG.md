@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - added support for AWS LocalZone Public and Private Subnets
 - added support for bedrock endpoints
 - added support for EKS Self Managed node groups with autoscaling
+- added `emr-on-eks` module and made it generic
 
 ### **Changed**
 

@@ -571,13 +571,16 @@ class Eks(Stack):  # type: ignore
         """
         Creates the EKS cluster admin role.
         """
+
         cluster_admin_role = iam.Role(
             self,
             "ClusterAdminRole",
             role_name=f"{project_name}-{deployment_name}-{module_name}-{region}-masterrole",
-            assumed_by=iam.CompositePrincipal(
-                iam.AccountRootPrincipal(),
-                iam.ServicePrincipal("ec2.amazonaws.com"),
+            assumed_by=iam.PrincipalWithConditions(
+                iam.AccountPrincipal(account),
+                conditions={
+                    "ArnLike": {"aws:PrincipalArn": f"arn:aws:iam::{account}:role/{project_name}-{deployment_name}-*"}
+                },
             ),
         )
 

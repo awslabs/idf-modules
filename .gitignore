@@ -379,6 +379,7 @@ fabric.properties
 cdk.out
 cdk.context.json
 cdk.json
+self/
 
 # codeseeder
 codeseeder.out
