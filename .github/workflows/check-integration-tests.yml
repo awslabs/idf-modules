@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - shell: bash
+      - name: Get modules
         id: get-modules
         run: |
           # Get all modules
@@ -24,6 +24,7 @@ jobs:
           MODULES_WITHOUT_INTEG=()
           for d in modules/*/* ; do
               MODULES+=("$d")
+              echo $MODULES
           done
           echo $MODULES
           for m in $MODULES ; do
