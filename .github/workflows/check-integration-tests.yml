@@ -35,7 +35,7 @@ jobs:
               fi
           done
           # Create our json structure [{"module_path": "..."}]
-          MODULES_JSON=$(echo "$MODULES_WITHOUT_INTEG" | jq -R -s 'split("\n")' | jq '[ .[] | select(length > 0) ]' | jq 'map({"module_name": .})')
+          MODULES_JSON=$(echo "$MODULES_WITHOUT_INTEG" | jq -R -s 'split("\n")' | jq '[ .[] | select(length > 0) ]' | jq 'map({"module_path": .})')
           # Export the modules as json to the outputs
           echo 'matrix<<EOF' >> $GITHUB_OUTPUT
           echo $MODULES_JSON >> $GITHUB_OUTPUT
