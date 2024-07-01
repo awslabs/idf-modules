@@ -27,8 +27,8 @@ jobs:
               echo $d
               MODULES+=("$d")
           done
-          for m in $MODULES ; do
-              echo modules/${m}/integ/
+          for m in "$MODULES[@]" ; do
+              echo ${m}/integ/
               if [ ! -d ${m}/integ/ ]; then
                 echo "No Integration tests for ${m}"
                 MODULES_WITHOUT_INTEG+=($m)
