@@ -29,6 +29,7 @@ class BucketsStack(Stack):  # type: ignore
         self,
         scope: Construct,
         id: str,
+        partition: str,
         project_name: str,
         deployment_name: str,
         module_name: str,
@@ -49,6 +50,7 @@ class BucketsStack(Stack):  # type: ignore
         super().__init__(scope, id, description=stack_description, **kwargs)
         Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=full_dep_mod)
 
+        self._partition = partition
         artifact_bucket_name = bucket_hash(
             bucket_name=f"{project_name}-{deployment_name}-artifacts-bucket-{hash}",
             module_name=module_name,
@@ -106,7 +108,7 @@ class BucketsStack(Stack):  # type: ignore
                         "kms:DescribeKey",
                         "kms:GenerateDataKey",
                     ],
-                    resources=[f"arn:aws:kms::{account}:*"],
+                    resources=[f"arn:{self._partition}:kms::{account}:*"],
                 ),
                 aws_iam.PolicyStatement(
                     effect=aws_iam.Effect.ALLOW,
@@ -138,7 +140,7 @@ class BucketsStack(Stack):  # type: ignore
                         "kms:DescribeKey",
                         "kms:GenerateDataKey",
                     ],
-                    resources=[f"arn:aws:kms::{account}:*"],
+                    resources=[f"arn:{self._partition}:kms::{account}:*"],
                 ),
                 aws_iam.PolicyStatement(
                     effect=aws_iam.Effect.ALLOW,

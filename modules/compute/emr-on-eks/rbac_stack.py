@@ -25,6 +25,7 @@ class EmrEksRbacStack(Stack):
         scope: Construct,
         id: str,
         *,
+        partition: str,
         project_name: str,
         deployment_name: str,
         module_name: str,
@@ -43,6 +44,7 @@ class EmrEksRbacStack(Stack):
         self.deployment_name = deployment_name
         self.module_name = module_name
         self.emr_eks_namespace = emr_eks_namespace
+        self._partition = partition
 
         dep_mod = f"{self.project_name}-{self.deployment_name}-{self.module_name}"
         # used to tag AWS resources. Tag Value length cant exceed 256 characters
@@ -73,7 +75,7 @@ class EmrEksRbacStack(Stack):
             kubectl_layer=KubectlV29Layer(self, "Kubectlv29Layer"),
         )
 
-        self.emrsvcrolearn = f"arn:aws:iam::{self.account}:role/AWSServiceRoleForAmazonEMRContainers"
+        self.emrsvcrolearn = f"arn:{self._partition}:iam::{self.account}:role/AWSServiceRoleForAmazonEMRContainers"
 
         # Create namespace for EMR to use
         namespace = eks_cluster.add_manifest(
@@ -227,11 +229,11 @@ class EmrEksRbacStack(Stack):
         self.job_role.add_to_policy(
             iam.PolicyStatement(
                 resources=[
-                    f"arn:aws:s3:::{logs_bucket_name}",
-                    f"arn:aws:s3:::{logs_bucket_name}/*",
-                    f"arn:aws:s3:::{artifacts_bucket_name}",
-                    f"arn:aws:s3:::{artifacts_bucket_name}/*",
-                    f"arn:aws:kms:{self.region}:{self.account}:key/*",
+                    f"arn:{self._partition}:s3:::{logs_bucket_name}",
+                    f"arn:{self._partition}:s3:::{logs_bucket_name}/*",
+                    f"arn:{self._partition}:s3:::{artifacts_bucket_name}",
+                    f"arn:{self._partition}:s3:::{artifacts_bucket_name}/*",
+                    f"arn:{self._partition}:kms:{self.region}:{self.account}:key/*",
                 ],
                 actions=[
                     "s3:PutObject*",
@@ -246,7 +248,7 @@ class EmrEksRbacStack(Stack):
 
         self.job_role.add_to_policy(
             iam.PolicyStatement(
-                resources=[f"arn:aws:logs:{self.region}:{self.account}:*"],
+                resources=[f"arn:{self._partition}:logs:{self.region}:{self.account}:*"],
                 actions=[
                     "logs:Put*",
                     "logs:Create*",

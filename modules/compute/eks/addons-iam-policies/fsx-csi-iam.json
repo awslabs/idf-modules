@@ -8,7 +8,7 @@
              "iam:AttachRolePolicy",
              "iam:PutRolePolicy"
           ],
-          "Resource":"arn:aws:iam::*:role/aws-service-role/s3.data-source.lustre.fsx.amazonaws.com/*"
+          "Resource":"arn:*:iam::*:role/aws-service-role/s3.data-source.lustre.fsx.amazonaws.com/*"
        },
        {
           "Action":"iam:CreateServiceLinkedRole",
@@ -43,7 +43,7 @@
             "logs:PutLogEvents"
         ],
         "Resource": [
-            "arn:aws:logs:*:*:log-group:/aws/fsx/*"
+            "arn:*:logs:*:*:log-group:/aws/fsx/*"
         ]
     }
     ]

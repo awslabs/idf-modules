@@ -23,6 +23,7 @@ class AwsBatch(Stack):
         scope: Construct,
         id: str,
         *,
+        partition: str,
         project_name: str,
         deployment_name: str,
         module_name: str,
@@ -74,9 +75,9 @@ class AwsBatch(Stack):
                 ],
                 effect=iam.Effect.ALLOW,
                 resources=[
-                    f"arn:aws:batch:{self.region}:{self.account}:job-queue/{project_name}*",
-                    f"arn:aws:batch:{self.region}:{self.account}:job-definition/*",
-                    f"arn:aws:batch:{self.region}:{self.account}:job/*",
+                    f"arn:{partition}:batch:{self.region}:{self.account}:job-queue/{project_name}*",
+                    f"arn:{partition}:batch:{self.region}:{self.account}:job-definition/*",
+                    f"arn:{partition}:batch:{self.region}:{self.account}:job/*",
                 ],
             ),
             iam.PolicyStatement(
@@ -85,7 +86,7 @@ class AwsBatch(Stack):
                 ],
                 effect=iam.Effect.ALLOW,
                 resources=[
-                    f"arn:aws:iam::{self.account}:role/{project_name}*",
+                    f"arn:{partition}:iam::{self.account}:role/{project_name}*",
                 ],
             ),
             iam.PolicyStatement(

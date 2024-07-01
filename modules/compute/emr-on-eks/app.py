@@ -15,6 +15,7 @@ from rbac_stack import EmrEksRbacStack
 project_name = os.getenv("SEEDFARMER_PROJECT_NAME", "")
 deployment_name = os.getenv("SEEDFARMER_DEPLOYMENT_NAME", "")
 module_name = os.getenv("SEEDFARMER_MODULE_NAME", "")
+partition = os.getenv("AWS_PARTITION", "")
 
 if len(f"{project_name}-{deployment_name}") > 36:
     raise ValueError("This module cannot support a project+deployment name character length greater than 35")
@@ -38,6 +39,7 @@ app = App()
 eks_rbac_stack = EmrEksRbacStack(
     scope=app,
     id=f"{project_name}-{deployment_name}-{module_name}-rbac",
+    partition=partition,
     project_name=project_name,
     deployment_name=deployment_name,
     module_name=module_name,
@@ -58,6 +60,7 @@ eks_rbac_stack = EmrEksRbacStack(
 emr_eks_airflow = EmrEksStack(
     app,
     id=f"{project_name}-{deployment_name}-{module_name}",
+    partition=partition,
     project_name=project_name,
     deployment_name=deployment_name,
     module_name=module_name,

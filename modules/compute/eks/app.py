@@ -15,6 +15,7 @@ from stack import Eks
 project_name = os.getenv("SEEDFARMER_PROJECT_NAME", "")
 deployment_name = os.getenv("SEEDFARMER_DEPLOYMENT_NAME", "")
 module_name = os.getenv("SEEDFARMER_MODULE_NAME", "")
+partition = os.getenv("AWS_PARTITION", "")
 
 if len(f"{project_name}-{deployment_name}") > 36:
     raise ValueError("This module cannot support a project+deployment name character length greater than 35")
@@ -56,6 +57,7 @@ app = App()
 stack = Eks(
     scope=app,
     id=f"{project_name}-{deployment_name}-{module_name}",
+    partition=partition,
     project_name=project_name,
     deployment_name=deployment_name,
     module_name=module_name,
