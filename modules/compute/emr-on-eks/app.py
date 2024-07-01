@@ -15,7 +15,7 @@ from rbac_stack import EmrEksRbacStack
 project_name = os.getenv("SEEDFARMER_PROJECT_NAME", "")
 deployment_name = os.getenv("SEEDFARMER_DEPLOYMENT_NAME", "")
 module_name = os.getenv("SEEDFARMER_MODULE_NAME", "")
-partition = os.getenv("AWS_PARTITION", "")
+partition = os.getenv("AWS_PARTITION", "aws")
 
 if len(f"{project_name}-{deployment_name}") > 36:
     raise ValueError("This module cannot support a project+deployment name character length greater than 35")
