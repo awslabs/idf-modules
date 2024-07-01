@@ -13,6 +13,7 @@ from aws_cdk.assertions import Template
 def stack_defaults():
     os.environ["CDK_DEFAULT_ACCOUNT"] = "111111111111"
     os.environ["CDK_DEFAULT_REGION"] = "us-east-1"
+    os.environ["AWS_PARTITION"] = "aws"
 
     # Unload the app import so that subsequent tests don't reuse
 
@@ -31,6 +32,7 @@ def test_synthesize_stack(stack_defaults):
     bucket_stack = stack.BucketsStack(
         scope=app,
         id=f"{project_name}-{dep_name}-{mod_name}",
+        partition="aws",
         project_name=project_name,
         deployment_name=dep_name,
         module_name=mod_name,
