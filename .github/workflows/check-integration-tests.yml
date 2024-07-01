@@ -1,0 +1,53 @@
+name: Module Checks
+
+on:
+  push:
+    branches: ["main"]
+    paths: ['modules/**']
+
+  pull_request:
+    branches: ["main", "release/*", "stable"]
+    paths: ['modules/**']
+
+  workflow_dispatch:
+
+jobs:
+  get-modules:
+    name: Get Modules
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.get-modules.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Get modules
+        id: get-modules
+        run: |
+          set -x
+          # Get all the modules that have the directory "tests"
+          MODULES=$(find modules -type d -name "tests" | cut -d/ -f 2-3 | uniq)
+          # Create our json structure [{"module_path": "..."}]
+          MODULES_JSON=$(echo "$MODULES" | jq -R -s 'split("\s")' | jq '[ .[] | select(length > 0) ]' | jq 'map({"module_path": .})')
+          # Export the modules as json to the outputs
+          echo 'matrix<<EOF' >> $GITHUB_OUTPUT
+          echo $MODULES_JSON >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
+
+  create-issues:
+    name: Create Issue for ${{ matrix.modules.module_path }}
+    needs: get-modules
+    strategy:
+      fail-fast: false
+      matrix:
+        modules: ${{ fromJson(needs.get-modules.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    env:
+      MODULE_PATH: ${{ matrix.modules.module_name }}
+    steps:
+      - name: placeholder
+        run: |
+          set -x
+          echo $MODULE_PATH
+          
