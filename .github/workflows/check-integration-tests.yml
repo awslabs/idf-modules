@@ -13,27 +13,26 @@ jobs:
       matrix: ${{ steps.get-modules.outputs.matrix }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Get modules
         id: get-modules
         run: |
-          set -x
           # Get all modules
           MODULES=()
           MODULES_WITHOUT_INTEG=()
           for d in modules/*/* ; do
-              echo $d
               MODULES+=("$d")
           done
+          echo $MODULES
           for m in $MODULES ; do
-              echo /${m}/integ/
               if [ ! -d ${m}/integ/ ]; then
                 echo "No Integration tests for ${m}"
                 MODULES_WITHOUT_INTEG+=($m)
               fi
           done
+          echo $MODULES_WITHOUT_INTEG
           # Create our json structure [{"module_path": "..."}]
           MODULES_JSON=$(echo "$MODULES_WITHOUT_INTEG" | jq -R -s 'split(" ")' | jq '[ .[] | select(length > 0) ]' | jq 'map({"module_path": .})')
           # Export the modules as json to the outputs
