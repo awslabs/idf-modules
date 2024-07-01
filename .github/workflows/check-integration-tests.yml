@@ -23,6 +23,7 @@ jobs:
           MODULES=()
           MODULES_WITHOUT_INTEG=()
           for d in modules/*/* ; do
+              echo $d
               MODULES+=("$d")
               echo $MODULES
           done
