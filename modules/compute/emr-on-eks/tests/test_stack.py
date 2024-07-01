@@ -32,6 +32,7 @@ def test_synthesize_rbac_stack(stack_defaults):
     stack = rbac_stack.EmrEksRbacStack(
         scope=app,
         id=f"{proj_name}-{dep_name}-{mod_name}",
+        partition="aws",
         project_name=proj_name,
         deployment_name=dep_name,
         module_name=mod_name,
@@ -64,6 +65,7 @@ def test_synthesize_emr_eks_stack(stack_defaults):
     stack = emr_eks.EmrEksStack(
         scope=app,
         id=f"{proj_name}-{dep_name}-{mod_name}",
+        partition="aws",
         project_name=proj_name,
         deployment_name=dep_name,
         module_name=mod_name,

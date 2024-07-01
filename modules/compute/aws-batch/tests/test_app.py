@@ -15,6 +15,7 @@ def stack_defaults():
     os.environ["SEEDFARMER_MODULE_NAME"] = "test-module"
     os.environ["CDK_DEFAULT_ACCOUNT"] = "111111111111"
     os.environ["CDK_DEFAULT_REGION"] = "us-east-1"
+    os.environ["AWS_PARTITION"] = "aws"
     os.environ["SEEDFARMER_PARAMETER_RETENTION_TYPE"] = "DESTROY"
     os.environ["SEEDFARMER_PARAMETER_VPC_ID"] = "vpc-12345"
     os.environ["SEEDFARMER_PARAMETER_PRIVATE_SUBNET_IDS"] = json.dumps(["subnet-12345", "subnet-54321"])

@@ -12,7 +12,7 @@ project_name = os.getenv("SEEDFARMER_PROJECT_NAME", "")
 deployment_name = os.getenv("SEEDFARMER_DEPLOYMENT_NAME", "")
 module_name = os.getenv("SEEDFARMER_MODULE_NAME", "")
 hash = os.getenv("SEEDFARMER_HASH", "")
-
+partition = os.getenv("AWS_PARTITION", "aws")
 
 buckets_encryption_type = os.getenv("SEEDFARMER_PARAMETER_ENCRYPTION_TYPE", "SSE")
 buckets_retention = os.getenv("SEEDFARMER_PARAMETER_RETENTION_TYPE", "RETAIN")
@@ -47,6 +47,7 @@ def generate_description() -> str:
 stack = BucketsStack(
     scope=app,
     id=f"{project_name}-{deployment_name}-{module_name}",
+    partition=partition,
     project_name=project_name,
     deployment_name=deployment_name,
     module_name=module_name,

@@ -10,6 +10,7 @@ import pytest
 
 @pytest.fixture(scope="function")
 def stack_defaults():
+    os.environ["AWS_PARTITION"] = "aws"
     os.environ["SEEDFARMER_PROJECT_NAME"] = "test-project"
     os.environ["SEEDFARMER_DEPLOYMENT_NAME"] = "test-deployment"
     os.environ["SEEDFARMER_MODULE_NAME"] = "test-module"

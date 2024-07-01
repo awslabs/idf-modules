@@ -15,23 +15,23 @@ deploy:
         - cdk deploy --require-approval never --progress events --app "python app.py" --outputs-file ./cdk-exports.json
         - export SEEDFARMER_MODULE_METADATA=$(python -c "import json; file=open('cdk-exports.json'); print(json.load(file)['${SEEDFARMER_PROJECT_NAME}-${SEEDFARMER_DEPLOYMENT_NAME}-${SEEDFARMER_MODULE_NAME}']['metadata'])")
         # Assuming EKS Master Role
-        - eval $(aws sts assume-role --role-arn arn:aws:iam::${AWS_ACCOUNT_ID}:role/${SEEDFARMER_PROJECT_NAME}-${SEEDFARMER_DEPLOYMENT_NAME}-${SEEDFARMER_MODULE_NAME}-${AWS_REGION}-masterrole --role-session-name aws-auth-ops | jq -r '.Credentials | "export AWS_ACCESS_KEY_ID=\(.AccessKeyId)\nexport AWS_SECRET_ACCESS_KEY=\(.SecretAccessKey)\nexport AWS_SESSION_TOKEN=\(.SessionToken)\n"')
+        - eval $(aws sts assume-role --role-arn arn:${AWS_PARTITION}:iam::${AWS_ACCOUNT_ID}:role/${SEEDFARMER_PROJECT_NAME}-${SEEDFARMER_DEPLOYMENT_NAME}-${SEEDFARMER_MODULE_NAME}-${AWS_REGION}-masterrole --role-session-name aws-auth-ops | jq -r '.Credentials | "export AWS_ACCESS_KEY_ID=\(.AccessKeyId)\nexport AWS_SECRET_ACCESS_KEY=\(.SecretAccessKey)\nexport AWS_SESSION_TOKEN=\(.SessionToken)\n"')
         # Configuring `aws-auth` ConfigMap
         - |
           if [ -n "$SEEDFARMER_PARAMETER_EKS_ADMIN_ROLE_NAME" ] ; then
-            eksctl get iamidentitymapping --cluster ${SEEDFARMER_PROJECT_NAME}-${SEEDFARMER_DEPLOYMENT_NAME}-${SEEDFARMER_MODULE_NAME}-cluster --arn arn:aws:iam::${AWS_ACCOUNT_ID}:role/${SEEDFARMER_PARAMETER_EKS_ADMIN_ROLE_NAME} \
+            eksctl get iamidentitymapping --cluster ${SEEDFARMER_PROJECT_NAME}-${SEEDFARMER_DEPLOYMENT_NAME}-${SEEDFARMER_MODULE_NAME}-cluster --arn arn:${AWS_PARTITION}:iam::${AWS_ACCOUNT_ID}:role/${SEEDFARMER_PARAMETER_EKS_ADMIN_ROLE_NAME} \
             && echo "IAM Identity Mapping already found" \
-            || eksctl create iamidentitymapping --cluster ${SEEDFARMER_PROJECT_NAME}-${SEEDFARMER_DEPLOYMENT_NAME}-${SEEDFARMER_MODULE_NAME}-cluster --arn arn:aws:iam::${AWS_ACCOUNT_ID}:role/${SEEDFARMER_PARAMETER_EKS_ADMIN_ROLE_NAME} --username ${SEEDFARMER_PROJECT_NAME}-${SEEDFARMER_PARAMETER_EKS_ADMIN_ROLE_NAME} --group system:masters
+            || eksctl create iamidentitymapping --cluster ${SEEDFARMER_PROJECT_NAME}-${SEEDFARMER_DEPLOYMENT_NAME}-${SEEDFARMER_MODULE_NAME}-cluster --arn arn:${AWS_PARTITION}:iam::${AWS_ACCOUNT_ID}:role/${SEEDFARMER_PARAMETER_EKS_ADMIN_ROLE_NAME} --username ${SEEDFARMER_PROJECT_NAME}-${SEEDFARMER_PARAMETER_EKS_ADMIN_ROLE_NAME} --group system:masters
           fi
           if [ -n "$SEEDFARMER_PARAMETER_EKS_POWERUSER_ROLE_NAME" ] ; then
-            eksctl get iamidentitymapping --cluster ${SEEDFARMER_PROJECT_NAME}-${SEEDFARMER_DEPLOYMENT_NAME}-${SEEDFARMER_MODULE_NAME}-cluster --arn arn:aws:iam::${AWS_ACCOUNT_ID}:role/${SEEDFARMER_PARAMETER_EKS_POWERUSER_ROLE_NAME} \
+            eksctl get iamidentitymapping --cluster ${SEEDFARMER_PROJECT_NAME}-${SEEDFARMER_DEPLOYMENT_NAME}-${SEEDFARMER_MODULE_NAME}-cluster --arn arn:${AWS_PARTITION}:iam::${AWS_ACCOUNT_ID}:role/${SEEDFARMER_PARAMETER_EKS_POWERUSER_ROLE_NAME} \
             && echo "IAM Identity Mapping already found" \
-            || eksctl create iamidentitymapping --cluster ${SEEDFARMER_PROJECT_NAME}-${SEEDFARMER_DEPLOYMENT_NAME}-${SEEDFARMER_MODULE_NAME}-cluster --arn arn:aws:iam::${AWS_ACCOUNT_ID}:role/${SEEDFARMER_PARAMETER_EKS_POWERUSER_ROLE_NAME} --username ${SEEDFARMER_PROJECT_NAME}-${SEEDFARMER_PARAMETER_EKS_POWERUSER_ROLE_NAME} --group poweruser-group
+            || eksctl create iamidentitymapping --cluster ${SEEDFARMER_PROJECT_NAME}-${SEEDFARMER_DEPLOYMENT_NAME}-${SEEDFARMER_MODULE_NAME}-cluster --arn arn:${AWS_PARTITION}:iam::${AWS_ACCOUNT_ID}:role/${SEEDFARMER_PARAMETER_EKS_POWERUSER_ROLE_NAME} --username ${SEEDFARMER_PROJECT_NAME}-${SEEDFARMER_PARAMETER_EKS_POWERUSER_ROLE_NAME} --group poweruser-group
           fi
           if [ -n "$SEEDFARMER_PARAMETER_EKS_READ_ONLY_ROLE_NAME" ] ; then
-            eksctl get iamidentitymapping --cluster ${SEEDFARMER_PROJECT_NAME}-${SEEDFARMER_DEPLOYMENT_NAME}-${SEEDFARMER_MODULE_NAME}-cluster --arn arn:aws:iam::${AWS_ACCOUNT_ID}:role/${SEEDFARMER_PARAMETER_EKS_READ_ONLY_ROLE_NAME} \
+            eksctl get iamidentitymapping --cluster ${SEEDFARMER_PROJECT_NAME}-${SEEDFARMER_DEPLOYMENT_NAME}-${SEEDFARMER_MODULE_NAME}-cluster --arn arn:${AWS_PARTITION}:iam::${AWS_ACCOUNT_ID}:role/${SEEDFARMER_PARAMETER_EKS_READ_ONLY_ROLE_NAME} \
             && echo "IAM Identity Mapping already found" \
-            || eksctl create iamidentitymapping --cluster ${SEEDFARMER_PROJECT_NAME}-${SEEDFARMER_DEPLOYMENT_NAME}-${SEEDFARMER_MODULE_NAME}-cluster --arn arn:aws:iam::${AWS_ACCOUNT_ID}:role/${SEEDFARMER_PARAMETER_EKS_READ_ONLY_ROLE_NAME} --username ${SEEDFARMER_PROJECT_NAME}-${SEEDFARMER_PARAMETER_EKS_READ_ONLY_ROLE_NAME} --group readonly-group
+            || eksctl create iamidentitymapping --cluster ${SEEDFARMER_PROJECT_NAME}-${SEEDFARMER_DEPLOYMENT_NAME}-${SEEDFARMER_MODULE_NAME}-cluster --arn arn:${AWS_PARTITION}:iam::${AWS_ACCOUNT_ID}:role/${SEEDFARMER_PARAMETER_EKS_READ_ONLY_ROLE_NAME} --username ${SEEDFARMER_PROJECT_NAME}-${SEEDFARMER_PARAMETER_EKS_READ_ONLY_ROLE_NAME} --group readonly-group
           fi
         # Unsetting the EKS role assumption for future use
         - unset AWS_ACCESS_KEY_ID && unset AWS_SECRET_ACCESS_KEY && unset AWS_SESSION_TOKEN

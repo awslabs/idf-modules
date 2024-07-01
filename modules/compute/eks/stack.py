@@ -68,6 +68,7 @@ class Eks(Stack):  # type: ignore
         scope: Construct,
         id: str,
         *,
+        partition: str,
         project_name: str,
         deployment_name: str,
         module_name: str,
@@ -97,6 +98,7 @@ class Eks(Stack):  # type: ignore
 
         Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=full_dep_mod)
 
+        self._partition = partition
         # Importing the VPC
         self.vpc = ec2.Vpc.from_lookup(
             self,
@@ -579,7 +581,11 @@ class Eks(Stack):  # type: ignore
             assumed_by=iam.PrincipalWithConditions(
                 iam.AccountPrincipal(account),
                 conditions={
-                    "ArnLike": {"aws:PrincipalArn": f"arn:aws:iam::{account}:role/{project_name}-{deployment_name}-*"}
+                    "ArnLike": {
+                        "aws:PrincipalArn": (
+                            f"arn:{self._partition}:iam::{account}:role/{project_name}-{deployment_name}-*"
+                        )
+                    }
                 },
             ),
         )
@@ -788,11 +794,11 @@ class Eks(Stack):  # type: ignore
         Creates the AWS S3 CSI Driver addon for the EKS cluster.
         """
         if mountpoint_buckets:
-            arns = [f"arn:aws:s3:::{bucket}" for bucket in mountpoint_buckets]
-            arns_with_paths = [f"arn:aws:s3:::{bucket}/*" for bucket in mountpoint_buckets]
+            arns = [f"arn:{self._partition}:s3:::{bucket}" for bucket in mountpoint_buckets]
+            arns_with_paths = [f"arn:{self._partition}:s3:::{bucket}/*" for bucket in mountpoint_buckets]
         else:
-            arns = [f"arn:aws:s3:::{project_name}*"]
-            arns_with_paths = [f"arn:aws:s3:::{project_name}*/*"]
+            arns = [f"arn:{self._partition}:s3:::{project_name}*"]
+            arns_with_paths = [f"arn:{self._partition}:s3:::{project_name}*/*"]
 
         # IRSA for S3 Addon
         s3_addon_role = iam.Role(
@@ -864,7 +870,7 @@ class Eks(Stack):  # type: ignore
                 iam.ManagedPolicy.from_managed_policy_arn(
                     self,
                     "CloudWatchAgentServerPolicy",
-                    managed_policy_arn="arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy",
+                    managed_policy_arn=f"arn:{self._partition}:iam::aws:policy/CloudWatchAgentServerPolicy",
                 )
             ],
         )
@@ -1300,7 +1306,7 @@ class Eks(Stack):  # type: ignore
         externaldns_policy_statement_json_1 = {
             "Effect": "Allow",
             "Action": ["route53:ChangeResourceRecordSets"],
-            "Resource": ["arn:aws:route53:::hostedzone/*"],
+            "Resource": [f"arn:{self._partition}:route53:::hostedzone/*"],
         }
         externaldns_policy_statement_json_2 = {
             "Effect": "Allow",
@@ -1382,10 +1388,6 @@ class Eks(Stack):  # type: ignore
             namespace="kube-system",
         )
 
-        # Associate the IAM Policy
-        # NOTE: you really want to specify the secret ARN rather than * in the Resource
-        # Consider namespacing these by cluster/environment name or some such as in this example:
-        # "Resource": ["arn:aws:secretsmanager:Region:AccountId:secret:TestEnv/*"]
         secrets_csi_policy_statement_json_1 = {
             "Effect": "Allow",
             "Action": [

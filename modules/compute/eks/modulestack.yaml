@@ -25,22 +25,23 @@ Resources:
             Action:
               - "sts:AssumeRole"
             Resource:
-              - !Sub 'arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-${DeploymentName}-${ModuleName}-${AWS::Region}-masterrole'
+              - !Sub 'arn:${AWS::Partition}:iam::${AWS::AccountId}:role/${ProjectName}-${DeploymentName}-${ModuleName}-${AWS::Region}-masterrole'
           - Effect: Allow
             Action:
               - "ssm:GetParameter"
             Resource:
               - "*"
+          # Below are for docker replication
           - Effect: Allow
             Action:
               - "s3:ListBucket"
             Resource:
-              - "arn:aws:s3:::*-d*-rep*-*"
+              - !Sub "arn:${AWS::Partition}:s3:::*-d*-rep*-*"
           - Effect: Allow
             Action:
               - "s3:GetObject"
             Resource:
-              - "arn:aws:s3:::*-d*-rep*-*/*"
+              - !Sub "arn:${AWS::Partition}:s3:::*-d*-rep*-*/*"
         Version: 2012-10-17
-      PolicyName: "idf-modulespecific-policy"
+      PolicyName: "modulespecific-policy"
       Roles: [!Ref RoleName]

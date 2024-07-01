@@ -15,6 +15,7 @@ class EmrEksStack(Stack):
         self,
         scope: Construct,
         id: str,
+        partition: str,
         project_name: str,
         deployment_name: str,
         module_name: str,
@@ -27,6 +28,7 @@ class EmrEksStack(Stack):
         self.deployment_name = deployment_name
         self.module_name = module_name
         self.emr_eks_namespace = emr_eks_namespace
+        self._partition = partition
 
         dep_mod = f"{self.project_name}-{self.deployment_name}-{self.module_name}"
         # used to tag AWS resources. Tag Value length cant exceed 256 characters
