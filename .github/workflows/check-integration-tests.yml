@@ -53,12 +53,20 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       MODULE_PATH: ${{ matrix.modules.module_path }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: nickderobertis/check-if-issue-exists-action@master
+        name: Check if Issue Exists
+        id: check_if_issue_exists
+        with:
+          repo: myuser/my-target-repo
+          token: ${{ env.GITHUB_TOKEN }}
+          title: |
+            [CHORE]: Module ${{ env.MODULE_PATH }} is missing integration tests
       - uses: dacbd/create-issue-action@v2
+        if: steps.check_if_issue_exists.outputs.exists == 'false'
         with:
           token: ${{ env.GITHUB_TOKEN }}
           title: |
-            [CHORE: Module ${{ env.MODULE_PATH }} is missing integration tests]
+            [CHORE]: Module ${{ env.MODULE_PATH }} is missing integration tests
           labels: workflows, backlog
           body: |
             ## Failure Report:
