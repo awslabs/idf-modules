@@ -75,12 +75,12 @@ class EmrServerlessStack(Stack):
             iam.PolicyStatement(
                 actions=["dynamodb:*"],
                 effect=iam.Effect.ALLOW,
-                resources=[f"arn:aws:dynamodb:{self.region}:{self.account}:table/{self.project_name}*"],
+                resources=[f"arn:{self.partition}:dynamodb:{self.region}:{self.account}:table/{self.project_name}*"],
             ),
             iam.PolicyStatement(
                 actions=["s3:*"],
                 effect=iam.Effect.ALLOW,
-                resources=[f"arn:aws:s3:::{self.project_name}-*", f"arn:aws:s3:::{self.project_name}-*/*"],
+                resources=[f"arn:{self.partition}:s3:::{self.project_name}-*", f"arn:aws:s3:::{self.project_name}-*/*"],
             ),
         ]
         iam_policy = iam.PolicyDocument(statements=policy_statements)

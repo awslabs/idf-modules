@@ -43,6 +43,7 @@ class MWAAStack(Stack):  # type: ignore
         # CDK Env Vars
         account: str = aws_cdk.Aws.ACCOUNT_ID
         region: str = aws_cdk.Aws.REGION
+        partition: str = aws_cdk.Aws.PARTITION
 
         # IDF Env vars
         dep_mod = f"{project_name}-{deployment_name}-{module_name}"
@@ -105,17 +106,21 @@ class MWAAStack(Stack):  # type: ignore
                 aws_iam.PolicyStatement(
                     actions=["airflow:PublishMetrics"],
                     effect=aws_iam.Effect.ALLOW,
-                    resources=[f"arn:aws:airflow:{region}:{account}:environment/{project_name}-{deployment_name}-*"],
+                    resources=[
+                        f"arn:{partition}:airflow:{region}:{account}:environment/{project_name}-{deployment_name}-*"
+                    ],
                 ),
                 aws_iam.PolicyStatement(  # type: ignore
                     actions=["batch:SubmitJob"],
                     effect=aws_iam.Effect.ALLOW,
-                    resources=[f"arn:aws:airflow:{region}:{account}:environment/{project_name}-{deployment_name}-*"],
+                    resources=[
+                        f"arn:{partition}:airflow:{region}:{account}:environment/{project_name}-{deployment_name}-*"
+                    ],
                 ),
                 aws_iam.PolicyStatement(
                     actions=["eks:DescribeCluster"],
                     effect=aws_iam.Effect.ALLOW,
-                    resources=[f"arn:aws:eks:{region}:{account}:cluster/{project_name}-{deployment_name}-*"],
+                    resources=[f"arn:{partition}:eks:{region}:{account}:cluster/{project_name}-{deployment_name}-*"],
                 ),
                 aws_iam.PolicyStatement(
                     actions=[
@@ -140,7 +145,7 @@ class MWAAStack(Stack):  # type: ignore
                         "kms:DescribeKey",
                         "kms:GenerateDataKey",
                     ],
-                    not_resources=[f"arn:aws:kms:*:{account}:key/*"],
+                    not_resources=[f"arn:{partition}:kms:*:{account}:key/*"],
                     conditions={"StringLike": {"kms:ViaService": f"sqs.{region}.amazonaws.com"}},
                 ),
                 aws_iam.PolicyStatement(
@@ -155,12 +160,12 @@ class MWAAStack(Stack):  # type: ignore
                         "logs:DescribeLogGroups",
                     ],
                     effect=aws_iam.Effect.ALLOW,
-                    resources=[f"arn:aws:logs:{region}:{account}:log-group:airflow-{project_name}*"],
+                    resources=[f"arn:{partition}:logs:{region}:{account}:log-group:airflow-{project_name}*"],
                 ),
                 aws_iam.PolicyStatement(
                     actions=["logs:DescribeLogGroups"],
                     effect=aws_iam.Effect.ALLOW,
-                    resources=[f"arn:aws:logs::{account}:*"],
+                    resources=[f"arn:{partition}:logs::{account}:*"],
                 ),
                 aws_iam.PolicyStatement(
                     actions=["cloudwatch:PutMetricData"],
@@ -177,19 +182,19 @@ class MWAAStack(Stack):  # type: ignore
                         "sqs:SendMessage",
                     ],
                     effect=aws_iam.Effect.ALLOW,
-                    resources=[f"arn:aws:sqs:{region}:*:airflow-celery-*"],
+                    resources=[f"arn:{partition}:sqs:{region}:*:airflow-celery-*"],
                 ),
                 aws_iam.PolicyStatement(
                     actions=["sts:AssumeRole"],
                     effect=aws_iam.Effect.ALLOW,
-                    resources=[f"arn:aws:iam::{account}:role/{project_name}-*"],
+                    resources=[f"arn:{partition}:iam::{account}:role/{project_name}-*"],
                 ),
                 aws_iam.PolicyStatement(
                     actions=["dynamodb:*"],
                     effect=aws_iam.Effect.ALLOW,
                     resources=[
                         (
-                            f"arn:aws:dynamodb:{self.region}:{self.account}:"
+                            f"arn:{self.partition}:dynamodb:{self.region}:{self.account}:"
                             f"table/{project_name}-{deployment_name}-{module_name}*"
                         )
                     ],
@@ -202,7 +207,7 @@ class MWAAStack(Stack):  # type: ignore
                     ],
                     effect=aws_iam.Effect.ALLOW,
                     resources=[
-                        f"arn:aws:sagemaker:{self.region}:{self.account}:processing-job/*",
+                        f"arn:{self.partition}:sagemaker:{self.region}:{self.account}:processing-job/*",
                     ],
                 ),
                 aws_iam.PolicyStatement(
@@ -217,7 +222,7 @@ class MWAAStack(Stack):  # type: ignore
                     ],
                     effect=aws_iam.Effect.ALLOW,
                     resources=[
-                        f"arn:aws:emr-serverless:{self.region}:{self.account}:/applications/*",
+                        f"arn:{self.partition}:emr-serverless:{self.region}:{self.account}:/applications/*",
                     ],
                 ),
             ]

@@ -31,7 +31,7 @@ Resources:
               - "servicecatalog:DisassociateResource"
             Effect: Allow
             Resource:
-               - !Sub "arn:aws:servicecatalog:${AWS::Region}:${AWS::AccountId}:/applications/*"
+               - !Sub "arn:${AWS::Partition}:servicecatalog:${AWS::Region}:${AWS::AccountId}:/applications/*"
         Version: 2012-10-17
       PolicyName: idf-modulespecific-policy
       Roles: [!Ref RoleName]
