@@ -49,11 +49,25 @@ jobs:
       matrix:
         modules: ${{ fromJson(needs.get-modules.outputs.matrix) }}
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      MODULE_PATH: ${{ matrix.modules.module_path }}
     steps:
       - uses: actions/checkout@v4
-      - uses: JasonEtco/create-an-issue@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MODULE_PATH: ${{ matrix.modules.module_path }}
+      - uses: dacbd/create-issue-action@v2
         with:
-          filename: .github/ISSUE_TEMPLATE/missing_integ_tests_issue.md
+          token: ${{ env.GITHUB_TOKEN }}
+          title: |
+            [CHORE: Module ${{ env.MODULE_PATH }} is missing integration tests]
+          labels: workflows, backlog
+          body: |
+            ## Failure Report:
+            > Details on failed run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            - Branch: `${{ github.ref }}`
+            - Commit: ${{ github.sha }}
+            - Workflow Path: `${{ github.workflow_ref }}`
+    
+            - [ ] **Task**: Add integration tests for module: ${{ env.MODULE_PATH }}, and re-run until successful.
+    
+            > This issue was created automatically by GitHub, 
+            > through `dacbd/create-issue-action@v2` action
