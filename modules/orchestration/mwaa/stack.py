@@ -106,12 +106,16 @@ class MWAAStack(Stack):  # type: ignore
                 aws_iam.PolicyStatement(
                     actions=["airflow:PublishMetrics"],
                     effect=aws_iam.Effect.ALLOW,
-                    resources=[f"arn:{partition}:airflow:{region}:{account}:environment/{project_name}-{deployment_name}-*"],
+                    resources=[
+                        f"arn:{partition}:airflow:{region}:{account}:environment/{project_name}-{deployment_name}-*"
+                    ],
                 ),
                 aws_iam.PolicyStatement(  # type: ignore
                     actions=["batch:SubmitJob"],
                     effect=aws_iam.Effect.ALLOW,
-                    resources=[f"arn:{partition}:airflow:{region}:{account}:environment/{project_name}-{deployment_name}-*"],
+                    resources=[
+                        f"arn:{partition}:airflow:{region}:{account}:environment/{project_name}-{deployment_name}-*"
+                    ],
                 ),
                 aws_iam.PolicyStatement(
                     actions=["eks:DescribeCluster"],
