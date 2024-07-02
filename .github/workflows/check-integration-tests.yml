@@ -49,33 +49,11 @@ jobs:
       matrix:
         modules: ${{ fromJson(needs.get-modules.outputs.matrix) }}
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      MODULE_PATH: ${{ matrix.modules.module_path }}
     steps:
-      - uses: nickderobertis/check-if-issue-exists-action@master
-        name: Check if Issue Exists
-        id: check_if_issue_exists
+      - uses: actions/checkout@v4
+      - uses: JasonEtco/create-an-issue@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MODULE_PATH: ${{ matrix.modules.module_path }}
         with:
-          repo: ${{ github.repository_owner}}/${{ github.repository }}
-          token: ${{ env.GITHUB_TOKEN }}
-          title: |
-            [CHORE]: Module ${{ env.MODULE_PATH }} is missing integration tests
-      - uses: dacbd/create-issue-action@v2
-        if: steps.check_if_issue_exists.outputs.exists == 'false'
-        with:
-          token: ${{ env.GITHUB_TOKEN }}
-          title: |
-            [CHORE]: Module ${{ env.MODULE_PATH }} is missing integration tests
-          labels: workflows, backlog
-          body: |
-            ## Failure Report:
-            > Details on failed run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-            - Branch: `${{ github.ref }}`
-            - Commit: ${{ github.sha }}
-            - Workflow Path: `${{ github.workflow_ref }}`
-    
-            - [ ] **Task**: Add integration tests for module: ${{ env.MODULE_PATH }}, and re-run until successful.
-    
-            > This issue was created automatically by GitHub, 
-            > through `dacbd/create-issue-action@v2` action
+          filename: .github/ISSUE_TEMPLATE/missing_integ_tests_issue.md
