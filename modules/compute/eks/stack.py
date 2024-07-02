@@ -60,6 +60,7 @@ NGINX_CONTROLLER = "nginx_controller"
 PROMETHEUS_STACK = "prometheus_stack"
 SECRETS_MANAGER_CSI_DRIVER = "secrets_manager_csi_driver"
 SECRETS_STORE_CSI_DRIVER_PROVIDER_AWS = "secrets_store_csi_driver_provider_aws"
+NVIDIA_DEVICE_PLUGIN = "nvidia_device_plugin"
 
 
 class Eks(Stack):  # type: ignore
@@ -209,6 +210,9 @@ class Eks(Stack):  # type: ignore
                     )
                 else:
                     self._create_managed_node_group(eks_cluster, eks_version, ng, node_capacity_type, vpc_cni_chart)
+
+                if ng.get("install_nvidia_device_plugin"):
+                    self._install_nvidia_device_plugin(eks_cluster, eks_version, replicated_ecr_images_metadata)
 
         # AWS Load Balancer Controller
         if eks_addons_config.get("deploy_aws_lb_controller"):
@@ -1741,6 +1745,53 @@ class Eks(Stack):  # type: ignore
         )
         amp_prometheus_chart.node.add_dependency(amp_sa)
         return amp_sa, amp_workspace, amp_prometheus_chart
+
+    def _install_nvidia_device_plugin(self, eks_cluster, eks_version, replicated_ecr_images_metadata):
+        """
+        Installs the NVIDIA Device Plugin for the EKS cluster.
+        """
+
+        plugin = "nvidia-device-plugin"
+        nvidia_device_plugin_namespace = eks_cluster.add_manifest(
+            f"{plugin}-namespace",
+            {
+                "apiVersion": "v1",
+                "kind": "Namespace",
+                "metadata": {"name": plugin},
+            },
+        )
+
+        # This should be acceptable as the metrics are immediatly streamed to the AMP
+        nvidia_device_plugin_chart = eks_cluster.add_helm_chart(
+            plugin,
+            chart=get_chart_release(str(eks_version), NVIDIA_DEVICE_PLUGIN),
+            version=get_chart_version(str(eks_version), NVIDIA_DEVICE_PLUGIN),
+            repository=get_chart_repo(str(eks_version), NVIDIA_DEVICE_PLUGIN),
+            release=plugin,
+            namespace=plugin,
+            create_namespace=False,
+            values=deep_merge(
+                {
+                    "tolerations": [{"key": "nvidia.com/gpu", "operator": "Exists", "effect": "NoSchedule"}],
+                    "affinity": {
+                        "nodeAffinity": {
+                            "requiredDuringSchedulingIgnoredDuringExecution": {
+                                "nodeSelectorTerms": [
+                                    {
+                                        "matchExpressions": [
+                                            {"key": "nvidia.com/gpu.present", "operator": "In", "values": ["true"]}
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                },
+                get_chart_values(replicated_ecr_images_metadata, NVIDIA_DEVICE_PLUGIN),
+            ),
+        )
+
+        nvidia_device_plugin_chart.node.add_dependency(nvidia_device_plugin_namespace)
 
     def _deploy_grafana_for_amp(
         self,

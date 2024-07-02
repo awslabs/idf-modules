@@ -1,4 +1,16 @@
 charts:
+  nvidia_device_plugin:
+    name: nvidia-device-plugin
+    repository: "https://nvidia.github.io/k8s-device-plugin"
+    version: 0.14.5
+    images:
+      nvidia_device_plugin:
+        repository:
+          location: values
+          path: image.repository
+        tag:
+          location: chart
+          path: appVersion
   alb_controller:
     name: aws-load-balancer-controller
     repository: "https://aws.github.io/eks-charts"
