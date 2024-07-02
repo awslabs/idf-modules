@@ -22,20 +22,17 @@ jobs:
           MODULES=()
           MODULES_WITHOUT_INTEG=()
           for d in modules/*/* ; do
-              echo $d
               MODULES+=("$d")
-              echo $MODULES
           done
-          echo "$MODULES"
           for m in "${MODULES[@]}" ; do
               if [ ! -d "${m}"/integ/ ]; then
                 echo "No Integration tests for ${m}"
                 MODULES_WITHOUT_INTEG+=("$m")
               fi
           done
-          echo "$MODULES_WITHOUT_INTEG"
+          echo "${MODULES_WITHOUT_INTEG[@]}"
           # Create our json structure [{"module_path": "..."}]
-          MODULES_JSON=$(echo "$MODULES_WITHOUT_INTEG" | jq -R -s 'split(" ")' | jq '[ .[] | select(length > 0) ]' | jq 'map({"module_path": .})')
+          MODULES_JSON=$(echo "${MODULES_WITHOUT_INTEG[@]}" | jq -R -s 'split(" ")' | jq '[ .[] | select(length > 0) ]' | jq 'map({"module_path": .})')
           # Export the modules as json to the outputs
           echo 'matrix<<EOF' >> $GITHUB_OUTPUT
           echo $MODULES_JSON >> $GITHUB_OUTPUT
