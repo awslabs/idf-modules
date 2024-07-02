@@ -35,7 +35,7 @@ parameters:
   - name: eks-compute
     value:
       eks_nodegroup_config:
-        - eks_ng_name: ng1
+        - eks_ng_name: ng1 # EKS Self managed nodegroups are compatible with LocalZones currently
           eks_node_quantity: 1
           eks_node_max_quantity: 5
           eks_node_min_quantity: 1
