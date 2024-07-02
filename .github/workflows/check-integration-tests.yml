@@ -57,3 +57,4 @@ jobs:
           MODULE_PATH: ${{ matrix.modules.module_path }}
         with:
           filename: .github/ISSUE_TEMPLATE/missing_integ_tests_issue.md
+          update_existing: false
