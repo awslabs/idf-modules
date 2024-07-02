@@ -41,16 +41,18 @@ jobs:
   create-issues:
     name: Create issue for ${{ matrix.modules.module_path }}
     needs: get-modules
+    permissions:
+      contents: read
+      issues: write
     strategy:
       fail-fast: false
       matrix:
         modules: ${{ fromJson(needs.get-modules.outputs.matrix) }}
-        python-version: [3.9]
     runs-on: ubuntu-latest
-    env:
-      MODULE_PATH: ${{ matrix.modules.module_name }}
     steps:
-      - name: placeholder
-        run: |
-          set -x
-          echo $MODULE_PATH
+      - uses: JasonEtco/create-an-issue@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MODULE_PATH: ${{ matrix.modules.module_path }}
+        with:
+          filename: .github/ISSUE_TEMPLATE/missing_integ_tests_issue.md
