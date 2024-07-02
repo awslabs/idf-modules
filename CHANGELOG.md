@@ -16,6 +16,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - eks
   - emr-on-eks
   - buckets
+- added partition support for modules
+  - emr-serverless
+  - neptune
+  - fsx-lustre-on-eks
+  - mwaa
+  - dockerimage-replication
+  - app-registry
+  - ecr
+  - fsx-lustre
+  - opensearch-serverless
+  - opensearch
 
 ### **Changed**
 
