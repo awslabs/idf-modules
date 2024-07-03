@@ -50,6 +50,8 @@ jobs:
         modules: ${{ fromJson(needs.get-modules.outputs.matrix) }}
     runs-on: ubuntu-latest
     steps:
+      - name: Avoid Rate Limit With Wait
+        run: sleep $((RANDOM % 15)) 
       - uses: actions/checkout@v4
       - uses: JasonEtco/create-an-issue@v2
         env:
