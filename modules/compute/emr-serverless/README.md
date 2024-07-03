@@ -27,11 +27,14 @@ The parameters `(solution-*)` will resolve a custom text that is used as a descr
 
 - `EmrApplicationId`: name of the S3 Bucket configured to store MWAA Environment DAG artifacts
 - `EmrJobExecutionRoleArn`: name of the path in the S3 Bucket configured to store MWAA Environment DAG artifacts
+- `EmrSecurityGroupId`: Security group ID associated with EMR Serverless environment
 
 #### Output Example
 
 ```json
 {
-    "EmrApplicationId": "application id",
-    "EmrJobExecutionRoleArn": "arn:::::"
+    "EmrApplicationId": "00XXXXXXX",
+    "EmrJobExecutionRoleArn": "arn:::::",
+    "EmrSecurityGroupId": "sg-XXXX",
+
 }
