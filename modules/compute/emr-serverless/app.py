@@ -71,7 +71,7 @@ CfnOutput(
         {
             "EmrApplicationId": emr_serverless.emr_app.attr_application_id,
             "EmrJobExecutionRoleArn": emr_serverless.job_role.role_arn,
-            "EmrSecurityGroupId": emr_serverless.emr_security_group.security_group_id
+            "EmrSecurityGroupId": emr_serverless.emr_security_group.security_group_id,
         }
     ),
 )
