@@ -87,10 +87,13 @@ parameters:
         key: ArtifactsBucketName
 ```
 
-### Module Metadata Outputs
+### Module Metadata RBAC Stack Outputs
 
 - `EmrJobExecutionRoleArn`: ARN for the EMR On EKS Execution Role
-- `VirtualClusterId`: Cluster ID for the EMR Virtual Cluster ID
+
+### Module Metadata EMR Stack Outputs
+
+- `VirtualClusterId`: Cluster ID for the EMR Virtual Cluster
 
 #### Output Example
 
