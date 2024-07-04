@@ -74,7 +74,7 @@ class NeptuneStack(Stack):
             self,
             f"{dep_mod}ClusterParams",
             description="Cluster parameter group",
-            family=neptune.ParameterGroupFamily.NEPTUNE_1_2,
+            family=neptune.ParameterGroupFamily.NEPTUNE_1_3,
             parameters={"neptune_enable_audit_log": "1"},
         )
 
@@ -82,7 +82,7 @@ class NeptuneStack(Stack):
             self,
             "DbParams",
             description="Db parameter group",
-            family=neptune.ParameterGroupFamily.NEPTUNE_1_2,
+            family=neptune.ParameterGroupFamily.NEPTUNE_1_3,
             parameters={"neptune_query_timeout": "120000"},
         )
 
