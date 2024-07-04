@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### **Changed**
 
 - update CDK in neptune module due to deprecated neptune version
+- update airflow version to 2.8.1
 
 ### **Removed**
 
