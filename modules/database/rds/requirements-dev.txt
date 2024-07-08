@@ -28,7 +28,7 @@ build==1.0.3
     #   check-manifest
     #   pip-tools
     #   pyroma
-certifi==2024.2.2
+certifi==2024.7.4
     # via requests
 cfn-lint==0.85.1
     # via -r requirements-dev.in
