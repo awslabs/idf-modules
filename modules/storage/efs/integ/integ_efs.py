@@ -2,8 +2,8 @@ import datetime
 import sys
 
 import aws_cdk as cdk
-import aws_cdk.cloud_assembly_schema as cas
 import aws_cdk.aws_ec2 as ec2
+import aws_cdk.cloud_assembly_schema as cas
 import aws_cdk.integ_tests_alpha as integration
 
 sys.path.append("../")
