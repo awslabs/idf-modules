@@ -342,6 +342,15 @@ class Eks(Stack):  # type: ignore
         """
         Creates a Self Managed Node Group with the specified configuration.
         """
+
+        KUBELET_EXTRA_ARGS = ""
+
+        if ng_config.get("eks_node_labels"):
+            KUBELET_EXTRA_ARGS = f"--node-labels {ng_config.get('eks_node_labels')}"
+
+        if ng_config.get("eks_node_taints"):
+            KUBELET_EXTRA_ARGS = f"{KUBELET_EXTRA_ARGS} --register-with-taints {ng_config.get('eks_node_taints')}"
+
         self_managed_nodegroup = eks_cluster.add_auto_scaling_group_capacity(
             f"self-managed-{ng_config.get('eks_ng_name')}",
             desired_capacity=ng_config.get("eks_node_quantity"),
@@ -349,6 +358,9 @@ class Eks(Stack):  # type: ignore
             min_capacity=ng_config.get("eks_node_min_quantity"),
             update_policy=None,
             instance_type=ec2.InstanceType(str(ng_config.get("eks_node_instance_type"))),
+            bootstrap_options=eks.BootstrapOptions(
+                kubelet_extra_args=KUBELET_EXTRA_ARGS if KUBELET_EXTRA_ARGS else None,
+            ),
             vpc_subnets=ec2.SubnetSelection(subnets=self.dataplane_subnets),
             auto_scaling_group_name=f"{dep_mod}-{ng_config.get('eks_ng_name')}",
             group_metrics=[asg.GroupMetrics.all()],
