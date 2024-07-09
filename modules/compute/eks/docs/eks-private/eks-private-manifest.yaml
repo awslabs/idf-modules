@@ -61,10 +61,11 @@ parameters:
           eks_node_taints:
             - key: "nvidia.com/gpu"
               value: "true"
-              effect: "NO_SCHEDULE"
+              effect: "NoSchedule"
+              #operator: "Equal"
           install_nvidia_device_plugin: True
       eks_node_spot: False
-      eks_api_endpoint_private: False # This makes the EKS Endpoint public
+      eks_api_endpoint_private: False # This makes the EKS Endpoint PUBLIC by default
       eks_secrets_envelope_encryption: True 
   - name: eks-addons
     value:

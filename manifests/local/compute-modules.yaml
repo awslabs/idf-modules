@@ -84,23 +84,39 @@ parameters:
   - name: eks-compute
     value:
       eks_nodegroup_config:
-        - eks_ng_name: ng1
+        - eks_ng_name: ng1 # EKS Managed NodeGroup
           eks_node_quantity: 2
           eks_node_max_quantity: 5
           eks_node_min_quantity: 1
           eks_node_disk_size: 20
           eks_node_instance_type: "m5.large"
-        - eks_ng_name: ng-gpu
-          eks_node_quantity: 1
-          eks_node_max_quantity: 2
-          eks_node_min_quantity: 0
-          eks_node_disk_size: 100
-          eks_node_instance_type: "g4dn.xlarge"
           eks_node_labels:
-            usage: gpu
-          use_gpu_ami: True
+            usage: "general"
+        # - eks_ng_name: ng2 # EKS Self Managed NodeGroup - only option for LocalZones ATM
+        #   eks_node_quantity: 1
+        #   eks_node_max_quantity: 5
+        #   eks_node_min_quantity: 1
+        #   eks_node_disk_size: 20
+        #   eks_node_instance_type: "m5.2xlarge"
+        #   eks_self_managed: True
+        # - eks_ng_name: ng-gpu # EKS Managed NodeGroup with GPU AMI
+        #   eks_node_quantity: 1
+        #   eks_node_max_quantity: 2
+        #   eks_node_min_quantity: 0
+        #   eks_node_disk_size: 100
+        #   eks_node_instance_type: "g4dn.xlarge"
+        #   eks_node_labels:
+        #     usage: "gpu"
+        #     nvidia.com/gpu.present: "true"
+        #   use_gpu_ami: True
+        #   eks_node_taints:
+        #     - key: "nvidia.com/gpu"
+        #       value: "true"
+        #       effect: "NoSchedule"
+        #       #operator: "Equal"
+        #   install_nvidia_device_plugin: True
       eks_node_spot: False
-      eks_api_endpoint_private: False
+      eks_api_endpoint_private: False # This makes the EKS Endpoint PUBLIC by default
       eks_secrets_envelope_encryption: True
   - name: eks-addons
     value:
