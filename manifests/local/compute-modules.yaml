@@ -116,7 +116,8 @@ parameters:
         #       #operator: "Equal"
         #   install_nvidia_device_plugin: True
       eks_node_spot: False
-      eks_api_endpoint_private: False # This makes the EKS Endpoint PUBLIC by default
+      eks_api_endpoint_private: False # This makes the EKS Endpoint PUBLIC AND PRIVATE unless set to False
+      eks_api_cidrs: ${EKS_API_CIDRS} # load the CIDRS from .env file
       eks_secrets_envelope_encryption: True
   - name: eks-addons
     value:

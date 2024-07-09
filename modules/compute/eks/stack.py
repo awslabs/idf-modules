@@ -477,6 +477,15 @@ class Eks(Stack):  # type: ignore
         Creates an Amazon EKS cluster with the specified configuration.
         """
 
+        # CIDRS = ["0.0.0.0/0", "127.0.0.1/32"]
+        if eks_compute_config.get("eks_api_endpoint_private"):
+            api_endpoint = eks.EndpointAccess.PRIVATE
+        else:
+            api_endpoint = eks.EndpointAccess.PUBLIC_AND_PRIVATE
+            if eks_compute_config.get("eks_api_cidrs"):
+                CIDRS = eks_compute_config.get("eks_api_cidrs")
+                api_endpoint = eks.EndpointAccess.PUBLIC_AND_PRIVATE.only_from(*CIDRS)
+
         # Create the EKS cluster
         eks_cluster = eks.Cluster(
             self,
@@ -485,9 +494,7 @@ class Eks(Stack):  # type: ignore
             vpc_subnets=[ec2.SubnetSelection(subnets=controlplane_subnets)],
             cluster_name=f"{project_name}-{deployment_name}-{module_name}-cluster",
             masters_role=cluster_admin_role,
-            endpoint_access=eks.EndpointAccess.PRIVATE
-            if eks_compute_config.get("eks_api_endpoint_private")
-            else eks.EndpointAccess.PUBLIC,
+            endpoint_access=api_endpoint,
             version=eks.KubernetesVersion.of(str(eks_version)),
             kubectl_layer=KubectlV29Layer(self, "Kubectlv29Layer"),
             default_capacity=0,
