@@ -31,6 +31,7 @@ from helpers import (
     get_chart_version,
     get_image,
 )
+from utils.k8s import convert_node_labels_to_k8sargs, convert_taints_to_k8sargs
 
 project_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -346,10 +347,12 @@ class Eks(Stack):  # type: ignore
         KUBELET_EXTRA_ARGS = ""
 
         if ng_config.get("eks_node_labels"):
-            KUBELET_EXTRA_ARGS = f"--node-labels {ng_config.get('eks_node_labels')}"
+            labels = convert_node_labels_to_k8sargs(ng_config.get("eks_node_labels"))
+            KUBELET_EXTRA_ARGS = f"--node-labels {labels}"
 
         if ng_config.get("eks_node_taints"):
-            KUBELET_EXTRA_ARGS = f"{KUBELET_EXTRA_ARGS} --register-with-taints {ng_config.get('eks_node_taints')}"
+            taints = convert_taints_to_k8sargs(ng_config.get("eks_node_taints"))
+            KUBELET_EXTRA_ARGS = f"{KUBELET_EXTRA_ARGS} --register-with-taints {taints}"
 
         self_managed_nodegroup = eks_cluster.add_auto_scaling_group_capacity(
             f"self-managed-{ng_config.get('eks_ng_name')}",
@@ -473,6 +476,7 @@ class Eks(Stack):  # type: ignore
         """
         Creates an Amazon EKS cluster with the specified configuration.
         """
+
         # Create the EKS cluster
         eks_cluster = eks.Cluster(
             self,

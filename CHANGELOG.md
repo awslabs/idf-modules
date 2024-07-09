@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - refactored the deployspec of `emr-on-eks` module and used seedfarmer to add/group metadata of 2 stacks
 - fixed the readme and app.py of `emr-serverless` module
+- fixed the missing taints and labels for self managed nodegroups of `eks` module
 
 ### **Removed**
 
