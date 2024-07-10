@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - buckets
 - added support for `nvidia device plugin` for management of GPUs on EKS clusters
 - added support for adding taints and labels for self managed ngs
+- added a custom timeout for Self Managed Nodegroups for successful signalling
 
 ### **Changed**
 
