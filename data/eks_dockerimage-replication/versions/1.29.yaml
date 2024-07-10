@@ -1,5 +1,5 @@
 ami:
-  version: 1.29.3-20240703
+  version: 1.29.0-20240307
 charts:
   nvidia_device_plugin:
     version: 0.14.5

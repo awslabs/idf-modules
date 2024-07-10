@@ -36,6 +36,7 @@ def test_synthesize_stack(stack_defaults):
                 "max_vcpus": 4800,
                 "desired_vcpus": 0,
                 "order": 1,
+                "allocation_strategy": "BEST_FIT",
                 "instance_types": ["m5.xlarge"],
             },
             {"env_name": "ng2", "max_vcpus": 4800, "desired_vcpus": 0, "compute_type": "SPOT", "order": 1},
