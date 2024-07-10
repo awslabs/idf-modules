@@ -10,7 +10,7 @@ from typing import Any, Dict, List, Optional, cast
 
 import cdk_nag
 import yaml
-from aws_cdk import Aspects, CfnJson, RemovalPolicy, Stack, Tags
+from aws_cdk import Aspects, CfnJson, Duration, RemovalPolicy, Stack, Tags
 from aws_cdk import aws_aps as aps
 from aws_cdk import aws_autoscaling as asg
 from aws_cdk import aws_ec2 as ec2
@@ -368,7 +368,7 @@ class Eks(Stack):  # type: ignore
             auto_scaling_group_name=f"{dep_mod}-{ng_config.get('eks_ng_name')}",
             group_metrics=[asg.GroupMetrics.all()],
             instance_monitoring=asg.Monitoring.DETAILED,
-            signals=asg.Signals.wait_for_all(),
+            signals=asg.Signals.wait_for_all(timeout=Duration.minutes(10)),
         )
 
         self_managed_nodegroup.role.add_managed_policy(
