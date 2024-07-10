@@ -15,6 +15,8 @@ from constructs import Construct, IConstruct
 _logger: logging.Logger = logging.getLogger(__name__)
 
 DEFAULT_MAX_VCPUS_PER_QUEUE = str(256)
+DEFAULT_ON_DEMAND_ALLOCATION_STRATEGY = "BEST_FIT"
+DEFAULT_SPOT_ALLOCATION_STRATEGY = "SPOT_PRICE_CAPACITY_OPTIMIZED"
 
 
 class AwsBatch(Stack):
@@ -168,6 +170,9 @@ class AwsBatch(Stack):
                             type=batch.ComputeResourceType.ON_DEMAND,
                             vpc_subnets=ec2.SubnetSelection(subnets=self.private_subnets),
                             security_groups=[batch_sg],
+                            allocation_strategy=batch.AllocationStrategy(
+                                batchenv.get("allocation_strategy", DEFAULT_ON_DEMAND_ALLOCATION_STRATEGY)
+                            ),
                         ),
                     )
                     on_demand_compute_env_list.append(
@@ -194,7 +199,9 @@ class AwsBatch(Stack):
                             type=batch.ComputeResourceType.SPOT,
                             vpc_subnets=ec2.SubnetSelection(subnets=self.private_subnets),
                             security_groups=[batch_sg],
-                            allocation_strategy=batch.AllocationStrategy("SPOT_CAPACITY_OPTIMIZED"),
+                            allocation_strategy=batch.AllocationStrategy(
+                                batchenv.get("allocation_strategy", DEFAULT_SPOT_ALLOCATION_STRATEGY)
+                            ),
                         ),
                     )
                     spot_compute_env_list.append(

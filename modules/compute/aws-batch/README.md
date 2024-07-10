@@ -3,6 +3,7 @@
 ## Description
 
 This module:
+
 - Creates different AWS Batch Compute resources based on the configuration
 - Creates AWS Batch Queue(s) based on the user input
 
@@ -33,6 +34,7 @@ The parameters `(solution-*)` will resolve a custom text that is used as a descr
       max_vcpus: 256
       desired_vcpus: 0
       order: 1
+      allocation_strategy: BEST_FIT_PROGRESSIVE #default is BEST_FIT
       instance_types: #Example of providing explicit instance type(s)
         - "m5.large"
     - env_name: ng2
@@ -40,6 +42,7 @@ The parameters `(solution-*)` will resolve a custom text that is used as a descr
       desired_vcpus: 0
       compute_type: SPOT
       order: 1
+      allocation_strategy:  SPOT_CAPACITY_OPTIMIZED #default is SPOT_PRICE_CAPACITY_OPTIMIZED
       # instance_types: #if not set, the code defaults to "optimal", where AWS Batch launches the right instance type based on the job definition requirement
       #   - "m5.large"
     - env_name: ng3

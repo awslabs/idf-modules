@@ -21,6 +21,7 @@ parameters:
           max_vcpus: 4800
           desired_vcpus: 0
           order: 1
+          allocation_strategy: BEST_FIT_PROGRESSIVE # https://docs.aws.amazon.com/batch/latest/userguide/allocation-strategies.html
           instance_types:
              - "m5.xlarge"
         - env_name: ng2
@@ -28,6 +29,7 @@ parameters:
           desired_vcpus: 0
           compute_type: SPOT
           order: 1
+          #allocation_strategy:  SPOT_CAPACITY_OPTIMIZED # https://docs.aws.amazon.com/batch/latest/userguide/allocation-strategies.html
           # instance_types: #if not set, the code defaults to "optimal"
           #   - "m5.large"
         - env_name: ng3

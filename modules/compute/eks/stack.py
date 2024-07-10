@@ -10,7 +10,7 @@ from typing import Any, Dict, List, Optional, cast
 
 import cdk_nag
 import yaml
-from aws_cdk import Aspects, CfnJson, RemovalPolicy, Stack, Tags
+from aws_cdk import Aspects, CfnJson, Duration, RemovalPolicy, Stack, Tags
 from aws_cdk import aws_aps as aps
 from aws_cdk import aws_autoscaling as asg
 from aws_cdk import aws_ec2 as ec2
@@ -368,7 +368,7 @@ class Eks(Stack):  # type: ignore
             auto_scaling_group_name=f"{dep_mod}-{ng_config.get('eks_ng_name')}",
             group_metrics=[asg.GroupMetrics.all()],
             instance_monitoring=asg.Monitoring.DETAILED,
-            signals=asg.Signals.wait_for_all(),
+            signals=asg.Signals.wait_for_all(timeout=Duration.minutes(10)),
         )
 
         self_managed_nodegroup.role.add_managed_policy(
@@ -477,15 +477,6 @@ class Eks(Stack):  # type: ignore
         Creates an Amazon EKS cluster with the specified configuration.
         """
 
-        # CIDRS = ["0.0.0.0/0", "127.0.0.1/32"]
-        if eks_compute_config.get("eks_api_endpoint_private"):
-            api_endpoint = eks.EndpointAccess.PRIVATE
-        else:
-            api_endpoint = eks.EndpointAccess.PUBLIC_AND_PRIVATE
-            if eks_compute_config.get("eks_api_cidrs"):
-                CIDRS = eks_compute_config.get("eks_api_cidrs")
-                api_endpoint = eks.EndpointAccess.PUBLIC_AND_PRIVATE.only_from(*CIDRS)
-
         # Create the EKS cluster
         eks_cluster = eks.Cluster(
             self,
@@ -494,7 +485,9 @@ class Eks(Stack):  # type: ignore
             vpc_subnets=[ec2.SubnetSelection(subnets=controlplane_subnets)],
             cluster_name=f"{project_name}-{deployment_name}-{module_name}-cluster",
             masters_role=cluster_admin_role,
-            endpoint_access=api_endpoint,
+            endpoint_access=eks.EndpointAccess.PRIVATE
+            if eks_compute_config.get("eks_api_endpoint_private")
+            else eks.EndpointAccess.PUBLIC,
             version=eks.KubernetesVersion.of(str(eks_version)),
             kubectl_layer=KubectlV29Layer(self, "Kubectlv29Layer"),
             default_capacity=0,
