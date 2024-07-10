@@ -65,5 +65,5 @@ typing-extensions==4.10.0
     # via
     #   cattrs
     #   jsii
-zipp==3.17.0
+zipp==3.19.1
     # via importlib-resources
