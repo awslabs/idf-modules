@@ -361,7 +361,10 @@ class Eks(Stack):  # type: ignore
             desired_capacity=ng_config.get("eks_node_quantity"),
             max_capacity=ng_config.get("eks_node_max_quantity"),
             min_capacity=ng_config.get("eks_node_min_quantity"),
-            update_policy=None,
+            update_policy=asg.UpdatePolicy.rolling_update(
+                max_batch_size=1,
+                min_instances_in_service=ng_config.get("eks_node_quantity"),
+            ),
             instance_type=ec2.InstanceType(str(ng_config.get("eks_node_instance_type"))),
             bootstrap_options=eks.BootstrapOptions(
                 kubelet_extra_args=KUBELET_EXTRA_ARGS if KUBELET_EXTRA_ARGS else None,

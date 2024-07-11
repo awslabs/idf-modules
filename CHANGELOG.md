@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### **Added**
 
 - added support for whitelisting custom CIDRs from SSM Parameters and AWS Codebuild IPs for being able to run seedfarmer commands
+- added asg rolling update for self managed node groups
 
 ### **Changed**
 
