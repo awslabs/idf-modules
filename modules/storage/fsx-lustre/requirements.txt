@@ -61,5 +61,5 @@ typeguard==2.13.3
     #   jsii
 typing-extensions==4.6.3
     # via jsii
-zipp==3.15.0
+zipp==3.19.1
     # via importlib-resources
