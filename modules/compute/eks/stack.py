@@ -9,6 +9,7 @@ from string import Template
 from typing import Any, Dict, List, Optional, cast
 
 import cdk_nag
+import requests
 import yaml
 from aws_cdk import Aspects, CfnJson, Duration, RemovalPolicy, Stack, Tags
 from aws_cdk import aws_aps as aps
@@ -17,6 +18,7 @@ from aws_cdk import aws_ec2 as ec2
 from aws_cdk import aws_eks as eks
 from aws_cdk import aws_iam as iam
 from aws_cdk import aws_kms as kms
+from aws_cdk import aws_ssm as ssm
 from aws_cdk.lambda_layer_kubectl_v29 import KubectlV29Layer
 from cdk_nag import NagSuppressions
 from constructs import Construct, IConstruct
@@ -477,6 +479,16 @@ class Eks(Stack):  # type: ignore
         Creates an Amazon EKS cluster with the specified configuration.
         """
 
+        if eks_compute_config.get("eks_api_endpoint_private"):
+            api_endpoint = eks.EndpointAccess.PRIVATE
+        else:
+            api_endpoint = eks.EndpointAccess.PUBLIC_AND_PRIVATE
+            if eks_compute_config.get("ips_to_whitelist"):
+                cidrs_from_ssm = self._fetch_cidrs_from_ssm(json.loads(eks_compute_config.get("ips_to_whitelist")))
+                aws_cidrs = self._fetch_aws_cidrs()
+                CIDRS = [*cidrs_from_ssm, *aws_cidrs]
+                api_endpoint = eks.EndpointAccess.PUBLIC_AND_PRIVATE.only_from(*CIDRS)
+
         # Create the EKS cluster
         eks_cluster = eks.Cluster(
             self,
@@ -485,9 +497,7 @@ class Eks(Stack):  # type: ignore
             vpc_subnets=[ec2.SubnetSelection(subnets=controlplane_subnets)],
             cluster_name=f"{project_name}-{deployment_name}-{module_name}-cluster",
             masters_role=cluster_admin_role,
-            endpoint_access=eks.EndpointAccess.PRIVATE
-            if eks_compute_config.get("eks_api_endpoint_private")
-            else eks.EndpointAccess.PUBLIC,
+            endpoint_access=api_endpoint,
             version=eks.KubernetesVersion.of(str(eks_version)),
             kubectl_layer=KubectlV29Layer(self, "Kubectlv29Layer"),
             default_capacity=0,
@@ -2080,3 +2090,33 @@ class Eks(Stack):  # type: ignore
                 {"id": "AwsSolutions-L1", "reason": "Suppress error caused by python_3_12 release in December"},
             ],
         )
+
+    def _fetch_cidrs_from_ssm(self, ips_to_whitelist: List[str]):
+        """
+        Fetches the CIDR ranges from the list of SSM Parameters.
+        """
+        cidrs_list = []
+
+        for parameter_name in ips_to_whitelist:
+            string_value = ssm.StringParameter.from_string_parameter_attributes(
+                self, f"SSM-{parameter_name}", parameter_name=parameter_name
+            ).string_value
+            cidrs_list.append(string_value)
+
+        return cidrs_list
+
+    def _fetch_aws_cidrs(self):
+        """
+        Fetches the CIDR ranges from the AWS Services
+        https://docs.aws.amazon.com/vpc/latest/userguide/aws-ip-work-with.html#filter-json-file
+        """
+
+        aws_cidrs_list = []
+        aws_url = "https://ip-ranges.amazonaws.com/ip-ranges.json"
+        aws_ips = requests.get(aws_url, allow_redirects=True).json()
+
+        for item in aws_ips["prefixes"]:
+            if item.get("service") in ("CODEBUILD") and item.get("region") == self.region:
+                aws_cidrs_list.append(item["ip_prefix"])
+
+        return aws_cidrs_list

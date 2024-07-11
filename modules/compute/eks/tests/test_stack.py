@@ -44,6 +44,7 @@ def test_synthesize_stack(stack_defaults):
         "eks_node_spot": "False",
         "eks_api_endpoint_private": "False",
         "eks_secrets_envelope_encryption": "True",
+        "ips_to_whitelist": ["/test/sample1", "/test/sample2"],
     }
 
     eks_addons_config = {
@@ -138,4 +139,32 @@ def test_synthesize_stack(stack_defaults):
         },
     )
 
-    # template.has_resource_properties("Custom::AWSCDK-EKS-Cluster")
+    # EKS Cluster Creator
+    template.resource_count_is("Custom::AWSCDK-EKS-Cluster", 1)
+
+    # Autoscaling group
+    # template.resource_count_is("AWS::AutoScaling::AutoScalingGroup", 1)
+
+    # Helm charts
+    template.resource_count_is("Custom::AWSCDK-EKS-HelmChart", 18)
+
+    # Security groups
+    template.resource_count_is("AWS::EC2::SecurityGroup", 1)
+
+    # Provider Lambda
+    template.resource_count_is("AWS::Lambda::Function", 2)
+
+    # Cluster Creator role
+    template.has_resource_properties(
+        "AWS::IAM::Role",
+        {
+            "AssumeRolePolicyDocument": {
+                "Statement": [
+                    {
+                        "Action": "sts:AssumeRoleWithWebIdentity",
+                        "Effect": "Allow",
+                    },
+                ],
+            },
+        },
+    )

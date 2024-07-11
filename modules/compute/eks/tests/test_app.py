@@ -21,6 +21,7 @@ def stack_defaults():
     os.environ["SEEDFARMER_PARAMETER_DATAPLANE_SUBNET_IDS"] = json.dumps(["subnet-12345", "subnet-54321"])
     os.environ["SEEDFARMER_PARAMETER_CONTROLPLANE_SUBNET_IDS"] = json.dumps(["subnet-12345", "subnet-54321"])
     os.environ["SEEDFARMER_PARAMETER_EKS_VERSION"] = "1.29"
+    os.environ["SEEDFARMER_PARAMETER_MOUNTPOINT_BUCKETS"] = json.dumps(["test-bucket1"])
     os.environ["SEEDFARMER_PARAMETER_EKS_COMPUTE"] = json.dumps(
         {
             "eks_nodegroup_config": [
@@ -44,6 +45,7 @@ def stack_defaults():
             "eks_node_spot": "False",
             "eks_api_endpoint_private": "False",
             "eks_secrets_envelope_encryption": "True",
+            "ips_to_whitelist": ["/test/sample1", "/test/sample2"],
         }
     )
     os.environ["SEEDFARMER_PARAMETER_EKS_ADDONS"] = json.dumps(
@@ -157,6 +159,15 @@ def test_controlplane_subnet_ids(stack_defaults):
         assert os.environ["SEEDFARMER_PARAMETER_CONTROLPLANE_SUBNET_IDS"] == ["subnet-12345", "subnet-54321"]
 
 
+def test_mp_s3_buckets(stack_defaults):
+    del os.environ["SEEDFARMER_PARAMETER_MOUNTPOINT_BUCKETS"]
+
+    with pytest.raises(Exception):
+        import app  # noqa: F401
+
+        assert os.environ["SEEDFARMER_PARAMETER_MOUNTPOINT_BUCKETS"] == ["test-bucket1"]
+
+
 def test_eks_compute(stack_defaults):
     del os.environ["SEEDFARMER_PARAMETER_EKS_COMPUTE"]
 
@@ -177,6 +188,7 @@ def test_eks_compute(stack_defaults):
             "eks_node_spot": "False",
             "eks_api_endpoint_private": "False",
             "eks_secrets_envelope_encryption": "True",
+            "ips_to_whitelist": ["/test/sample1", "/test/sample2"],
         }
 
 
