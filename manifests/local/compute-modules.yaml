@@ -117,7 +117,8 @@ parameters:
         #   install_nvidia_device_plugin: True
       eks_node_spot: False
       eks_api_endpoint_private: False # This makes the EKS Endpoint PUBLIC and Private by default
-      #ips_to_whitelist: ${IPS_TO_WHITELIST} # It loads SSM Params from `.env` file
+      # ips_to_whitelist_from_ssm: ${IPS_TO_WHITELIST_FROM_SSM} # It loads SSM Params from `.env` file
+      # ips_to_whitelist_adhoc: ${IPS_TO_WHITELIST_ADHOC} # It loads list of CIDRs from `.env` file
       eks_secrets_envelope_encryption: True
   - name: eks-addons
     value:

@@ -482,14 +482,24 @@ class Eks(Stack):  # type: ignore
         Creates an Amazon EKS cluster with the specified configuration.
         """
 
+        CIDRS = []
+        if eks_compute_config.get("ips_to_whitelist_from_ssm"):
+            cidrs_from_ssm = self._fetch_cidrs_from_ssm(json.loads(eks_compute_config.get("ips_to_whitelist_from_ssm")))
+            CIDRS.extend(cidrs_from_ssm)
+        if eks_compute_config.get("ips_to_whitelist_adhoc"):
+            cidrs_adhoc = json.loads(eks_compute_config.get("ips_to_whitelist_adhoc"))
+            CIDRS.extend(cidrs_adhoc)
+
         if eks_compute_config.get("eks_api_endpoint_private"):
             api_endpoint = eks.EndpointAccess.PRIVATE
         else:
-            api_endpoint = eks.EndpointAccess.PUBLIC_AND_PRIVATE
-            if eks_compute_config.get("ips_to_whitelist"):
-                cidrs_from_ssm = self._fetch_cidrs_from_ssm(json.loads(eks_compute_config.get("ips_to_whitelist")))
+            api_endpoint = eks.EndpointAccess.PUBLIC_AND_PRIVATE.only_from(
+                "0.0.0.0/0"
+            )  # by default, opens up to 0.0.0.0/0
+
+            if eks_compute_config.get("ips_to_whitelist_from_ssm") or eks_compute_config.get("ips_to_whitelist_adhoc"):
                 aws_cidrs = self._fetch_aws_cidrs()
-                CIDRS = [*cidrs_from_ssm, *aws_cidrs]
+                CIDRS.extend(aws_cidrs)
                 api_endpoint = eks.EndpointAccess.PUBLIC_AND_PRIVATE.only_from(*CIDRS)
 
         # Create the EKS cluster
