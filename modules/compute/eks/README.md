@@ -87,7 +87,31 @@ Security:
 - `eks_readonly_role_name`: The ReadOnly Role to be mapped to the `readonly-group` group of RBAC
 - `eks_node_spot`: If `eks_node_spot` is set to True, we deploy SPOT instances of the above `nodegroup_config` for you else we deploy `ON_DEMAND` instances.
 - `eks_secrets_envelope_encryption`: If set to True, we enable KMS secret for [envelope encryption](https://aws.amazon.com/about-aws/whats-new/2020/03/amazon-eks-adds-envelope-encryption-for-secrets-with-aws-kms/) for Kubernetes secrets.
-- `eks_api_endpoint_private`: If set to True, we deploy EKS cluster with API endpoint set to [private mode](https://docs.aws.amazon.com/eks/latest/userguide/cluster-endpoint.html).
+- `eks_api_endpoint_private`: If set to `True`, we deploy the EKS cluster with API endpoint set to [private mode](https://docs.aws.amazon.com/eks/latest/userguide/cluster-endpoint.html). By default, it is set to `PUBLIC AND PRIVATE` access mode (which whitelists `0.0.0.0/0` CIDR). If you want to whitelist custom CIDRs instead of the default whitelisted CIDR, you can either set `ips_to_whitelist_from_ssm` or `ips_to_whitelist_adhoc` attribute(s). You should not set either of them if `eks_api_endpoint_private` is set to `True`.
+- `ips_to_whitelist_from_ssm`: You can load a list of SSM Parameters in which your enterprise stores CIDRs to be whietlisted. The SSM Parameters should be declared in a `.env` file (feature supported by SeedFarmer). If you set this parameter, the EKS module also loads the list of CODEBUILD Public IPS from `ip-ranges.json` [file](https://ip-ranges.amazonaws.com/ip-ranges.json) based on the region of operation, so your seedfarmer commands continue to work. Below is an example declaration:
+
+```yaml
+eks_api_endpoint_private: False
+ips_to_whitelist_from_ssm: ${IPS_TO_WHITELIST_FROM_SSM}
+```
+
+```.env
+IPS_TO_WHITELIST_FROM_SSM=["/company/org/ip-whitelists1", "/company/org/ip-whitelists2"]
+```
+
+- `ips_to_whitelist_adhoc`: You can declare a list of Public CIDRs which needs to be whietlisted. The entities leveraging Public CIDRs can be declared in a `.env` file (feature supported by SeedFarmer). If you set this parameter, the EKS module also loads the list of CODEBUILD Public IPS from `ip-ranges.json` [file](https://ip-ranges.amazonaws.com/ip-ranges.json) based on the region of operation, so your seedfarmer commands continue to work. Below is an example declaration:
+
+```yaml
+eks_api_endpoint_private: False
+ips_to_whitelist_adhoc: ${IPS_TO_WHITELIST_ADHOC}
+```
+
+```.env
+IPS_TO_WHITELIST_ADHOC=["1.2.3.4/8", "11.2.33.44/8"]
+```
+
+#### Optional Drivers/Addons/Plugins
+
 - `deploy_aws_lb_controller`: Deploys the [ALB Ingress controller](https://docs.aws.amazon.com/eks/latest/userguide/alb-ingress.html). Default behavior is set to False
 - `deploy_external_dns`: Deploys the External DNS to interact with [AWS Route53](https://github.com/kubernetes-sigs/external-dns/blob/master/docs/tutorials/aws.md). Default behavior is set to False
 - `deploy_aws_ebs_csi`: Deploys the [AWS EBS](https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html) Driver. Default behavior is set to False
