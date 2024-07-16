@@ -45,7 +45,7 @@ integration.IntegTest(
             module_name="efs",
             solution_id="0123",
             solution_name="app-registry-integ",
-            solution_version="x.y.z"
+            solution_version="x.y.z",
         )
     ],
     regions=["us-east-1"],
