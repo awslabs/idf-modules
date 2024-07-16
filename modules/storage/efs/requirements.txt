@@ -21,6 +21,12 @@ aws-cdk-lib==2.82.0
     #   -r requirements.in
     #   aws-cdk-integ-tests-alpha
     #   cdk-nag
+boto3==1.34.144
+    # via -r requirements.in
+botocore==1.34.144
+    # via
+    #   boto3
+    #   s3transfer
 cattrs==23.2.3
     # via jsii
 cdk-nag==2.12.29
@@ -31,10 +37,14 @@ constructs==10.0.91
     #   aws-cdk-integ-tests-alpha
     #   aws-cdk-lib
     #   cdk-nag
-exceptiongroup==1.2.1
+exceptiongroup==1.2.2
     # via cattrs
 importlib-resources==6.4.0
     # via jsii
+jmespath==1.0.1
+    # via
+    #   boto3
+    #   botocore
 jsii==1.101.0
     # via
     #   aws-cdk-asset-awscli-v1
@@ -55,7 +65,11 @@ publication==0.0.3
     #   constructs
     #   jsii
 python-dateutil==2.9.0.post0
-    # via jsii
+    # via
+    #   botocore
+    #   jsii
+s3transfer==0.10.2
+    # via boto3
 six==1.16.0
     # via python-dateutil
 typeguard==2.13.3
@@ -70,5 +84,7 @@ typing-extensions==4.12.2
     # via
     #   cattrs
     #   jsii
+urllib3==1.26.19
+    # via botocore
 zipp==3.19.2
     # via importlib-resources
