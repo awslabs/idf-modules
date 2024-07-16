@@ -80,7 +80,6 @@ typeguard==2.13.3
     #   aws-cdk-integ-tests-alpha
     #   aws-cdk-lib
     #   jsii
-<<<<<<< HEAD
 typing-extensions==4.12.2
     # via
     #   cattrs
@@ -88,9 +87,4 @@ typing-extensions==4.12.2
 urllib3==1.26.19
     # via botocore
 zipp==3.19.2
-=======
-typing-extensions==4.6.3
-    # via jsii
-zipp==3.19.1
->>>>>>> dca0f5c68b2bbe1bcb10727cb14b5c9271bf2cd8
     # via importlib-resources
