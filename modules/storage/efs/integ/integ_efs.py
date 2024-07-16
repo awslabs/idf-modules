@@ -17,12 +17,13 @@ app = cdk.App()
 timestamp = datetime.datetime.now()
 logger = logging.getLogger(__name__)
 
+
 def get_module_dependencies(resource_keys: List[str]) -> Dict[str, str]:
     ssm = boto3.client("ssm", region_name="us-east-1")
     dependencies = {}
     try:
         for key in resource_keys:
-            dependencies[key] = ssm.get_parameter(Name=f"/module-integration-tests/{key}")['Parameter']['Value']
+            dependencies[key] = ssm.get_parameter(Name=f"/module-integration-tests/{key}")["Parameter"]["Value"]
     except Exception as e:
         print(f"issue getting dependencies: {e}")
     return dependencies
@@ -30,9 +31,7 @@ def get_module_dependencies(resource_keys: List[str]) -> Dict[str, str]:
 
 dependencies = get_module_dependencies(
     # Add any required resource identifiers here
-    resource_keys=[
-        "vpc-id"
-    ]
+    resource_keys=["vpc-id"]
 )
 
 integration.IntegTest(
@@ -47,10 +46,7 @@ integration.IntegTest(
             module_name="efs",
             vpc_id=dependencies["vpc-id"],
             efs_removal_policy="DESTROY",
-            env=cdk.Environment(
-                account=os.getenv("CDK_DEFAULT_ACCOUNT"),
-                region="us-east-1"
-            )
+            env=cdk.Environment(account=os.getenv("CDK_DEFAULT_ACCOUNT"), region="us-east-1"),
         )
     ],
     regions=["us-east-1"],
