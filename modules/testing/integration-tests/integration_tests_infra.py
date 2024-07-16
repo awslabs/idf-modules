@@ -174,7 +174,7 @@ class IntegrationTestsInfrastructure(cdk.Stack):
             ],
             targets=[self.alerts_topic],
         )
-        rule.node.add_dependency(self.alerts_topic.node.find_child('Policy'))
+        rule.node.add_dependency(self.alerts_topic.node.find_child("Policy"))
 
     def create_codebuild_project(
         self,
