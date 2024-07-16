@@ -1,6 +1,8 @@
 ami:
-  version: 1.29.0-20240307
+  version: 1.29.3-20240703
 charts:
+  nvidia_device_plugin:
+    version: 0.14.5
   alb_controller:
     version: 1.7.0
   aws_vpc_cni:

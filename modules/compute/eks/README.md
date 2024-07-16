@@ -68,7 +68,11 @@ Security:
           eks_node_min_quantity: Declare the Node group minimum size here
           eks_node_disk_size: Declare the Node group EBS volume disk size here
           eks_node_instance_type: Declare the Node group desired instance type here
+          eks_node_labels: Declare the Kubernetes labels here, so they will be propogated to the nodes
+          eks_node_taints: Declare the Kubernetes taints here, so they will be propogated to the nodes. Pods should tolerate these taints for being able to schedule workloads on them
           use_gpu_ami: Enable if you want to deploy GPU instances in the node group
+          install_nvidia_device_plugin: Install [Nvidia Device plugin](https://github.com/NVIDIA/k8s-device-plugin) for management of available GPU resources on a node. You would need to use an AMI with GPU drivers, container runtime already configured. It is recommended to use AWS GPU Optimized AMI, which is done for you if you set the attribute `use_gpu_ami` above. Checkout the [example](https://github.com/NVIDIA/k8s-device-plugin?tab=readme-ov-file#running-gpu-jobs) here on how to request GPUs from the pod spec.
+          
       ```
 
 - `eks-version`: The EKS Cluster version to lock the version to
@@ -83,7 +87,31 @@ Security:
 - `eks_readonly_role_name`: The ReadOnly Role to be mapped to the `readonly-group` group of RBAC
 - `eks_node_spot`: If `eks_node_spot` is set to True, we deploy SPOT instances of the above `nodegroup_config` for you else we deploy `ON_DEMAND` instances.
 - `eks_secrets_envelope_encryption`: If set to True, we enable KMS secret for [envelope encryption](https://aws.amazon.com/about-aws/whats-new/2020/03/amazon-eks-adds-envelope-encryption-for-secrets-with-aws-kms/) for Kubernetes secrets.
-- `eks_api_endpoint_private`: If set to True, we deploy EKS cluster with API endpoint set to [private mode](https://docs.aws.amazon.com/eks/latest/userguide/cluster-endpoint.html).
+- `eks_api_endpoint_private`: If set to `True`, we deploy the EKS cluster with API endpoint set to [private mode](https://docs.aws.amazon.com/eks/latest/userguide/cluster-endpoint.html). By default, it is set to `PUBLIC AND PRIVATE` access mode (which whitelists `0.0.0.0/0` CIDR). If you want to whitelist custom CIDRs instead of the default whitelisted CIDR, you can either set `ips_to_whitelist_from_ssm` or `ips_to_whitelist_adhoc` attribute(s). You should not set either of them if `eks_api_endpoint_private` is set to `True`.
+- `ips_to_whitelist_from_ssm`: You can load a list of SSM Parameters in which your enterprise stores CIDRs to be whietlisted. The SSM Parameters should be declared in a `.env` file (feature supported by SeedFarmer). If you set this parameter, the EKS module also loads the list of CODEBUILD Public IPS from `ip-ranges.json` [file](https://ip-ranges.amazonaws.com/ip-ranges.json) based on the region of operation, so your seedfarmer commands continue to work. Below is an example declaration:
+
+```yaml
+eks_api_endpoint_private: False
+ips_to_whitelist_from_ssm: ${IPS_TO_WHITELIST_FROM_SSM}
+```
+
+```.env
+IPS_TO_WHITELIST_FROM_SSM=["/company/org/ip-whitelists1", "/company/org/ip-whitelists2"]
+```
+
+- `ips_to_whitelist_adhoc`: You can declare a list of Public CIDRs which needs to be whietlisted. The entities leveraging Public CIDRs can be declared in a `.env` file (feature supported by SeedFarmer). If you set this parameter, the EKS module also loads the list of CODEBUILD Public IPS from `ip-ranges.json` [file](https://ip-ranges.amazonaws.com/ip-ranges.json) based on the region of operation, so your seedfarmer commands continue to work. Below is an example declaration:
+
+```yaml
+eks_api_endpoint_private: False
+ips_to_whitelist_adhoc: ${IPS_TO_WHITELIST_ADHOC}
+```
+
+```.env
+IPS_TO_WHITELIST_ADHOC=["1.2.3.4/8", "11.2.33.44/8"]
+```
+
+#### Optional Drivers/Addons/Plugins
+
 - `deploy_aws_lb_controller`: Deploys the [ALB Ingress controller](https://docs.aws.amazon.com/eks/latest/userguide/alb-ingress.html). Default behavior is set to False
 - `deploy_external_dns`: Deploys the External DNS to interact with [AWS Route53](https://github.com/kubernetes-sigs/external-dns/blob/master/docs/tutorials/aws.md). Default behavior is set to False
 - `deploy_aws_ebs_csi`: Deploys the [AWS EBS](https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html) Driver. Default behavior is set to False
