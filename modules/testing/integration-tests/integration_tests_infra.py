@@ -58,6 +58,7 @@ class IntegrationTestsInfrastructure(cdk.Stack):
             encryption=s3.BucketEncryption.KMS,
             encryption_key=self.artifacts_cmk,
             removal_policy=cdk.RemovalPolicy.DESTROY,
+            auto_delete_objects=True,
             versioned=True,
         )
 
