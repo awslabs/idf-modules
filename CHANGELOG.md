@@ -13,8 +13,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - added support for whitelisting custom CIDRs from SSM Parameters, from a static entry list, and auto loads AWS Codebuild IPs for being able to run seedfarmer commands
 - added asg rolling update for self managed node groups
+- added partition support for modules
+  - emr-serverless
+  - neptune
+  - fsx-lustre-on-eks
+  - mwaa
+  - dockerimage-replication
+  - app-registry
+  - ecr
+  - fsx-lustre
+  - opensearch-serverless
+  - opensearch
 
 ### **Changed**
+
+- update CDK in neptune module due to deprecated neptune version
+- update airflow version to 2.8.1
 
 ### **Removed**
 
@@ -31,17 +45,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - eks
   - emr-on-eks
   - buckets
-- added partition support for modules
-  - emr-serverless
-  - neptune
-  - fsx-lustre-on-eks
-  - mwaa
-  - dockerimage-replication
-  - app-registry
-  - ecr
-  - fsx-lustre
-  - opensearch-serverless
-  - opensearch
 - added support for `nvidia device plugin` for management of GPUs on EKS clusters
 - added support for adding taints and labels for self managed ngs
 - added a custom timeout for Self Managed Nodegroups for successful signalling
@@ -51,8 +54,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - refactored the deployspec of `emr-on-eks` module and used seedfarmer to add/group metadata of 2 stacks
 - fixed the readme and app.py of `emr-serverless` module
 - fixed the missing taints and labels for self managed nodegroups of `eks` module
-- update CDK in neptune module due to deprecated neptune version
-- update airflow version to 2.8.1
 
 ### **Removed**
 
