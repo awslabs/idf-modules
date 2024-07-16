@@ -9,14 +9,16 @@ from string import Template
 from typing import Any, Dict, List, Optional, cast
 
 import cdk_nag
+import requests
 import yaml
-from aws_cdk import Aspects, CfnJson, RemovalPolicy, Stack, Tags
+from aws_cdk import Aspects, CfnJson, Duration, RemovalPolicy, Stack, Tags
 from aws_cdk import aws_aps as aps
 from aws_cdk import aws_autoscaling as asg
 from aws_cdk import aws_ec2 as ec2
 from aws_cdk import aws_eks as eks
 from aws_cdk import aws_iam as iam
 from aws_cdk import aws_kms as kms
+from aws_cdk import aws_ssm as ssm
 from aws_cdk.lambda_layer_kubectl_v29 import KubectlV29Layer
 from cdk_nag import NagSuppressions
 from constructs import Construct, IConstruct
@@ -31,6 +33,7 @@ from helpers import (
     get_chart_version,
     get_image,
 )
+from utils.k8s import convert_node_labels_to_k8sargs, convert_taints_to_k8sargs
 
 project_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -342,18 +345,35 @@ class Eks(Stack):  # type: ignore
         """
         Creates a Self Managed Node Group with the specified configuration.
         """
+
+        KUBELET_EXTRA_ARGS = ""
+
+        if ng_config.get("eks_node_labels"):
+            labels = convert_node_labels_to_k8sargs(ng_config.get("eks_node_labels"))
+            KUBELET_EXTRA_ARGS = f"--node-labels {labels}"
+
+        if ng_config.get("eks_node_taints"):
+            taints = convert_taints_to_k8sargs(ng_config.get("eks_node_taints"))
+            KUBELET_EXTRA_ARGS = f"{KUBELET_EXTRA_ARGS} --register-with-taints {taints}"
+
         self_managed_nodegroup = eks_cluster.add_auto_scaling_group_capacity(
             f"self-managed-{ng_config.get('eks_ng_name')}",
             desired_capacity=ng_config.get("eks_node_quantity"),
             max_capacity=ng_config.get("eks_node_max_quantity"),
             min_capacity=ng_config.get("eks_node_min_quantity"),
-            update_policy=None,
+            update_policy=asg.UpdatePolicy.rolling_update(
+                max_batch_size=1,
+                min_instances_in_service=ng_config.get("eks_node_quantity"),
+            ),
             instance_type=ec2.InstanceType(str(ng_config.get("eks_node_instance_type"))),
+            bootstrap_options=eks.BootstrapOptions(
+                kubelet_extra_args=KUBELET_EXTRA_ARGS if KUBELET_EXTRA_ARGS else None,
+            ),
             vpc_subnets=ec2.SubnetSelection(subnets=self.dataplane_subnets),
             auto_scaling_group_name=f"{dep_mod}-{ng_config.get('eks_ng_name')}",
             group_metrics=[asg.GroupMetrics.all()],
             instance_monitoring=asg.Monitoring.DETAILED,
-            signals=asg.Signals.wait_for_all(),
+            signals=asg.Signals.wait_for_all(timeout=Duration.minutes(10)),
         )
 
         self_managed_nodegroup.role.add_managed_policy(
@@ -461,6 +481,27 @@ class Eks(Stack):  # type: ignore
         """
         Creates an Amazon EKS cluster with the specified configuration.
         """
+
+        CIDRS = []
+        if eks_compute_config.get("ips_to_whitelist_from_ssm"):
+            cidrs_from_ssm = self._fetch_cidrs_from_ssm(json.loads(eks_compute_config.get("ips_to_whitelist_from_ssm")))
+            CIDRS.extend(cidrs_from_ssm)
+        if eks_compute_config.get("ips_to_whitelist_adhoc"):
+            cidrs_adhoc = json.loads(eks_compute_config.get("ips_to_whitelist_adhoc"))
+            CIDRS.extend(cidrs_adhoc)
+
+        if eks_compute_config.get("eks_api_endpoint_private"):
+            api_endpoint = eks.EndpointAccess.PRIVATE
+        else:
+            api_endpoint = eks.EndpointAccess.PUBLIC_AND_PRIVATE.only_from(
+                "0.0.0.0/0"
+            )  # by default, opens up to 0.0.0.0/0
+
+            if eks_compute_config.get("ips_to_whitelist_from_ssm") or eks_compute_config.get("ips_to_whitelist_adhoc"):
+                aws_cidrs = self._fetch_aws_cidrs()
+                CIDRS.extend(aws_cidrs)
+                api_endpoint = eks.EndpointAccess.PUBLIC_AND_PRIVATE.only_from(*CIDRS)
+
         # Create the EKS cluster
         eks_cluster = eks.Cluster(
             self,
@@ -469,9 +510,7 @@ class Eks(Stack):  # type: ignore
             vpc_subnets=[ec2.SubnetSelection(subnets=controlplane_subnets)],
             cluster_name=f"{project_name}-{deployment_name}-{module_name}-cluster",
             masters_role=cluster_admin_role,
-            endpoint_access=eks.EndpointAccess.PRIVATE
-            if eks_compute_config.get("eks_api_endpoint_private")
-            else eks.EndpointAccess.PUBLIC,
+            endpoint_access=api_endpoint,
             version=eks.KubernetesVersion.of(str(eks_version)),
             kubectl_layer=KubectlV29Layer(self, "Kubectlv29Layer"),
             default_capacity=0,
@@ -2064,3 +2103,33 @@ class Eks(Stack):  # type: ignore
                 {"id": "AwsSolutions-L1", "reason": "Suppress error caused by python_3_12 release in December"},
             ],
         )
+
+    def _fetch_cidrs_from_ssm(self, ips_to_whitelist: List[str]):
+        """
+        Fetches the CIDR ranges from the list of SSM Parameters.
+        """
+        cidrs_list = []
+
+        for parameter_name in ips_to_whitelist:
+            string_value = ssm.StringParameter.from_string_parameter_attributes(
+                self, f"SSM-{parameter_name}", parameter_name=parameter_name
+            ).string_value
+            cidrs_list.append(string_value)
+
+        return cidrs_list
+
+    def _fetch_aws_cidrs(self):
+        """
+        Fetches the CIDR ranges from the AWS Services
+        https://docs.aws.amazon.com/vpc/latest/userguide/aws-ip-work-with.html#filter-json-file
+        """
+
+        aws_cidrs_list = []
+        aws_url = "https://ip-ranges.amazonaws.com/ip-ranges.json"
+        aws_ips = requests.get(aws_url, allow_redirects=True).json()
+
+        for item in aws_ips["prefixes"]:
+            if item.get("service") in ("CODEBUILD") and item.get("region") == self.region:
+                aws_cidrs_list.append(item["ip_prefix"])
+
+        return aws_cidrs_list
