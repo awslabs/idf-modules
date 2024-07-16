@@ -1,6 +1,7 @@
 import datetime
 import logging
 import sys
+import os
 from typing import Dict, List
 
 import aws_cdk as cdk
@@ -47,7 +48,10 @@ integration.IntegTest(
             manifests=[],
             repo_owner="awslabs",
             repo_name="idf-modules",
-            oauth_token_secret_name="foobar",
+            oauth_token_secret_name=os.getenv("OAUTH_TOKEN_SECRET_NAME"),
+            seedfarmer_project_name="integration-tests",
+            assets_path="../artifacts",
+            create_github_source_credentials=False,
         )
     ],
     enable_lookups=True,

@@ -27,6 +27,8 @@ class IntegrationTestsInfrastructure(cdk.Stack):
         oauth_token_secret_name: str,
         seedfarmer_project_name: str,
         branch: Optional[str] = None,
+        assets_path: Optional[str] = "artifacts",
+        create_github_source_credentials: Optional[bool] = True,
         **kwargs: Any,
     ) -> None:
         super().__init__(
@@ -62,7 +64,7 @@ class IntegrationTestsInfrastructure(cdk.Stack):
         s3_deploy.BucketDeployment(
             self,
             "S3ArtifactsDeployment",
-            sources=[s3_deploy.Source.asset("artifacts")],
+            sources=[s3_deploy.Source.asset(assets_path)],
             destination_bucket=self.artifacts_bucket,
             destination_key_prefix="artifacts",
         )
@@ -78,11 +80,12 @@ class IntegrationTestsInfrastructure(cdk.Stack):
         )
         self.artifacts_cmk.grant_encrypt_decrypt(self.codebuild_service_role)
 
-        codebuild.GitHubSourceCredentials(
-            self,
-            "GitHubCodeBuildCreds",
-            access_token=cdk.SecretValue.secrets_manager(oauth_token_secret_name),
-        )
+        if create_github_source_credentials:
+            codebuild.GitHubSourceCredentials(
+                self,
+                "GitHubCodeBuildCreds",
+                access_token=cdk.SecretValue.secrets_manager(oauth_token_secret_name),
+            )
 
         self.pipeline = codepipeline.Pipeline(
             self, "Pipeline", pipeline_name=cdk.PhysicalName.GENERATE_IF_NEEDED
@@ -108,7 +111,7 @@ class IntegrationTestsInfrastructure(cdk.Stack):
                     action_name="SeedFarmerBootstrap",
                     project=self.create_codebuild_project(
                         "SeedFarmerBootstrap",
-                        "artifacts/seedfarmer-bootstrap.yml",
+                        f"{assets_path}/seedfarmer-bootstrap.yml",
                         "bootstraps seedfarmer",
                         environment_variables={
                             "ARTIFACTS_BUCKET": codebuild.BuildEnvironmentVariable(
@@ -130,7 +133,7 @@ class IntegrationTestsInfrastructure(cdk.Stack):
 
         deploy_project = self.create_codebuild_project(
             "Deploy",
-            "artifacts/seedfarmer-deploy.yml",
+            f"{assets_path}/seedfarmer-deploy.yml",
             f"deploys seedfarmer with manifest(s) {manifests}",
         )
         self.pipeline.add_stage(
