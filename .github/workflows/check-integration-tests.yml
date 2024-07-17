@@ -24,6 +24,10 @@ jobs:
           for d in modules/*/* ; do
               MODULES+=("$d")
           done
+          exempt=(modules/dummy/blank)
+          for del in ${exempt[@]}; do
+              MODULES=("${MODULES[@]/$del}") 
+          done
           for m in "${MODULES[@]}" ; do
               if [ ! -d "${m}"/integ/ ]; then
                 echo "No Integration tests for ${m}"

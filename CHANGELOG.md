@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - add integration tests for modules 
   - `service-catalog/app-registry`
   - `testing/integration-tests`
+  - `storage/opensearch-serverless`
 - added partition support for modules
   - emr-serverless
   - neptune
