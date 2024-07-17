@@ -17,13 +17,16 @@ integration.IntegTest(
     "Integration Tests ECR Module",
     test_cases=[
         stack.EcrStack(
-            app,
-            "ecr",
-            "integ",
-            "MUTABLE",
-            None,
-            None,
+            scope=app,
+            construct_id="ecr",
+            repository_name="integ",
+            image_tag_mutability="MUTABLE",
+            lifecycle_max_image_count=None,
+            lifecycle_max_days=None,
             removal_policy=cdk.RemovalPolicy.DESTROY,
+            image_scan_on_push=True,
+            encryption="KMS_MANAGED",
+            kms_key_arn=None,
             description=f"Integration Test: {timestamp.month}-{timestamp.day} {timestamp.hour}:{timestamp.minute}",
         )
     ],
