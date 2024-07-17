@@ -10,9 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## UNRELEASED
 
 ### **Added**
-
-- added support for whitelisting custom CIDRs from SSM Parameters, from a static entry list, and auto loads AWS Codebuild IPs for being able to run seedfarmer commands
-- added asg rolling update for self managed node groups
+- add integ tests for module `service-catalog/app-registry`
 - added partition support for modules
   - emr-serverless
   - neptune
@@ -36,6 +34,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 =======
 
+## v1.10.0 (2024-07-16)
+
+### **Added**
+
+- added support for whitelisting custom CIDRs from SSM Parameters, from a static entry list, and auto loads AWS Codebuild IPs for being able to run seedfarmer commands
+- added asg rolling update for self managed node groups
+
+### **Changed**
+
+### **Removed**
+
+=======
+
+=======
+
 ## v1.9.0 (2024-07-10)
 
 ### **Added**
@@ -46,6 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - emr-on-eks
   - buckets
 - added support for `nvidia device plugin` for management of GPUs on EKS clusters
+- add integration tests for module `storage/efs`
 - added support for adding taints and labels for self managed ngs
 - added a custom timeout for Self Managed Nodegroups for successful signalling
 
