@@ -3,11 +3,12 @@ import sys
 import yaml
 
 integration_test_group_keywords = [
-        "integ",
-        "integration",
-        "integ-tests",
-        "integration-tests",
-    ]
+    "integ",
+    "integration",
+    "integ-tests",
+    "integration-tests",
+]
+
 
 def remove_integration_tests_group(data):
     for group in data["groups"]:
@@ -38,7 +39,10 @@ data["targetAccountMappings"][0]["accountId"] = target_account
 if len(data["targetAccountMappings"]) > 1:
     count = 1
     for mapping in data["targetAccountMappings"]:
-        if data["targetAccountMappings"][count]["alias"] in integration_test_group_keywords:
+        if (
+            data["targetAccountMappings"][count]["alias"]
+            in integration_test_group_keywords
+        ):
             data["targetAccountMappings"].pop(count)
 
 
