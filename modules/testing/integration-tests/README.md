@@ -108,6 +108,8 @@ you can push to the repo and branch specified in your integration testing module
 
 #### Optional
 - `branch`: Repository branch to connect to integration tests. Defaults to `main`.
+- `assets_path`: A custom path for codebuild artifacts. Defaults to `artifacts`.
+- `create_github_source_credentials`: If Github credentials are already configured in the region this can be disabled. Defaults to `True`.
 
 ### Module Metadata Outputs
 
