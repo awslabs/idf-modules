@@ -1,0 +1,13 @@
+name: Check CHANGELOG.md updated
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  changelog:
+    name: Check Changelog Update
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: tarides/changelog-check-action@v2
+        with:
+          changelog: CHANGELOG.md
