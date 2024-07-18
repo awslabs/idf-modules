@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `service-catalog/app-registry`
   - `testing/integration-tests`
   - `storage/opensearch-serverless`
+  - `storage/fsx-lustre`
   - `database/rds`
 - added partition support for modules
   - emr-serverless

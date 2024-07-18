@@ -28,11 +28,11 @@ class FsxFileSystem(Stack):
         stack_description: str,
         storage_throughput: Union[int, float, None],
         storage_capacity: int,
-        data_bucket_name: Optional[str],
-        export_path: Optional[str],
-        import_path: Optional[str],
-        file_system_type_version: Optional[str],
-        import_policy: Optional[str],
+        data_bucket_name: Optional[str] = None,
+        export_path: Optional[str] = None,
+        import_path: Optional[str] = None,
+        file_system_type_version: Optional[str] = None,
+        import_policy: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
         # Env vars
