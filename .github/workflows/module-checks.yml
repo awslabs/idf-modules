@@ -9,15 +9,15 @@ on:
       - "requirements-dev.txt"
       - ".github/workflows/module-checks.yml"
 
-      pull_request:
-        branches:
-          - "main"
-          - "release/*"
-          - "stable"
-        paths:
-          - "modules/**"
-          - "requirements-dev.txt"
-          - ".github/workflows/module-checks.yml"
+  pull_request:
+    branches:
+      - "main"
+      - "release/*"
+      - "stable"
+    paths:
+      - "modules/**"
+      - "requirements-dev.txt"
+      - ".github/workflows/module-checks.yml"
 
   workflow_dispatch:
 
