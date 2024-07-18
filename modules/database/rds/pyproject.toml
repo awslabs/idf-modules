@@ -24,7 +24,7 @@ fixable = ["ALL"]
 python_version = "3.8"
 strict = true
 disallow_untyped_decorators = false
-exclude = "codeseeder.out/|example/|tests/"
+exclude = "codeseeder.out/|example/|tests/|integ/"
 warn_unused_ignores = false
 
 plugins = [
