@@ -36,7 +36,7 @@ Resources:
               - "ecr:Put*"
             Effect: Allow
             Resource:
-              - !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${ProjectName}-*"
+              - !Sub "arn:${AWS::Partition}:ecr:${AWS::Region}:${AWS::AccountId}:repository/${ProjectName}-*"
           - Action:
               - "s3:CreateBucket"
             Effect: Allow
@@ -45,13 +45,15 @@ Resources:
               - "s3:ListBucket"
               - "s3:PutObject"
             Effect: Allow
-            Resource: "arn:aws:s3:::*-d*-rep*-*"
+            Resource:
+              - !Sub "arn:${AWS::Partition}:s3:::*-d*-rep*-*"
           - Action:
               - "s3:CreateBucket"
               - "s3:ListBucket"
               - "s3:PutObject"
             Effect: Allow
-            Resource: "arn:aws:s3:::*-d*-rep*-*/*"
+            Resource:
+              - !Sub "arn:${AWS::Partition}:s3:::*-d*-rep*-*/*"
         Version: 2012-10-17
       PolicyName: "idf-modulespecific-policy"
       Roles: [!Ref RoleName]
