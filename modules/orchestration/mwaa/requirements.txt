@@ -12,11 +12,14 @@ aws-cdk-asset-awscli-v1==2.2.202
     # via aws-cdk-lib
 aws-cdk-asset-kubectl-v20==2.1.2
     # via aws-cdk-lib
-aws-cdk-asset-node-proxy-agent-v5==2.0.166
+aws-cdk-asset-node-proxy-agent-v6==2.0.3
     # via aws-cdk-lib
-aws-cdk-lib==2.82.0
+aws-cdk-integ-tests-alpha==2.105.0a0
+    # via -r requirements.in
+aws-cdk-lib==2.105.0
     # via
     #   -r requirements.in
+    #   aws-cdk-integ-tests-alpha
     #   cdk-nag
 boto3==1.27.1
     # via -r requirements.in
@@ -31,9 +34,10 @@ cdk-nag==2.12.29
 constructs==10.0.91
     # via
     #   -r requirements.in
+    #   aws-cdk-integ-tests-alpha
     #   aws-cdk-lib
     #   cdk-nag
-exceptiongroup==1.2.1
+exceptiongroup==1.2.2
     # via cattrs
 importlib-resources==6.4.0
     # via jsii
@@ -41,11 +45,12 @@ jmespath==1.0.1
     # via
     #   boto3
     #   botocore
-jsii==1.100.0
+jsii==1.101.0
     # via
     #   aws-cdk-asset-awscli-v1
     #   aws-cdk-asset-kubectl-v20
-    #   aws-cdk-asset-node-proxy-agent-v5
+    #   aws-cdk-asset-node-proxy-agent-v6
+    #   aws-cdk-integ-tests-alpha
     #   aws-cdk-lib
     #   cdk-nag
     #   constructs
@@ -53,7 +58,8 @@ publication==0.0.3
     # via
     #   aws-cdk-asset-awscli-v1
     #   aws-cdk-asset-kubectl-v20
-    #   aws-cdk-asset-node-proxy-agent-v5
+    #   aws-cdk-asset-node-proxy-agent-v6
+    #   aws-cdk-integ-tests-alpha
     #   aws-cdk-lib
     #   cdk-nag
     #   constructs
@@ -70,7 +76,8 @@ typeguard==2.13.3
     # via
     #   aws-cdk-asset-awscli-v1
     #   aws-cdk-asset-kubectl-v20
-    #   aws-cdk-asset-node-proxy-agent-v5
+    #   aws-cdk-asset-node-proxy-agent-v6
+    #   aws-cdk-integ-tests-alpha
     #   aws-cdk-lib
     #   jsii
 typing-extensions==4.12.2
