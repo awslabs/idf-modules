@@ -47,7 +47,7 @@ rds_stack = stack.RDSDatabaseStack(
     instance_type="t3.small",
     is_accessible_from_vpc=True,
     removal_policy=cdk.RemovalPolicy.DESTROY,
-    env=cdk.Environment(account=os.environ["CDK_DEFAULT_ACCOUNT"], region=os.environ["CDK_DEFAULT_REGION"]),
+    env=cdk.Environment(account=os.environ["CDK_DEFAULT_ACCOUNT"], region="us-east-1"),
 )
 
 integration.IntegTest(
@@ -59,6 +59,7 @@ integration.IntegTest(
     diff_assets=True,
     stack_update_workflow=True,
     enable_lookups=True,
+    regions=["us-east-1"],
     cdk_command_options=cas.CdkCommands(
         deploy=cas.DeployCommand(args=cas.DeployOptions(require_approval=cas.RequireApproval.NEVER, json=True)),
         destroy=cas.DestroyCommand(args=cas.DestroyOptions(force=True)),
