@@ -27,12 +27,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - fsx-lustre
   - opensearch-serverless
   - opensearch
+- adds workflow specific to changes for `requirements-dev.txt` so all static checks are run
+
 
 ### **Changed**
 
 - fixed `storage/ecr` module integration test
 - update CDK in neptune module due to deprecated neptune version
 - update airflow version to 2.8.1
+- updated `get-modules` workflow to only run tests against changed files in `modules/**`
+
 
 ### **Removed**
 
