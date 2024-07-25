@@ -54,7 +54,7 @@ integration.IntegTest(
             os_master_nodes=0,
             os_master_node_instance_type="r6g.large.search",
             os_ebs_volume_size=10,
-            stack_description=f"Integration Testing: {timestamp.hour}:{timestamp.minute}:{timestamp.seconds}",
+            stack_description=f"Integration Testing: {timestamp.hour}:{timestamp.minute}:{timestamp.second}",
             env=cdk.Environment(account=os.getenv("CDK_DEFAULT_ACCOUNT"), region="us-east-1"),
         )
     ],
