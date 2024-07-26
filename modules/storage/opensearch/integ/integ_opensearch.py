@@ -48,7 +48,7 @@ integration.IntegTest(
             hash="foobar",
             os_domain_retention="DESTROY",
             vpc_id=dependencies["vpc-id"],
-            private_subnet_ids=literal_eval(dependencies["vpc-private-subnets"]),
+            private_subnet_ids=literal_eval(dependencies["vpc-private-subnets"])[:2],
             os_data_nodes=1,
             os_data_node_instance_type="r6g.large.search",
             os_master_nodes=0,
