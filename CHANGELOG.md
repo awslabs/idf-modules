@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `storage/opensearch`
   - `storage/fsx-lustre`
   - `database/rds`
+  - `compute/aws-batch`
 - added partition support for modules
   - emr-serverless
   - neptune

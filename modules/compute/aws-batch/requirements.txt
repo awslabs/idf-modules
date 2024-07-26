@@ -16,14 +16,17 @@ aws-cdk-asset-node-proxy-agent-v5==2.0.166
     # via aws-cdk-lib
 aws-cdk-aws-batch-alpha==2.70.0-alpha.0
     # via -r requirements.in
+aws-cdk-integ-tests-alpha==2.70.0a0
+    # via -r requirements.in
 aws-cdk-lib==2.70.0
     # via
     #   -r requirements.in
     #   aws-cdk-aws-batch-alpha
+    #   aws-cdk-integ-tests-alpha
     #   cdk-nag
-boto3==1.27.1
+boto3==1.34.149
     # via -r requirements.in
-botocore==1.30.1
+botocore==1.34.149
     # via
     #   boto3
     #   s3transfer
@@ -35,9 +38,10 @@ constructs==10.0.91
     # via
     #   -r requirements.in
     #   aws-cdk-aws-batch-alpha
+    #   aws-cdk-integ-tests-alpha
     #   aws-cdk-lib
     #   cdk-nag
-exceptiongroup==1.2.1
+exceptiongroup==1.2.2
     # via cattrs
 importlib-resources==6.4.0
     # via jsii
@@ -45,12 +49,13 @@ jmespath==1.0.1
     # via
     #   boto3
     #   botocore
-jsii==1.100.0
+jsii==1.101.0
     # via
     #   aws-cdk-asset-awscli-v1
     #   aws-cdk-asset-kubectl-v20
     #   aws-cdk-asset-node-proxy-agent-v5
     #   aws-cdk-aws-batch-alpha
+    #   aws-cdk-integ-tests-alpha
     #   aws-cdk-lib
     #   cdk-nag
     #   constructs
@@ -60,6 +65,7 @@ publication==0.0.3
     #   aws-cdk-asset-kubectl-v20
     #   aws-cdk-asset-node-proxy-agent-v5
     #   aws-cdk-aws-batch-alpha
+    #   aws-cdk-integ-tests-alpha
     #   aws-cdk-lib
     #   cdk-nag
     #   constructs
@@ -68,7 +74,7 @@ python-dateutil==2.9.0.post0
     # via
     #   botocore
     #   jsii
-s3transfer==0.6.2
+s3transfer==0.10.2
     # via boto3
 six==1.16.0
     # via python-dateutil
@@ -78,6 +84,7 @@ typeguard==2.13.3
     #   aws-cdk-asset-kubectl-v20
     #   aws-cdk-asset-node-proxy-agent-v5
     #   aws-cdk-aws-batch-alpha
+    #   aws-cdk-integ-tests-alpha
     #   aws-cdk-lib
     #   jsii
 typing-extensions==4.12.2
