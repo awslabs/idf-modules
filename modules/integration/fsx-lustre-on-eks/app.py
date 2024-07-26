@@ -22,6 +22,7 @@ eks_cluster_name = os.getenv(_param("EKS_CLUSTER_NAME"))
 eks_admin_role_arn = os.getenv(_param("EKS_CLUSTER_ADMIN_ROLE_ARN"))
 eks_oidc_arn = os.getenv(_param("EKS_OIDC_ARN"))
 eks_cluster_sg_id = os.getenv(_param("EKS_CLUSTER_SECURITY_GROUP_ID"))
+eks_handler_role_arn = os.getenv(_param("EKS_HANDLER_ROLE_ARN"))
 
 fsx_file_system_id = os.getenv(_param("FSX_FILE_SYSTEM_ID"))
 fsx_security_group_id = os.getenv(_param("FSX_SECURITY_GROUP_ID"))
@@ -29,6 +30,7 @@ fsx_mount_name = os.getenv(_param("FSX_MOUNT_NAME"))
 fsx_dns_name = os.getenv(_param("FSX_DNS_NAME"))
 
 fsx_storage_capacity = int(os.getenv(_param("FSX_STORAGE_CAPACITY"), 1200))
+dra_export_path = os.getenv(_param("DRA_EXPORT_PATH"))
 
 # This gets set in the deployspec...NOTE no PARAMETER prefix
 eks_namespace = os.getenv("EKS_NAMESPACE")
@@ -49,6 +51,7 @@ stack = FSXFileStorageOnEKS(
     project_name=project_name,
     deployment_name=deployment_name,
     module_name=module_name,
+    dra_export_path=cast(str, dra_export_path),
     fsx_file_system_id=cast(str, fsx_file_system_id),
     fsx_security_group_id=cast(str, fsx_security_group_id),
     fsx_mount_name=cast(str, fsx_mount_name),
@@ -57,6 +60,7 @@ stack = FSXFileStorageOnEKS(
     eks_cluster_name=cast(str, eks_cluster_name),
     eks_admin_role_arn=cast(str, eks_admin_role_arn),
     eks_oidc_arn=cast(str, eks_oidc_arn),
+    eks_handler_role_arn=cast(str, eks_handler_role_arn),
     eks_cluster_security_group_id=cast(str, eks_cluster_sg_id),
     eks_namespace=eks_namespace,
     env=aws_cdk.Environment(

@@ -10,14 +10,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## UNRELEASED
 
 ### **Added**
-- add integration tests for modules 
+
+- add integration tests for modules
   - `service-catalog/app-registry`
   - `testing/integration-tests`
   - `storage/opensearch-serverless`
+- added data repository integration for FSX Lustre module
 
 ### **Changed**
 
 - fixed `storage/ecr` module integration test
+- fixed `fsx lustre` integration module to add filesystem permissions on fly using an input var
+- fixed the `fsx lustre` module to use the KubectlV29 image to run kubectl commands
 
 ### **Removed**
 

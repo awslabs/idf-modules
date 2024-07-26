@@ -31,6 +31,8 @@ class FsxFileSystem(Stack):
         data_bucket_name: Optional[str],
         export_path: Optional[str],
         import_path: Optional[str],
+        dra_import_path: Optional[str],
+        dra_export_path: Optional[str],
         file_system_type_version: Optional[str],
         import_policy: Optional[str],
         **kwargs: Any,
@@ -78,6 +80,10 @@ class FsxFileSystem(Stack):
             description="FSx Lustre",
         )
 
+        auto_import_policy = None
+        if not (dra_import_path and dra_export_path) and fs_deployment_type not in ["PERSISTENT_1", "PERSISTENT_2"]:
+            auto_import_policy = import_policy
+
         self.fsx_filesystem = fsx.CfnFileSystem(
             self,
             "Fsx",
@@ -85,21 +91,58 @@ class FsxFileSystem(Stack):
             storage_capacity=storage_capacity,
             subnet_ids=[self.private_subnet_ids[0]],
             security_group_ids=[self.fsx_security_group.security_group_id],
-            tags=[CfnTag(key="Name", value="fsx-lustre")],
+            tags=[CfnTag(key="Name", value=full_dep_mod)],
             file_system_type_version=file_system_type_version if file_system_type_version else None,
+            # Lustre configuration is not supported if you need a data repository association
             lustre_configuration=fsx.CfnFileSystem.LustreConfigurationProperty(
                 deployment_type=fs_deployment_type,
                 import_path=import_path if fs_deployment_type not in ["PERSISTENT_1", "PERSISTENT_2"] else None,
                 export_path=export_path if fs_deployment_type not in ["PERSISTENT_1", "PERSISTENT_2"] else None,
                 per_unit_storage_throughput=storage_throughput,
                 data_compression_type="LZ4",
-                auto_import_policy=import_policy
-                if fs_deployment_type not in ["PERSISTENT_1", "PERSISTENT_2"]
-                else None,
+                auto_import_policy=auto_import_policy,
             ),
         )
         # Fsx Linking a Persistent 2 file system to an S3 bucket using the LustreConfiguration is not supported
 
+        if dra_import_path and dra_export_path:
+            dra_s3_import_path = f"s3://{data_bucket_name}{dra_import_path}" if dra_import_path else None
+            dra_s3_export_path = f"s3://{data_bucket_name}{dra_export_path}" if dra_export_path else None
+
+            _dra_import = fsx.CfnDataRepositoryAssociation(
+                self,
+                "ImportPathDRA",
+                data_repository_path=dra_s3_import_path,
+                file_system_id=self.fsx_filesystem.ref,
+                file_system_path=dra_import_path,
+                batch_import_meta_data_on_create=True,
+                # imported_file_chunk_size=1024,
+                s3=fsx.CfnDataRepositoryAssociation.S3Property(
+                    auto_export_policy=fsx.CfnDataRepositoryAssociation.AutoExportPolicyProperty(
+                        events=["NEW", "CHANGED", "DELETED"]
+                    ),
+                    auto_import_policy=fsx.CfnDataRepositoryAssociation.AutoImportPolicyProperty(
+                        events=["NEW", "CHANGED", "DELETED"]
+                    ),
+                ),
+            )
+            _dra_export = fsx.CfnDataRepositoryAssociation(
+                self,
+                "ExportPathDRA",
+                data_repository_path=dra_s3_export_path,
+                file_system_id=self.fsx_filesystem.ref,
+                file_system_path=dra_export_path,
+                batch_import_meta_data_on_create=True,
+                # imported_file_chunk_size=1024,
+                s3=fsx.CfnDataRepositoryAssociation.S3Property(
+                    auto_export_policy=fsx.CfnDataRepositoryAssociation.AutoExportPolicyProperty(
+                        events=["NEW", "CHANGED", "DELETED"]
+                    ),
+                    auto_import_policy=fsx.CfnDataRepositoryAssociation.AutoImportPolicyProperty(
+                        events=["NEW", "CHANGED", "DELETED"]
+                    ),
+                ),
+            )
         Aspects.of(self).add(AwsSolutionsChecks())
 
         NagSuppressions.add_stack_suppressions(
