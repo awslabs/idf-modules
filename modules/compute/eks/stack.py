@@ -133,8 +133,7 @@ class Eks(Stack):  # type: ignore
         self.node_role = self._create_node_role(project_name, deployment_name, module_name, self.region)
 
         # KMS key for Kubernetes secrets envelope encryption
-        if eks_compute_config.get("eks_secrets_envelope_encryption"):
-            secrets_key = kms.Key(self, "SecretsKey")
+        secrets_key = kms.Key(self, "SecretsKey") if eks_compute_config.get("eks_secrets_envelope_encryption") else None
 
         # Creates an EKS Cluster
         eks_cluster, cm_patch, patches = self._create_eks_cluster(
