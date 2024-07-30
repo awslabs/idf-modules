@@ -42,6 +42,8 @@ def test_synthesize_stack(stack_defaults):
         data_bucket_name="mybucket",
         export_path=None,
         import_path=None,
+        dra_import_path="/app/path1",
+        dra_export_path="/app/path2",
         stack_description="Tesing",
         file_system_type_version="2.15",
         import_policy="NEW",
