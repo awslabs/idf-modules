@@ -175,17 +175,18 @@ class FSXFileStorageOnEKS(Stack):
                             "restartPolicy": "Never",
                             "containers": [
                                 {
-                                    "name": "app",
-                                    "image": "centos",
-                                    "command": ["/bin/sh"],
+                                    "name": "set-permissions-job",
+                                    "image": "public.ecr.aws/amazonlinux/amazonlinux:2",
+                                    "command": ["/bin/sh", "-c"],
                                     "args": [
-                                        "-c",
-                                        f"chmod 660 {dra_export_path} && chown root:users {dra_export_path}",
+                                        f"chmod -R 777 {dra_export_path}",
+                                        f"chown -R root:users {dra_export_path}"
                                     ],
                                     "volumeMounts": [
                                         {
                                             "name": "persistent-storage",
                                             "mountPath": dra_export_path,
+                                            "subPath": dra_export_path[1:],
                                         }
                                     ],
                                 }

@@ -12,9 +12,9 @@ Resources:
     Properties:
       PolicyDocument:
         Statement:
-          - Effect: Allow
-            Action: 'fsx:CreateDataRepositoryAssociation'
-            Resource: '*'
+          # - Effect: Allow
+          #   Action: 'fsx:CreateDataRepositoryAssociation'
+          #   Resource: '*'
           - Effect: Allow
             Action:
               - "iam:CreateServiceLinkedRole"
