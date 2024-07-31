@@ -1,4 +1,5 @@
 ## Introduction
+
 FSx on Lustre
 
 ## Description
@@ -10,22 +11,21 @@ Amazon FSx also integrates with Amazon S3, making it easy for you to process clo
 Amazon FSx for Lustre uses parallel data transfer techniques to transfer data to and from S3 at up to hundreds of GB/s. Use Amazon FSx for Lustre for workloads where speed matters.
 
 ### WARNING
-Currently, this module does not support Windows File Server as the L2 CDK constructs do not support it.  As this module is written with the CDKv2 constructs, Windows support as been omitted in this module.
-REF: https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_fsx-readme.html:
-_The L2 construct for the FSx for Windows File Server has not yet been implemented. To instantiate an FSx for Windows file system, the L1 constructs can be used as defined by CloudFormation._
 
+Currently, this module is only tested for FSX Lustre mode only.
 
 ## Inputs/Outputs
+
 Amazon FSx for Lustre provides two deployment options: `scratch` and `persistent`.
 
-Scratch file systems are designed for temporary storage and shorter-term processing of data. Data is not replicated and does not persist if a file server fails.
+Scratch file systems are designed for temporary storage and shorter-term processing of data. You can configure data replication between FSX and S3 bucket using [Data repository association](https://docs.aws.amazon.com/fsx/latest/LustreGuide/create-dra-linked-data-repo.html) only with `SCRATCH_2` deployment type.
 
-Persistent file systems are designed for longer-term storage and workloads. The file servers are highly available, and data is automatically replicated within the AWS Availability Zone (AZ) that is associated with the file system. The data volumes attached to the file servers are replicated independently from the file servers to which they are attached.
+Persistent file systems are designed for longer-term storage and workloads. The file servers are highly available, and data is automatically replicated within the AWS Availability Zone (AZ) that is associated with the file system. The data volumes attached to the file servers are replicated independently from the file servers to which they are attached. You can configure data replication between FSX and S3 bucket using [Data repository association](https://docs.aws.amazon.com/fsx/latest/LustreGuide/create-dra-linked-data-repo.html) only with `PERSISTENT_2` deployment type.
 
 ### Input Parameters
 
-
 #### Required
+
 - `vpc_id`: The VPC in which to create the security group for your file system
 - `private_subnet_ids`: Specifies the IDs of the subnets that the file system will be accessible from
 - `fs_deployment_type`:
@@ -35,6 +35,7 @@ Persistent file systems are designed for longer-term storage and workloads. The 
   - For more information, and an up-to-date list of AWS Regions in which `PERSISTENT_2` is available, see File system deployment options for FSx for Lustre in the Amazon FSx for Lustre User Guide . .. epigraph:: If you choose `PERSISTENT_2` , and you set FileSystemTypeVersion to 2.10, the CreateFileSystem operation fails. Encryption of data in transit is automatically turned on when you access SCRATCH_2 , PERSISTENT_1 and `PERSISTENT_2` file systems from Amazon EC2 instances that [support automatic encryption](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/data- protection.html) in the AWS Regions where they are available. For more information about encryption in transit for FSx for Lustre file systems, see Encrypting data in transit in the Amazon FSx for Lustre User Guide . (Default = SCRATCH_1 )
 
 #### Optional
+
 - `fsx_version`: The version of FSX-Luster to use (`2.10`,`2.12`,`2.15`)
   - defaults to `2.12`
 - `data_bucket_name`: The S3 bucket used for mapping to and from the FSx filesystem
@@ -42,6 +43,8 @@ Persistent file systems are designed for longer-term storage and workloads. The 
   - This parameter is not supported for file systems using the `Persistent_2` deployment type in version `2.10`.
 - `import_path`: The path to the Amazon S3 bucket that you’re using as the data repository for your Amazon FSx for Lustre file system. The root of your FSx for Lustre file system will be mapped to the root of the Amazon S3 bucket you select. If you specify a prefix for the Amazon S3 bucket name, only object keys with that prefix are loaded into the file system.
   - This parameter is not supported for Lustre file systems using the Persistent_2 deployment type in version `2.10`.
+- `dra_import_path`: Configure it when you want to link a specific path in your filesystem with S3 bucket, where you can import all the change(s) made on S3 onto the filesystem using Data repository assoociation. Must start with a `/`.
+- `dra_export_path`: Configure it when you want to link a specific path in your filesystem with S3 bucket, where you can import all the change(s) made on the filesystem onto S3 bucket using Data repository assoociation. Must start with a `/`.
 - `storage_throughput`: Required with `PERSISTENT_1` and `PERSISTENT_2` deployment types, provisions the amount of read and write throughput for each 1 tebibyte (TiB) of file system storage capacity, in MB/s/TiB. File system throughput capacity is calculated by multiplying ﬁle system storage capacity (TiB) by the PerUnitStorageThroughput (MB/s/TiB). For a 2.4-TiB ﬁle system, provisioning 50 MB/s/TiB of PerUnitStorageThroughput yields 120 MB/s of ﬁle system throughput. You pay for the amount of throughput that you provision.
   - For `PERSISTENT_1` SSD storage: 50, 100, 200 MB/s/TiB.
   - For `PERSISTENT_1` HDD storage: 12, 40 MB/s/TiB.
@@ -52,7 +55,10 @@ Persistent file systems are designed for longer-term storage and workloads. The 
 - `import_policy` - must be one of `NEW`or `NEW_CHANGED` or `NEW_CHANGED_DELETED`
   - this does not support types of `SCRATCH_1`
 
+> Note: You should not declare `import_path` and `export_path` if you have declared `dra_import_path` and `dra_export_path`. It is recommended to use `dra_import_path` and `dra_export_path` since they help with establishing association between FSX and S3 bucket bi-directionally.
+
 ### Input Example
+
 Stand-alone module manifest example:
 
 ```yaml
@@ -69,10 +75,14 @@ parameters:
     value: PERSISTENT_2
   - name: storage_throughput
     value: 125
-  - name: export_path
-    value: "/fsx/export/"
-  - name: import_path
-    value: "/fsx/import/"
+  # - name: export_path
+  #   value: "/fsx/export/"
+  # - name: import_path
+  #   value: "/fsx/import/"
+  - name: dra_export_path # Do not mention import_path and export_path if you mention dra_export_path and dra_import_path
+    value: "/ray/export/"
+  - name: dra_import_path
+    value: "/ray/import/"
   - name: fsx_version 
     value: "2.15"
   - name: import_policy
@@ -103,8 +113,6 @@ parameters:
 ```
 
 ### Module Metadata Outputs
-
-
 
 #### Output Example
 

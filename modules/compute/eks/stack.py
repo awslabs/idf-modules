@@ -452,7 +452,9 @@ class Eks(Stack):  # type: ignore
                 eks.TaintSpec(
                     key=taint.get("key"),
                     value=taint.get("value"),
-                    effect=eks.TaintEffect(taint.get("effect").upper()),
+                    effect=eks.TaintEffect.NO_SCHEDULE
+                    if taint.get("effect") == "NoSchedule"
+                    else eks.TaintEffect.PREFER_NO_SCHEDULE,
                 )
                 for taint in ng_config.get("eks_node_taints")
             ]

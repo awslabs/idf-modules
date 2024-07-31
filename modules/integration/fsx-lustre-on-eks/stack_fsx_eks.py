@@ -7,6 +7,8 @@ import cdk_nag
 from aws_cdk import Aspects, Stack, Tags
 from aws_cdk import aws_ec2 as ec2
 from aws_cdk import aws_eks as eks
+from aws_cdk import aws_iam as iam
+from aws_cdk.lambda_layer_kubectl_v29 import KubectlV29Layer
 from cdk_nag import NagPackSuppression, NagSuppressions
 from constructs import Construct, IConstruct
 
@@ -28,7 +30,9 @@ class FSXFileStorageOnEKS(Stack):
         eks_cluster_name: str,
         eks_admin_role_arn: str,
         eks_oidc_arn: str,
+        eks_handler_role_arn: str,
         eks_cluster_security_group_id: str,
+        dra_export_path: str,
         **kwargs: Any,
     ) -> None:
         super().__init__(
@@ -50,12 +54,17 @@ class FSXFileStorageOnEKS(Stack):
         provider = eks.OpenIdConnectProvider.from_open_id_connect_provider_arn(
             self, f"{dep_mod}-provider", eks_oidc_arn
         )
+
+        handler_role = iam.Role.from_role_arn(self, "HandlerRole", eks_handler_role_arn)
+
         eks_cluster = eks.Cluster.from_cluster_attributes(
             self,
             f"{dep_mod}-eks-cluster",
             cluster_name=eks_cluster_name,
             kubectl_role_arn=eks_admin_role_arn,
             open_id_connect_provider=provider,
+            kubectl_lambda_role=handler_role,
+            kubectl_layer=KubectlV29Layer(self, "Kubectlv29Layer"),
         )
 
         fsx_security_group = ec2.SecurityGroup.from_security_group_id(self, "FSXSecurityGroup", fsx_security_group_id)
@@ -166,17 +175,18 @@ class FSXFileStorageOnEKS(Stack):
                             "restartPolicy": "Never",
                             "containers": [
                                 {
-                                    "name": "app",
-                                    "image": "centos",
-                                    "command": ["/bin/sh"],
+                                    "name": "set-permissions-job",
+                                    "image": "public.ecr.aws/amazonlinux/amazonlinux:2",
+                                    "command": ["/bin/sh", "-c"],
                                     "args": [
-                                        "-c",
-                                        "chmod 2775 /data && chown root:users /data",
+                                        f"chmod -R 777 {dra_export_path}",
+                                        f"chown -R root:users {dra_export_path}"
                                     ],
                                     "volumeMounts": [
                                         {
                                             "name": "persistent-storage",
-                                            "mountPath": "/data",
+                                            "mountPath": dra_export_path,
+                                            "subPath": dra_export_path[1:],
                                         }
                                     ],
                                 }
