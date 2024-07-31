@@ -22,7 +22,7 @@ The FSX Lustre should be deployed already with a Security Group associated. They
 - `fsx-security-group-id` - the Security Group ID that is tied to FSX
 - `fsx-mount-name` - the mount name of the FSX service
 - `fsx-dns-name` - the dns name tied to the FSX service
-- `dra_export_path` - the path of data repository link between the filesystem and aws s3 bucket. This path be used by a k8s job to set the permissions on the filesystem level
+- `dra_export_path` - the path of data repository link between the filesystem and aws s3 bucket. This path be used by a k8s job to set the permissions on the filesystem level. Must start with a `/`.
 - `namespace` - the namespace that the PVC will be created in - a string value
   - only one of `namespace`, `namespace_ssm` or `namespace_secret` can be used 
 - `namespace_ssm` - the name of the SSM parameter that has the string value to be used as the Namespace that the PVC will be created in
@@ -85,7 +85,7 @@ parameters:
   - name: FsxDnsName
     value: fs-066f18902985fdba0.fsx.us-east-1.amazonaws.com
   - name: dra_export_path
-    value: "/ray/export"
+    value: "/ray/export" # Must start with a `/`.
 ```
 
 ### Module Metadata Outputs
