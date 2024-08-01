@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### **Changed**
 
+- replace deprecated `auto_delete_images` with `empty_on_delete` &  bump CDK version in `ecr` module
+
 ### **Removed**
 
 =======
