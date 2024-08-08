@@ -33,6 +33,7 @@ from helpers import (
     get_chart_version,
     get_image,
 )
+from utils.iam import fetch_ecr_domain, fetch_global_ecr_account
 from utils.k8s import convert_node_labels_to_k8sargs, convert_taints_to_k8sargs
 
 project_dir = os.path.dirname(os.path.abspath(__file__))
@@ -681,6 +682,10 @@ class Eks(Stack):  # type: ignore
         """
         Creates the VPC CNI Helm chart.
         """
+
+        ECR_DOMAIN = fetch_ecr_domain(self.region)
+        GLOBAL_ECR_ACCOUNT = fetch_global_ecr_account(self.region)
+
         vpc_cni_chart = eks_cluster.add_helm_chart(
             "aws-vpc-cni",
             chart=get_chart_release(str(eks_version), AWS_VPC_CNI),
@@ -693,17 +698,23 @@ class Eks(Stack):  # type: ignore
                     "init": {
                         "image": {
                             "region": self.region,
-                            "account": "602401143452",
+                            "account": GLOBAL_ECR_ACCOUNT,
+                            "domain": ECR_DOMAIN,
                         },
                         "env": {"DISABLE_TCP_EARLY_DEMUX": True},
                     },
                     "nodeAgent": {
                         "image": {
                             "region": self.region,
-                            "account": "602401143452",
+                            "account": GLOBAL_ECR_ACCOUNT,
+                            "domain": ECR_DOMAIN,
                         },
                     },
-                    "image": {"region": self.region, "account": "602401143452"},
+                    "image": {
+                        "region": self.region,
+                        "domain": ECR_DOMAIN,
+                        "account": GLOBAL_ECR_ACCOUNT,
+                    },
                     "env": {"ENABLE_POD_ENI": True},
                     "serviceAccount": {"create": False, "name": "aws-node-helm"},
                     "originalMatchLabels": True,
