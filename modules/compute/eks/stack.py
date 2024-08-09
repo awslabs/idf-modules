@@ -11,7 +11,7 @@ from typing import Any, Dict, List, Optional, cast
 import cdk_nag
 import requests
 import yaml
-from aws_cdk import Aspects, CfnJson, Duration, RemovalPolicy, Stack, Tags
+from aws_cdk import Aspects, Aws, CfnJson, Duration, RemovalPolicy, Stack, Tags
 from aws_cdk import aws_aps as aps
 from aws_cdk import aws_autoscaling as asg
 from aws_cdk import aws_ec2 as ec2
@@ -33,7 +33,7 @@ from helpers import (
     get_chart_version,
     get_image,
 )
-from utils.iam import fetch_ecr_domain, fetch_global_ecr_account
+from utils.iam import fetch_global_ecr_account
 from utils.k8s import convert_node_labels_to_k8sargs, convert_taints_to_k8sargs
 
 project_dir = os.path.dirname(os.path.abspath(__file__))
@@ -683,7 +683,6 @@ class Eks(Stack):  # type: ignore
         Creates the VPC CNI Helm chart.
         """
 
-        ECR_DOMAIN = fetch_ecr_domain(self.region)
         GLOBAL_ECR_ACCOUNT = fetch_global_ecr_account(self.region)
 
         vpc_cni_chart = eks_cluster.add_helm_chart(
@@ -699,7 +698,7 @@ class Eks(Stack):  # type: ignore
                         "image": {
                             "region": self.region,
                             "account": GLOBAL_ECR_ACCOUNT,
-                            "domain": ECR_DOMAIN,
+                            "domain": Aws.URL_SUFFIX,
                         },
                         "env": {"DISABLE_TCP_EARLY_DEMUX": True},
                     },
@@ -707,12 +706,12 @@ class Eks(Stack):  # type: ignore
                         "image": {
                             "region": self.region,
                             "account": GLOBAL_ECR_ACCOUNT,
-                            "domain": ECR_DOMAIN,
+                            "domain": Aws.URL_SUFFIX,
                         },
                     },
                     "image": {
                         "region": self.region,
-                        "domain": ECR_DOMAIN,
+                        "domain": Aws.URL_SUFFIX,
                         "account": GLOBAL_ECR_ACCOUNT,
                     },
                     "env": {"ENABLE_POD_ENI": True},
