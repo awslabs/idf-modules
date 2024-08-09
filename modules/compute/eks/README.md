@@ -17,36 +17,66 @@ Load balancing:
 - ALB Ingress Controller - recommended
 - Nginx Ingress Controller
 
+> Note: Haven't tested in china region
+
 Storage:
 
 - EBS CSI Driver
 - EFS CSI Driver
+
+> Note: Not supported in china region, because the container image needs to be pulled from ECR Public registry which is blocked by china firewall
+
 - S3 CSI Driver
+
+> Note: Not supported in china region, because IDF EKS module uses EKS Addon to deploy it. To support it, user can deploy helm chart
+
 - FSX Lustre Driver
+
+> Note: Haven't tested in China region
 
 Secrets:
 
 - Secrets Manager CSI Driver
 
+> Note: Not supported in china region, because the container image needs to be pulled from ECR Public registry which is blocked by china firewall
+
 Scaling:
 
 - Horizontal Pod Autoscaler (HPA) - recommended
+
+> Note: Not supported in china region, because the container image needs to be pulled from ECR Public registry which is blocked by china firewall
+
 - Cluster Autoscaler (CA) - recommended
+
+> Note: Not supported in china region, because the container image needs to be pulled from ECR Public registry which is blocked by china firewall
 
 Monitoring/Logging/Alerting:
 
 - Cloudwatch Container Insights (logs)
+
+> Note: Haven't tested in China region
+
 - Amazon CloudWatch Observability EKS add-on (deploys metrics and logging drivers using EKS Managed Addon) - recommended
+
 - Amazon EKS add-on support for ADOT Operator
+
+> Note: Haven't tested in China region
 
 Networking:
 
 - Custom CIDR implementation
+
+> Note: Haven't tested in China region
+
 - Calico for network isolation/security
+
+> Note: Haven't tested in China region
 
 Security:
 
 - Kyverno policies (policy as enforcement in k8s)
+
+> Note: Haven't tested in China region
 
 ## Explaining the attributes
 

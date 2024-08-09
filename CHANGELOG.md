@@ -11,9 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### **Added**
 
+- added support for deploying EKS Cluster (ONLY) in China region.
+
 ### **Changed**
 
 - replace deprecated `auto_delete_images` with `empty_on_delete` &  bump CDK version in `ecr` module
+- fixed the failing regex error in the eks module when env var SEEDFARMER_PARAMETER_REPLICATED_ECR_IMAGES_METADATA_S3_PATH is not set
 
 ### **Removed**
 

@@ -8,7 +8,7 @@ deploy:
     build:
       commands:
         - |
-          if [ -n $SEEDFARMER_PARAMETER_REPLICATED_ECR_IMAGES_METADATA_S3_PATH ]; then
+          if [ -n "${SEEDFARMER_PARAMETER_REPLICATED_ECR_IMAGES_METADATA_S3_PATH:-}" ]; then
             aws s3 cp s3://$SEEDFARMER_PARAMETER_REPLICATED_ECR_IMAGES_METADATA_S3_PATH replication-metadata.json
             export SEEDFARMER_PARAMETER_REPLICATED_ECR_IMAGES_METADATA=$(cat replication-metadata.json)
           fi
