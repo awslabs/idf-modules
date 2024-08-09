@@ -31,12 +31,6 @@ ECR_REGION_REGISTRY_MAP = {
 }
 
 
-def fetch_ecr_domain(region: str) -> str:
-    if region in ["cn-northwest-1", "cn-north-1"]:
-        return "amazonaws.com.cn"
-    return "amazonaws.com"
-
-
 def fetch_global_ecr_account(region: str) -> Optional[str]:
     if region in ECR_REGION_REGISTRY_MAP.keys():
         return ECR_REGION_REGISTRY_MAP.get(region)
