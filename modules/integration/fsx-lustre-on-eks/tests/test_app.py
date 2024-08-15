@@ -21,6 +21,8 @@ def stack_defaults():
     os.environ["SEEDFARMER_PARAMETER_FSX_MOUNT_NAME"] = "asdf"
     os.environ["SEEDFARMER_PARAMETER_FSX_DNS_NAME"] = "asfsad"
     os.environ["SEEDFARMER_PARAMETER_FSX_STORAGE_CAPACITY"] = "1200"
+    os.environ["SEEDFARMER_PARAMETER_EKS_HANDLER_ROLE_ARN"] = "arn:aws:iam:::role/y"
+    os.environ["SEEDFARMER_PARAMETER_DRA_EXPORT_PATH"] = "/test/path"
     os.environ["EKS_NAMESPACE"] = "namespace"
     os.environ["CDK_DEFAULT_ACCOUNT"] = "111111111111"
     os.environ["CDK_DEFAULT_REGION"] = "us-east-1"

@@ -180,7 +180,7 @@ class FSXFileStorageOnEKS(Stack):
                                     "command": ["/bin/sh", "-c"],
                                     "args": [
                                         f"chmod -R 777 {dra_export_path}",
-                                        f"chown -R root:users {dra_export_path}"
+                                        f"chown -R root:users {dra_export_path}",
                                     ],
                                     "volumeMounts": [
                                         {
