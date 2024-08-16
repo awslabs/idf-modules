@@ -65,6 +65,7 @@ CfnOutput(
     value=stack.to_json_string(
         {
             "VpcId": stack.vpc.vpc_id,
+            "SecurityGroupId":  stack._vpc_security_group.security_group_id,
             "PublicSubnetIds": stack.public_subnets.subnet_ids,
             "PrivateSubnetIds": stack.private_subnets.subnet_ids,
             "IsolatedSubnetIds": stack.isolated_subnets.subnet_ids if not stack.internet_accessible else [],

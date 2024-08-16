@@ -42,6 +42,7 @@ The parameters `(solution-*)` will resolve a custom text that is used as a descr
 ### Module Metadata Outputs
 
 - `VpcId`: The VPC ID created
+- `SecurityGroupId`: The Security Group ID created
 - `PublicSubnetIds`: An array of the public subnets
 - `PrivateSubnetIds`: An array of the private subnets
 - `IsolatedSubnetIds`: An array of the isolated subnets  (only if `internet-accessible` is `false`)
@@ -57,6 +58,7 @@ The parameters `(solution-*)` will resolve a custom text that is used as a descr
   "IsolatedSubnetIds": [],
   "PrivateSubnetIds": ["subnet-1234567890abc", "subnet-1234567890def"],
   "PublicSubnetIds": ["subnet-1234567890ghi", "subnet-1234567890jkl"],
+  "SecurityGroupId": "sg-123456789abc",
   "VpcId": "vpc-1234567890mno"
 }
 ```
