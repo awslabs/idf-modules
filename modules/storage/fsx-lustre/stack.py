@@ -105,10 +105,8 @@ class FsxFileSystem(Stack):
         )
 
         # Configure DRA for FSx
-        if dra_import_path and dra_export_path:
-            dra_s3_import_path = f"s3://{data_bucket_name}{dra_import_path}" if dra_import_path else None
-            dra_s3_export_path = f"s3://{data_bucket_name}{dra_export_path}" if dra_export_path else None
-
+        if dra_import_path:
+            dra_s3_import_path = f"s3://{data_bucket_name}{dra_import_path}"
             _dra_import = fsx.CfnDataRepositoryAssociation(
                 self,
                 "ImportPathDRA",
@@ -126,6 +124,8 @@ class FsxFileSystem(Stack):
                     ),
                 ),
             )
+        if dra_export_path:
+            dra_s3_export_path = f"s3://{data_bucket_name}{dra_export_path}"
             _dra_export = fsx.CfnDataRepositoryAssociation(
                 self,
                 "ExportPathDRA",

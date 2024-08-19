@@ -43,7 +43,9 @@ def test_synthesize_stack(stack_defaults):
         fsx_mount_name="foobar",
         fsx_dns_name="example.com",
         fsx_storage_capacity="1200Gi",
+        eks_handler_role_arn="arn:aws:iam::123456789012:role/eks-handler-role",
         eks_namespace="service.example.com",
+        dra_export_path="/test/path",
         env=cdk.Environment(
             account=os.environ["CDK_DEFAULT_ACCOUNT"],
             region=os.environ["CDK_DEFAULT_REGION"],

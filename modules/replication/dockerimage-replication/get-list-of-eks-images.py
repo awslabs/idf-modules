@@ -97,7 +97,7 @@ def main() -> None:
 
                         if registry:
                             custom_chart_values[workload]["values"] = parser.add_branch_to_dict(
-                                custom_chart_values[workload]["values"],  # type: ignore
+                                custom_chart_values[workload]["values"],
                                 v,
                                 f"{args.registry_prefix}{registry}",
                             )
@@ -118,7 +118,7 @@ def main() -> None:
                             repository_in_chart_values = f"{args.registry_prefix}{repository}"
 
                         custom_chart_values[workload]["values"] = parser.add_branch_to_dict(
-                            custom_chart_values[workload]["values"],  # type: ignore
+                            custom_chart_values[workload]["values"],
                             v,
                             repository_in_chart_values,
                         )
@@ -129,7 +129,7 @@ def main() -> None:
                         tag = parser.parse_value(parsed_charts[workload], values, image_name, v, k)
 
                         custom_chart_values[workload]["values"] = parser.add_branch_to_dict(
-                            custom_chart_values[workload]["values"],  # type: ignore[arg-type]
+                            custom_chart_values[workload]["values"],
                             v,
                             tag,
                         )
@@ -141,7 +141,7 @@ def main() -> None:
                     # set value to empty, e.g. digest as it will be different after push to ECR
                     if k == "remove":
                         custom_chart_values[workload]["values"] = parser.add_branch_to_dict(
-                            custom_chart_values[workload]["values"],  # type: ignore[arg-type]
+                            custom_chart_values[workload]["values"],
                             v,
                             "",
                         )
