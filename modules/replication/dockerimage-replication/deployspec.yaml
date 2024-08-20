@@ -19,7 +19,7 @@ deploy:
             fi
             sleep 15
           fi
-        - python3 get-list-of-eks-images.py --eks-version ${SEEDFARMER_PARAMETER_EKS_VERSION} --versions-directory data/eks_dockerimage-replication/versions --update-helm-repos --registry-prefix "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${AWS_CODESEEDER_NAME}-"
+        - python3 get-list-of-eks-images.py --eks-version ${SEEDFARMER_PARAMETER_EKS_VERSION} --versions-directory data/eks_dockerimage-replication/versions --update-helm-repos --registry-prefix "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${SEEDFARMER_PROJECT_NAME}-"        
         - chmod +x replication.sh
         - bash replication.sh create
         - aws s3 cp replication-result.json s3://${S3_BUCKET_NAME}/${S3_OBJECT_NAME}

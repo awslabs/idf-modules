@@ -55,5 +55,5 @@ Resources:
             Resource:
               - !Sub "arn:${AWS::Partition}:s3:::*-d*-rep*-*/*"
         Version: 2012-10-17
-      PolicyName: "idf-modulespecific-policy"
+      PolicyName: "modulespecific-policy"
       Roles: [!Ref RoleName]
