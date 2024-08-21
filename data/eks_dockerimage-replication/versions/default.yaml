@@ -11,6 +11,7 @@ charts:
         tag:
           location: chart
           path: appVersion
+          prefix: v
   alb_controller:
     name: aws-load-balancer-controller
     repository: "https://aws.github.io/eks-charts"

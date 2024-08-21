@@ -2,6 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 #!/usr/bin/env python
+import sys
+
 import boto3
 from botocore.exceptions import ClientError
 
@@ -25,27 +27,5 @@ def cleanup_ecr_repos(prefix: str) -> None:
                         raise ex
 
 
-def cleanup_ssm_params(path: str) -> None:
-    paginator = SSM_CLIENT.get_paginator("get_parameters_by_path")
-
-    response_iterator = paginator.paginate(Path=path)
-
-    for page in response_iterator:
-        for entry in page["Parameters"]:
-            print("Deleting the SSM PARAMETER: {}".format(entry["Name"]))
-            try:
-                SSM_CLIENT.delete_parameter(Name=entry["Name"])
-            except ClientError as ex:
-                if ex.response["Error"]["Code"] == "ParameterNotFound":
-                    print("SSM PARAMETER: {} is not found, no action needed".format(entry["Name"]))
-                    continue
-                else:
-                    raise ex
-
-
-# Cleanups ECR Repositories based on a prefix
-cleanup_ecr_repos(prefix="idf")
-
-# Cleanups SSM Parameters based on a specific path pattern
-# cleanup_ssm_params(path="/idf/eks/chart")
-# cleanup_ssm_params(path="/idf/eks/ami")
+# Cleanups ECR Repositories based on a prefix - ProjectName
+cleanup_ecr_repos(prefix=sys.argv[1])
