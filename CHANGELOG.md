@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### **Added**
 
 - added support for deploying EKS Cluster (ONLY) in China region.
+- added security group ID to network module output
 
 ### **Changed**
 
