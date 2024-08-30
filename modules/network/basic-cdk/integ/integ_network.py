@@ -22,7 +22,10 @@ integration.IntegTest(
             project_name="integ",
             deployment_name="testing",
             module_name="basic-cdk",
+            vpc_cidr="10.0.0.0/16",
+            cidr_mask=24,
             internet_accessible=True,
+            local_zones=[],
             stack_description=f"""
             Integration Test: {timestamp.month}-{timestamp.day} {timestamp.hour}:{timestamp.minute}
             """,
@@ -33,7 +36,10 @@ integration.IntegTest(
             project_name="integ",
             deployment_name="testing",
             module_name="basic-cdk",
+            vpc_cidr="10.0.0.0/16",
+            cidr_mask=24,
             internet_accessible=False,
+            local_zones=[],
             stack_description=f"""
             Integration Test: {timestamp.month}-{timestamp.day} {timestamp.hour}:{timestamp.minute}
             """,
