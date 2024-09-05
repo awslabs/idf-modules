@@ -7,8 +7,7 @@ from typing import Any, List, cast
 import aws_cdk.aws_ec2 as ec2
 import aws_cdk.aws_iam as iam
 import aws_cdk.aws_opensearchservice as opensearch
-import cdk_nag
-from aws_cdk import Aspects, RemovalPolicy, Stack, Tags
+from aws_cdk import RemovalPolicy, Stack, Tags
 from cdk_nag import NagPackSuppression, NagSuppressions
 from constructs import Construct, IConstruct
 
@@ -117,8 +116,6 @@ class OpenSearchStack(Stack):  # type: ignore
         self.domain_name = os_domain.domain_name
         self.dashboard_url = url
         self.os_sg_id = os_security_group.security_group_id
-
-        Aspects.of(self).add(cdk_nag.AwsSolutionsChecks())
 
         NagSuppressions.add_stack_suppressions(
             self,

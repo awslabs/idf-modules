@@ -43,5 +43,4 @@ The parameters `(solution-*)` will resolve a custom text that is used as a descr
   "OpenSearchDomainEndpoint": "vpc-idf-test-core-opensearch-aaa.us-east-1.es.amazonaws.com",
   "OpenSearchSecurityGroupId": "sg-XXXXXXX"
 }
-
 ```
