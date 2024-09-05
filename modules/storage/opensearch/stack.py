@@ -74,6 +74,7 @@ class OpenSearchStack(Stack):  # type: ignore
             data_node_instance_type=os_data_node_instance_type,
             master_nodes=os_master_nodes,
             master_node_instance_type=os_master_node_instance_type,
+            multi_az_with_standby_enabled=False,
         )
 
         os_ebs = opensearch.EbsOptions(
