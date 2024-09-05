@@ -31,7 +31,7 @@ botocore==1.34.148
     #   s3transfer
 cattrs==23.2.3
     # via jsii
-cdk-nag==2.12.29
+cdk-nag==2.28.195
     # via -r requirements.in
 constructs==10.3.0
     # via
@@ -82,6 +82,7 @@ typeguard==2.13.3
     #   aws-cdk-cloud-assembly-schema
     #   aws-cdk-integ-tests-alpha
     #   aws-cdk-lib
+    #   cdk-nag
     #   constructs
     #   jsii
 typing-extensions==4.12.2
