@@ -4,7 +4,7 @@
 import os
 
 import aws_cdk
-from aws_cdk import App, CfnOutput
+import cdk_nag
 
 from stack import BucketsStack
 
@@ -18,7 +18,7 @@ buckets_encryption_type = os.getenv("SEEDFARMER_PARAMETER_ENCRYPTION_TYPE", "SSE
 buckets_retention = os.getenv("SEEDFARMER_PARAMETER_RETENTION_TYPE", "RETAIN")
 
 
-app = App()
+app = aws_cdk.App()
 
 if len(f"{project_name}-{deployment_name}") > 36:
     raise ValueError("This module cannot support a project+deployment name character length greater than 35")
@@ -61,7 +61,7 @@ stack = BucketsStack(
     ),
 )
 
-CfnOutput(
+aws_cdk.CfnOutput(
     scope=stack,
     id="metadata",
     value=stack.to_json_string(
@@ -74,5 +74,6 @@ CfnOutput(
     ),
 )
 
+aws_cdk.Aspects.of(app).add(cdk_nag.AwsSolutionsChecks(log_ignores=True))
 
 app.synth(force=True)
