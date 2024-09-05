@@ -13,6 +13,8 @@ import stack  # noqa: E402
 app = cdk.App()
 timestamp = datetime.datetime.now()
 
+stack_description = f"Integration Test: {timestamp.month}-{timestamp.day} {timestamp.hour}:{timestamp.minute}"
+
 integration.IntegTest(
     app,
     "Integration Tests Buckets Module",
@@ -27,7 +29,7 @@ integration.IntegTest(
             hash=str(uuid.uuid4())[:8],
             buckets_encryption_type="S3",
             buckets_retention="DESTROY",
-            stack_description=f"Integration Test: {timestamp.month}-{timestamp.day} {timestamp.hour}:{timestamp.minute}",
+            stack_description=stack_description,
         )
     ],
     diff_assets=True,
