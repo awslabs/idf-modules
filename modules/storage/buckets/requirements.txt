@@ -16,9 +16,12 @@ aws-cdk-asset-node-proxy-agent-v6==2.1.0
     # via aws-cdk-lib
 aws-cdk-cloud-assembly-schema==36.0.24
     # via aws-cdk-lib
+aws-cdk-integ-tests-alpha==2.155.0a0
+    # via -r requirements.in
 aws-cdk-lib==2.155.0
     # via
     #   -r requirements.in
+    #   aws-cdk-integ-tests-alpha
     #   cdk-nag
 cattrs==23.2.3
     # via jsii
@@ -27,6 +30,7 @@ cdk-nag==2.28.195
 constructs==10.3.0
     # via
     #   -r requirements.in
+    #   aws-cdk-integ-tests-alpha
     #   aws-cdk-lib
     #   cdk-nag
 importlib-resources==6.4.0
@@ -37,6 +41,7 @@ jsii==1.103.1
     #   aws-cdk-asset-kubectl-v20
     #   aws-cdk-asset-node-proxy-agent-v6
     #   aws-cdk-cloud-assembly-schema
+    #   aws-cdk-integ-tests-alpha
     #   aws-cdk-lib
     #   cdk-nag
     #   constructs
@@ -46,6 +51,7 @@ publication==0.0.3
     #   aws-cdk-asset-kubectl-v20
     #   aws-cdk-asset-node-proxy-agent-v6
     #   aws-cdk-cloud-assembly-schema
+    #   aws-cdk-integ-tests-alpha
     #   aws-cdk-lib
     #   cdk-nag
     #   constructs
@@ -60,6 +66,7 @@ typeguard==2.13.3
     #   aws-cdk-asset-kubectl-v20
     #   aws-cdk-asset-node-proxy-agent-v6
     #   aws-cdk-cloud-assembly-schema
+    #   aws-cdk-integ-tests-alpha
     #   aws-cdk-lib
     #   cdk-nag
     #   constructs
