@@ -14,16 +14,15 @@ exclude = [
     "codeseeder",
 ]
 line-length = 120
-target-version = "py37"
+target-version = "py38"
 
 [tool.ruff.lint]
 select = ["F", "I", "E", "W"]
 fixable = ["ALL"]
 
 [tool.mypy]
-python_version = "3.7"
+python_version = "3.8"
 strict = true
-ignore_missing_imports = true
 disallow_untyped_decorators = false
 exclude = "codeseeder.out/|example/|tests/|integ/"
 warn_unused_ignores = false
