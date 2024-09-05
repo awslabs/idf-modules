@@ -2,8 +2,9 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import aws_cdk as cdk
+import cdk_nag
 import pytest
-from aws_cdk.assertions import Template
+from aws_cdk.assertions import Annotations, Match, Template
 
 
 @pytest.fixture(scope="function")
@@ -64,3 +65,13 @@ def test_synthesize_stack(stack: cdk.Stack) -> None:
             },
         },
     )
+
+
+def test_no_cdk_nag_errors(stack: cdk.Stack) -> None:
+    cdk.Aspects.of(stack).add(cdk_nag.AwsSolutionsChecks())
+
+    nag_errors = Annotations.from_stack(stack).find_error(
+        "*",
+        Match.string_like_regexp(r"AwsSolutions-.*"),
+    )
+    assert not nag_errors, f"Found {len(nag_errors)} CDK nag errors"

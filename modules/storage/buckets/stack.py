@@ -8,6 +8,7 @@ from typing import Any, Optional, cast, no_type_check
 import aws_cdk
 import aws_cdk.aws_iam as aws_iam
 import aws_cdk.aws_s3 as aws_s3
+import cdk_nag
 from aws_cdk import Stack, Tags
 from constructs import Construct, IConstruct
 
@@ -166,3 +167,29 @@ class BucketsStack(Stack):  # type: ignore
         self.logs_bucket = logs_bucket
         self.readonly_policy = readonly_policy
         self.fullaccess_policy = fullaccess_policy
+
+        # Set up CDK Nag suppressions
+
+        cdk_nag.NagSuppressions.add_resource_suppressions(
+            [artifacts_bucket, logs_bucket],
+            suppressions=[
+                cdk_nag.NagPackSuppression(
+                    id="AwsSolutions-S1",
+                    reason="Logging has been disabled for demo purposes",
+                ),
+            ],
+        )
+
+        cdk_nag.NagSuppressions.add_stack_suppressions(
+            self,
+            suppressions=[
+                cdk_nag.NagPackSuppression(
+                    id="AwsSolutions-IAM4",
+                    reason="Resource access restriced to IDF resources",
+                ),
+                cdk_nag.NagPackSuppression(
+                    id="AwsSolutions-IAM5",
+                    reason="Resource access restriced to IDF resources",
+                ),
+            ],
+        )
