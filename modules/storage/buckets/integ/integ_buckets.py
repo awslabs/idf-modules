@@ -13,20 +13,23 @@ import stack  # noqa: E402
 app = cdk.App()
 timestamp = datetime.datetime.now()
 
+stack_description = f"Integration Test: {timestamp.month}-{timestamp.day} {timestamp.hour}:{timestamp.minute}"
+
 integration.IntegTest(
     app,
     "Integration Tests Buckets Module",
     test_cases=[
         stack.BucketsStack(
-            app,
-            "buckets",
-            "integ",
-            "testing",
-            "buckets",
-            str(uuid.uuid4())[:8],
-            "S3",
-            "DESTROY",
-            f"Integration Test: {timestamp.month}-{timestamp.day} {timestamp.hour}:{timestamp.minute}",
+            scope=app,
+            id="buckets",
+            partition="aws",
+            project_name="integ",
+            deployment_name="testing",
+            module_name="buckets",
+            hash=str(uuid.uuid4())[:8],
+            buckets_encryption_type="S3",
+            buckets_retention="DESTROY",
+            stack_description=stack_description,
         )
     ],
     diff_assets=True,

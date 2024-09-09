@@ -23,7 +23,7 @@ None
 #### Optional
 
 - `encryption-type`: the type of encryption on data stored in the buckets
-  - `SSE` or `KMS` 
+  - `SSE` or `KMS`
   - Assumed to be `SSE`
 - `retention-type`: type of data retention policy when deleteing the buckets
   - `DESTROY` or `RETAIN`

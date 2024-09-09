@@ -4,7 +4,8 @@
 import os
 
 import aws_cdk
-from aws_cdk import App, CfnOutput
+import cdk_nag
+from aws_cdk import App, Aspects, CfnOutput
 
 from stack import EFSFileStorage
 
@@ -56,5 +57,6 @@ CfnOutput(
     ),
 )
 
+Aspects.of(app).add(cdk_nag.AwsSolutionsChecks(log_ignores=True))
 
 app.synth(force=True)

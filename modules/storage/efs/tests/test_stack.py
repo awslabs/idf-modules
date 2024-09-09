@@ -1,34 +1,26 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-import os
-import sys
-
 import aws_cdk as cdk
+import cdk_nag
 import pytest
-from aws_cdk.assertions import Template
+from aws_cdk.assertions import Annotations, Match, Template
 
 
 @pytest.fixture(scope="function")
-def stack_defaults():
-    os.environ["CDK_DEFAULT_ACCOUNT"] = "111111111111"
-    os.environ["CDK_DEFAULT_REGION"] = "us-east-1"
-
-    # Unload the app import so that subsequent tests don't reuse
-
-    if "stack" in sys.modules:
-        del sys.modules["stack"]
+def app() -> cdk.App:
+    return cdk.App()
 
 
-def test_synthesize_stack(stack_defaults):
-    import stack
+@pytest.fixture(scope="function")
+def stack(app: cdk.App) -> cdk.Stack:
+    from stack import EFSFileStorage
 
-    app = cdk.App()
     project_name = "test-project"
     dep_name = "test-deployment"
     mod_name = "test-module"
 
-    efs_stack = stack.EFSFileStorage(
+    return EFSFileStorage(
         scope=app,
         id=f"{project_name}-{dep_name}-{mod_name}",
         project_name=project_name,
@@ -37,11 +29,23 @@ def test_synthesize_stack(stack_defaults):
         vpc_id="vpc-12345",
         efs_removal_policy="DESTROY",
         env=cdk.Environment(
-            account=os.environ["CDK_DEFAULT_ACCOUNT"],
-            region=os.environ["CDK_DEFAULT_REGION"],
+            account="111111111111",
+            region="us-east-1",
         ),
     )
 
-    template = Template.from_stack(efs_stack)
+
+def test_synthesize_stack(stack: cdk.Stack) -> None:
+    template = Template.from_stack(stack)
 
     template.resource_count_is("AWS::EFS::FileSystem", 1)
+
+
+def test_no_cdk_nag_errors(stack: cdk.Stack) -> None:
+    cdk.Aspects.of(stack).add(cdk_nag.AwsSolutionsChecks())
+
+    nag_errors = Annotations.from_stack(stack).find_error(
+        "*",
+        Match.string_like_regexp(r"AwsSolutions-.*"),
+    )
+    assert not nag_errors, f"Found {len(nag_errors)} CDK nag errors"

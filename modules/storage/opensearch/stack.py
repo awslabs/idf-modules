@@ -8,8 +8,7 @@ import aws_cdk.aws_ec2 as ec2
 import aws_cdk.aws_iam as iam
 import aws_cdk.aws_opensearchservice as opensearch
 import cdk_nag
-from aws_cdk import Aspects, RemovalPolicy, Stack, Tags
-from cdk_nag import NagPackSuppression, NagSuppressions
+from aws_cdk import RemovalPolicy, Stack, Tags
 from constructs import Construct, IConstruct
 
 _logger: logging.Logger = logging.getLogger(__name__)
@@ -75,6 +74,7 @@ class OpenSearchStack(Stack):  # type: ignore
             data_node_instance_type=os_data_node_instance_type,
             master_nodes=os_master_nodes,
             master_node_instance_type=os_master_node_instance_type,
+            multi_az_with_standby_enabled=False,
         )
 
         os_ebs = opensearch.EbsOptions(
@@ -118,64 +118,25 @@ class OpenSearchStack(Stack):  # type: ignore
         self.dashboard_url = url
         self.os_sg_id = os_security_group.security_group_id
 
-        Aspects.of(self).add(cdk_nag.AwsSolutionsChecks())
-
-        NagSuppressions.add_stack_suppressions(
+        cdk_nag.NagSuppressions.add_stack_suppressions(
             self,
-            [
-                NagPackSuppression(
-                    **{
-                        "id": "AwsSolutions-OS2",
-                        "reason": "Node to Node encryption not enabled - no customer data",
-                    }
+            suppressions=[
+                cdk_nag.NagPackSuppression(
+                    id="AwsSolutions-OS2", reason="Node to Node encryption not enabled - no customer data"
                 ),
-                NagPackSuppression(
-                    **{
-                        "id": "AwsSolutions-OS3",
-                        "reason": "Access restricted by security group ingress permissions in VPC",
-                    }
+                cdk_nag.NagPackSuppression(
+                    id="AwsSolutions-OS3", reason="Access restricted by security group ingress permissions in VPC"
                 ),
-                NagPackSuppression(
-                    **{
-                        "id": "AwsSolutions-OS4",
-                        "reason": "Single noe for demo purposes",
-                    }
+                cdk_nag.NagPackSuppression(id="AwsSolutions-OS4", reason="Single node for demo purposes"),
+                cdk_nag.NagPackSuppression(
+                    id="AwsSolutions-OS5", reason="Access restricted by security group ingress permissions in VPC"
                 ),
-                NagPackSuppression(
-                    **{
-                        "id": "AwsSolutions-OS5",
-                        "reason": "Access restricted by security group ingress permissions in VPC",
-                    }
+                cdk_nag.NagPackSuppression(id="AwsSolutions-OS7", reason="Single Node for Demo purposes"),
+                cdk_nag.NagPackSuppression(id="AwsSolutions-OS8", reason="No customer data - for Demo purposes"),
+                cdk_nag.NagPackSuppression(id="AwsSolutions-OS9", reason="No logs - for Demo purposes"),
+                cdk_nag.NagPackSuppression(
+                    id="AwsSolutions-IAM4", reason="Managed policies used by service accout roles and managed service"
                 ),
-                NagPackSuppression(
-                    **{
-                        "id": "AwsSolutions-OS7",
-                        "reason": "Single Node for Demo purposes",
-                    }
-                ),
-                NagPackSuppression(
-                    **{
-                        "id": "AwsSolutions-OS8",
-                        "reason": "No customer data - for Demo purposes",
-                    }
-                ),
-                NagPackSuppression(
-                    **{
-                        "id": "AwsSolutions-OS9",
-                        "reason": "No logs - for Demo purposes",
-                    }
-                ),
-                NagPackSuppression(
-                    **{
-                        "id": "AwsSolutions-IAM4",
-                        "reason": "Managed policies used by service accout roles and managed service",
-                    }
-                ),
-                NagPackSuppression(
-                    **{
-                        "id": "AwsSolutions-IAM5",
-                        "reason": "Policies applied for Custom Resources",
-                    }
-                ),
+                cdk_nag.NagPackSuppression(id="AwsSolutions-IAM5", reason="Policies applied for Custom Resources"),
             ],
         )

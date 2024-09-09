@@ -1,13 +1,7 @@
-AWSTemplateFormatVersion: 2010-09-09
+AWSTemplateFormatVersion: "2010-09-09"
 Description: This stack deploys a Module specific IAM permissions
 
 Parameters:
-  # DeploymentName:
-  #   Type: String
-  #   Description: The name of the deployment
-  # ModuleName:
-  #   Type: String
-  #   Description: The name of the Module
   RoleName:
     Type: String
     Description: The name of the IAM Role
@@ -16,15 +10,15 @@ Resources:
   Policy:
     Type: "AWS::IAM::Policy"
     Properties:
+      Roles:
+        - !Ref RoleName
+      PolicyName: idf-modulespecific-policy
       PolicyDocument:
+        Version: "2012-10-17"
         Statement:
           # Wildcard use on the specfic resources created by seedfarmer
-          - Action:
+          - Effect: Allow
+            Action:
               - iam:CreateServiceLinkedRole
-            Effect: Allow
-            Resource: 
-              !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:role/aws-service-role/*
-        Version: 2012-10-17
-      PolicyName: idf-modulespecific-policy
-      Roles: [!Ref RoleName]
-
+            Resource:
+              - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:role/aws-service-role/*

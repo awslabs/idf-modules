@@ -4,8 +4,7 @@
 import os
 from typing import Any, cast
 
-import cdk_nag
-from aws_cdk import Aspects, RemovalPolicy, Stack, Tags
+from aws_cdk import RemovalPolicy, Stack, Tags
 from aws_cdk import aws_ec2 as ec2
 from aws_cdk import aws_efs as efs
 from aws_cdk import aws_iam as iam
@@ -78,5 +77,3 @@ class EFSFileStorage(Stack):  # type: ignore
                 ),
             ]
         )
-
-        Aspects.of(self).add(cdk_nag.AwsSolutionsChecks())
