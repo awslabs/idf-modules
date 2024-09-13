@@ -2,7 +2,7 @@
 
 This module creates an integration between Amazon FSx Lustre and an existing Amazon EKS cluster.  
 
-## Prerequisistes
+## Prerequisites
 
 The FSX Lustre should be deployed already with a Security Group associated. They should be in the same VPC as the EKS cluster.  FSx CSI driver/addon should already be deployed on the EKS cluster. We do not support VPC-Peering at this time.
 
@@ -40,6 +40,8 @@ The FSX Lustre should be deployed already with a Security Group associated. They
 
 - `fsx-storage-capacity`: the amount (in GB) of storage, **defaults to 1200**, with the following guidelines:
   -  valid values are 1200, 2400 , and increments of 3600
+- `vpc_id`: id of the VPC in which the cluster was created. Required if the EKS cluster endpoint is not accessible publicly.
+- `private_subnet_ids`: private subnet Ids. Required if the EKS cluster endpoint is not accessible publicly.
 
 #### Input Example
 
