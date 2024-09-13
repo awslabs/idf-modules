@@ -14,7 +14,7 @@ The FSX Lustre should be deployed already with a Security Group associated. They
 
 #### Required
 
-- `eks-cluster-admin-role-arn` - the role that has kubectl access / admin access to the EKS clsuter
+- `eks-cluster-admin-role-arn` - the role that has kubectl access / admin access to the EKS cluster
 - `eks-cluster-name` - the name of the EKS cluster
 - `eks-oidc-arn` - the OpenID provider ARN of the cluster
 - `eks-cluster-security-group-id` - the EKS cluster security group to allow ingress to FSX
@@ -29,19 +29,19 @@ The FSX Lustre should be deployed already with a Security Group associated. They
   - only one of `namespace`, `namespace_ssm` or `namespace_secret` can be used 
 - `namespace_secret` - the name of the SSM parameter that has the string value to be used as the Namespace that the PVC will be created in
   - only one of `namespace`, `namespace_ssm` or `namespace_secret` can be used 
-  - if using this parameter, the unique entry to AWS SecretsManager is required with the following JSON format (username representing the namespace):
-    ```json
-    {
-      "username": "user1"
-    }
-    ```
+- if using this parameter, the unique entry to AWS SecretsManager is required with the following JSON format (username representing the namespace):
+```json
+  {
+    "username": "user1"
+  }
+```
 
 #### Optional
 
-- `fsx-storage-capacity`: the amount (in GB) of storage, **defaults to 1200**, with the following guidelines:
-  -  valid values are 1200, 2400 , and increments of 3600
-- `vpc_id`: id of the VPC in which the cluster was created. Required if the EKS cluster endpoint is not accessible publicly.
-- `private_subnet_ids`: private subnet Ids. Required if the EKS cluster endpoint is not accessible publicly.
+- `fsx-storage-capacity` - the amount (in GB) of storage, **defaults to 1200**, with the following guidelines:
+  - valid values are 1200, 2400, and increments of 3600
+- `vpc-id` - id of the VPC in which the cluster was created. Required if the EKS cluster endpoint is not accessible publicly
+- `private-subnet-ids` - private subnets. Required if the EKS cluster endpoint is not accessible publicly
 
 #### Input Example
 
