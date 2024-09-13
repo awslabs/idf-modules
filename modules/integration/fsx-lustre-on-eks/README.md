@@ -40,8 +40,8 @@ The FSX Lustre should be deployed already with a Security Group associated. They
 
 - `fsx-storage-capacity` - the amount (in GB) of storage, **defaults to 1200**, with the following guidelines:
   - valid values are 1200, 2400, and increments of 3600
-- `vpc-id` - id of the VPC in which the cluster was created. Required if the EKS cluster endpoint is not accessible publicly
-- `private-subnet-ids` - private subnets. Required if the EKS cluster endpoint is not accessible publicly
+- `vpc-id` - id of the VPC in which the cluster was created. **Required if the EKS cluster endpoint is not accessible publicly**
+- `private-subnet-ids` - private subnets. **Required if the EKS cluster endpoint is not accessible publicly**
 
 #### Input Example
 
@@ -88,6 +88,19 @@ parameters:
     value: fs-066f18902985fdba0.fsx.us-east-1.amazonaws.com
   - name: dra_export_path
     value: "/ray/export" # Must start with a `/`.
+  # If EKS cluster endpoint is not publicly accessible, add the VpcID and PrivateSubnetIds properties. Example:
+  - name: VpcId
+    valueFrom:
+      moduleMetadata:
+        group: base
+        name: networking
+        key: VpcId
+  - name: PrivateSubnetIds
+    valueFrom:
+      moduleMetadata:
+        group: base
+        name: networking
+        key: PrivateSubnetIds
 ```
 
 ### Module Metadata Outputs
