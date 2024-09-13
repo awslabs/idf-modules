@@ -1,6 +1,7 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
+import json
 import os
 from typing import List, Optional, cast
 
@@ -36,7 +37,7 @@ dra_export_path = os.getenv(_param("DRA_EXPORT_PATH"))
 eks_namespace = os.getenv("EKS_NAMESPACE")
 
 vpc_id = os.getenv(_param("VPC_ID"), None)
-private_subnet_ids = os.getenv(_param("PRIVATE_SUBNET_IDS"), None)
+private_subnet_ids = json.loads(os.getenv(_param("PRIVATE_SUBNET_IDS"), "[]"))
 
 if not eks_namespace:
     raise ValueError("No EKS Namespace defined...error")
