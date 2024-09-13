@@ -1,8 +1,9 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
+import json
 import os
-from typing import cast
+from typing import List, Optional, cast
 
 import aws_cdk
 from aws_cdk import App, CfnOutput
@@ -35,6 +36,9 @@ dra_export_path = os.getenv(_param("DRA_EXPORT_PATH"))
 # This gets set in the deployspec...NOTE no PARAMETER prefix
 eks_namespace = os.getenv("EKS_NAMESPACE")
 
+vpc_id = os.getenv(_param("VPC_ID"), None)
+private_subnet_ids = json.loads(os.getenv(_param("PRIVATE_SUBNET_IDS"), "[]"))
+
 if not eks_namespace:
     raise ValueError("No EKS Namespace defined...error")
 
@@ -63,6 +67,8 @@ stack = FSXFileStorageOnEKS(
     eks_handler_role_arn=cast(str, eks_handler_role_arn),
     eks_cluster_security_group_id=cast(str, eks_cluster_sg_id),
     eks_namespace=eks_namespace,
+    vpc_id=vpc_id,
+    private_subnet_ids=cast(Optional[List[str]], private_subnet_ids),
     env=aws_cdk.Environment(
         account=os.environ["CDK_DEFAULT_ACCOUNT"],
         region=os.environ["CDK_DEFAULT_REGION"],

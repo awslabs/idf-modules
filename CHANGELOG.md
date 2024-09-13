@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - fixed the failing regex error in the eks module when env var SEEDFARMER_PARAMETER_REPLICATED_ECR_IMAGES_METADATA_S3_PATH is not set
 - refactored docker images replication module
 - fixed `network/basic-cdk` module integration test failure
+- fixed `integration/fsx-lustre-on-eks` module to support EKS clusters with non-public endpoints
 
 ### **Removed**
 

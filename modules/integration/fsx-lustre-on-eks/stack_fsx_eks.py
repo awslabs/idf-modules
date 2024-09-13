@@ -1,7 +1,7 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-from typing import Any, cast
+from typing import Any, List, Optional, cast
 
 import cdk_nag
 from aws_cdk import Aspects, Stack, Tags
@@ -33,6 +33,8 @@ class FSXFileStorageOnEKS(Stack):
         eks_handler_role_arn: str,
         eks_cluster_security_group_id: str,
         dra_export_path: str,
+        vpc_id: Optional[str],
+        private_subnet_ids: Optional[List[str]],
         **kwargs: Any,
     ) -> None:
         super().__init__(
@@ -57,6 +59,17 @@ class FSXFileStorageOnEKS(Stack):
 
         handler_role = iam.Role.from_role_arn(self, "HandlerRole", eks_handler_role_arn)
 
+        # Required if EKS cluster endpoint is not accessible publicly
+        vpcConfig = (
+            {
+                "vpc": ec2.Vpc.from_lookup(self, "VPC", vpc_id=vpc_id),
+                "kubectl_private_subnet_ids": private_subnet_ids,
+                "kubectl_security_group_id": eks_cluster_security_group_id,
+            }
+            if vpc_id
+            else {}
+        )
+
         eks_cluster = eks.Cluster.from_cluster_attributes(
             self,
             f"{dep_mod}-eks-cluster",
@@ -65,6 +78,7 @@ class FSXFileStorageOnEKS(Stack):
             open_id_connect_provider=provider,
             kubectl_lambda_role=handler_role,
             kubectl_layer=KubectlV29Layer(self, "Kubectlv29Layer"),
+            **vpcConfig,  # type: ignore
         )
 
         fsx_security_group = ec2.SecurityGroup.from_security_group_id(self, "FSXSecurityGroup", fsx_security_group_id)
