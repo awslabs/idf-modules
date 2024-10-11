@@ -57,7 +57,7 @@ jobs:
       - name: Avoid Rate Limit With Wait
         run: sleep $((RANDOM % 15)) 
       - uses: actions/checkout@v4
-      - uses: JasonEtco/create-an-issue@v2
+      - uses: JasonEtco/create-an-issue@1b14a70e4d8dc185e5cc76d3bec9eab20257b2c5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MODULE_PATH: ${{ matrix.modules.module_path }}
