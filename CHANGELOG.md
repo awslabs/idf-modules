@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### **Changed**
 
 - pin external gh actions to hash
+- fix eks cluster admin role trust policy
 
 ### **Removed**
 
