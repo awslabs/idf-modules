@@ -130,6 +130,11 @@ class Eks(Stack):  # type: ignore
             project_name, deployment_name, module_name, self.region, self.account
         )
 
+        # EKS cluster kubectl lambda handler role
+        kubectl_lambda_role = self._create_cluster_kubectl_lambda_role(
+            project_name, deployment_name, module_name, self.region, self.account
+        )
+
         # EKS Node Role
         self.node_role = self._create_node_role(project_name, deployment_name, module_name, self.region)
 
@@ -139,6 +144,7 @@ class Eks(Stack):  # type: ignore
             dataplane_subnets=self.dataplane_subnets,
             controlplane_subnets=self.controlplane_subnets,
             cluster_admin_role=cluster_admin_role,
+            kubectl_lambda_role=kubectl_lambda_role,
             eks_version=eks_version,
             eks_compute_config=eks_compute_config,
             eks_addons_config=eks_addons_config,
@@ -334,6 +340,7 @@ class Eks(Stack):  # type: ignore
         # Outputs
         self.eks_cluster = eks_cluster
         self.eks_cluster_masterrole = cluster_admin_role
+        self.kubectl_lambda_role = kubectl_lambda_role
 
         # Add Aspects
         Aspects.of(self).add(cdk_nag.AwsSolutionsChecks())
@@ -474,6 +481,7 @@ class Eks(Stack):  # type: ignore
         dataplane_subnets: List[ec2.Subnet],
         controlplane_subnets: List[ec2.Subnet],
         cluster_admin_role: iam.Role,
+        kubectl_lambda_role: iam.Role,
         eks_version: str,
         eks_compute_config: Dict[Any, Any],
         eks_addons_config: Optional[Dict[Any, Any]] = None,
@@ -515,6 +523,7 @@ class Eks(Stack):  # type: ignore
             endpoint_access=api_endpoint,
             version=eks.KubernetesVersion.of(str(eks_version)),
             kubectl_layer=KubectlV29Layer(self, "Kubectlv29Layer"),
+            kubectl_lambda_role=kubectl_lambda_role,
             default_capacity=0,
             secrets_encryption_key=secrets_key if eks_compute_config.get("eks_secrets_envelope_encryption") else None,
             cluster_logging=[
@@ -524,15 +533,6 @@ class Eks(Stack):  # type: ignore
                 eks.ClusterLoggingTypes.CONTROLLER_MANAGER,
                 eks.ClusterLoggingTypes.SCHEDULER,
             ],
-        )
-
-        # Grant kubectl handler role explicit assume of cluster admin role
-        cluster_admin_role.assume_role_policy.add_statements(
-            iam.PolicyStatement(
-                effect=iam.Effect.ALLOW,
-                actions=["sts:AssumeRole"],
-                principals=[eks_cluster.kubectl_lambda_role.role_arn],
-            )
         )
 
         # Whitelist traffic between Codebuild SG and EKS SG when the APIServer is private
@@ -680,6 +680,46 @@ class Eks(Stack):  # type: ignore
         )
         node_role.add_managed_policy(iam.ManagedPolicy.from_aws_managed_policy_name("AmazonEKSWorkerNodePolicy"))
         return node_role
+
+    def _create_cluster_kubectl_lambda_role(self, project_name, deployment_name, module_name, region, account):
+        """
+        Creates the EKS cluster kubectl lambda handler role.
+        """
+
+        kubectl_lambda_role = iam.Role(
+            self,
+            "ClusterKubectlHandlerRole",
+            role_name=f"{project_name}-{deployment_name}-{module_name}-{region}-kubectl",
+            assumed_by=iam.ServicePrincipal("lambda.amazonaws.com"),
+            description="Role for EKS kubectl lambda handler",
+        )
+
+        kubectl_lambda_role.add_managed_policy(
+            iam.ManagedPolicy.from_aws_managed_policy_name("AmazonEC2ContainerRegistryReadOnly")
+        )
+        kubectl_lambda_role.add_managed_policy(
+            iam.ManagedPolicy.from_aws_managed_policy_name("AmazonElasticContainerRegistryPublicReadOnly")
+        )
+        kubectl_lambda_role.add_managed_policy(
+            iam.ManagedPolicy.from_aws_managed_policy_name("AWSLambdaBasicExecutionRole")
+        )
+        kubectl_lambda_role.add_managed_policy(
+            iam.ManagedPolicy.from_aws_managed_policy_name("AWSLambdaVPCAccessExecutionRole")
+        )
+
+        kubectl_lambda_role_policy_statement_json_1 = {
+            "Effect": "Allow",
+            "Action": [
+                "eks:DescribeCluster",
+            ],
+            "Resource": [f"arn:aws:eks:{region}:{account}:cluster/{project_name}-{deployment_name}-*"],
+        }
+
+        kubectl_lambda_role.add_to_principal_policy(
+            iam.PolicyStatement.from_json(kubectl_lambda_role_policy_statement_json_1)
+        )
+
+        return kubectl_lambda_role
 
     def _create_vpc_cni_chart(
         self,
