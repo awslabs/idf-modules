@@ -693,30 +693,11 @@ class Eks(Stack):  # type: ignore
             assumed_by=iam.ServicePrincipal("lambda.amazonaws.com"),
             description="Role for EKS kubectl lambda handler",
         )
-
         kubectl_lambda_role.add_managed_policy(
-            iam.ManagedPolicy.from_aws_managed_policy_name("AmazonEC2ContainerRegistryReadOnly")
+            iam.ManagedPolicy.from_aws_managed_policy_name("service-role/AWSLambdaBasicExecutionRole")
         )
         kubectl_lambda_role.add_managed_policy(
-            iam.ManagedPolicy.from_aws_managed_policy_name("AmazonElasticContainerRegistryPublicReadOnly")
-        )
-        kubectl_lambda_role.add_managed_policy(
-            iam.ManagedPolicy.from_aws_managed_policy_name("AWSLambdaBasicExecutionRole")
-        )
-        kubectl_lambda_role.add_managed_policy(
-            iam.ManagedPolicy.from_aws_managed_policy_name("AWSLambdaVPCAccessExecutionRole")
-        )
-
-        kubectl_lambda_role_policy_statement_json_1 = {
-            "Effect": "Allow",
-            "Action": [
-                "eks:DescribeCluster",
-            ],
-            "Resource": [f"arn:aws:eks:{region}:{account}:cluster/{project_name}-{deployment_name}-*"],
-        }
-
-        kubectl_lambda_role.add_to_principal_policy(
-            iam.PolicyStatement.from_json(kubectl_lambda_role_policy_statement_json_1)
+            iam.ManagedPolicy.from_aws_managed_policy_name("service-role/AWSLambdaVPCAccessExecutionRole")
         )
 
         return kubectl_lambda_role
@@ -2164,6 +2145,8 @@ class Eks(Stack):  # type: ignore
                     "reason": "The ASG does not have notifications setup",
                 },
                 {"id": "AwsSolutions-L1", "reason": "Suppress error caused by python_3_12 release in December"},
+                {"id": "AwsSolutions-SF1", "reason": "Log all is not required"},
+                {"id": "AwsSolutions-SF2", "reason": "X-Ray tracing is not required"},
             ],
         )
 
