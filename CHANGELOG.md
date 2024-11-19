@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### **Changed**
 
+=======
+
+=======
+
+## v1.13.0 (2024-11-15)
+
+### **Added**
+
+### **Changed**
+
 - pin external gh actions to hash
 - fix eks cluster admin role trust policy & create kubectl role
 - update CDK in `eks` module to 2.166.0
