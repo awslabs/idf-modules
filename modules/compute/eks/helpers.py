@@ -7,7 +7,7 @@
 import logging
 import os
 from copy import deepcopy
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Optional, Union
 
 import boto3
 import botocore
@@ -167,7 +167,23 @@ def get_az_from_subnet(subnets: List[str]) -> Dict[str, str]:
     return az_subnet_map
 
 
-def get_chart_release(eks_version: str, workload_name: str) -> str:
+def get_helm_replication_metadata(
+    workload_name: str, key: str, replication_metadata: Optional[Dict[Any, Any]] = None
+) -> Optional[str]:
+    if not replication_metadata or "charts" not in replication_metadata:
+        return None
+    workload_data = replication_metadata.get("charts").get(workload_name)
+    if not workload_data:
+        return None
+    helm_data = workload_data.get("helm")
+    if not helm_data:
+        return None
+    return helm_data.get(key)
+
+
+def get_chart_release(
+    eks_version: str, workload_name: str, replication_metadata: Optional[Dict[Any, Any]] = None
+) -> str:
     """Get chart name
 
     Args:
@@ -177,11 +193,11 @@ def get_chart_release(eks_version: str, workload_name: str) -> str:
     Returns:
         str: Chart name
     """
+    override = get_helm_replication_metadata(workload_name, "name", replication_metadata)
+    return override if override else _get_chart_release_from_file(eks_version, workload_name)
 
-    return _get_chart_release_from_file(eks_version, workload_name)
 
-
-def get_chart_repo(eks_version: str, workload_name: str) -> str:
+def get_chart_repo(eks_version: str, workload_name: str, replication_metadata: Optional[Dict[Any, Any]] = None) -> str:
     """Get chart repository URL
 
     Args:
@@ -191,8 +207,8 @@ def get_chart_repo(eks_version: str, workload_name: str) -> str:
     Returns:
         str: Chart repository URL
     """
-
-    return _get_chart_repo_from_file(eks_version, workload_name)
+    override = get_helm_replication_metadata(workload_name, "repository", replication_metadata)
+    return override if override else _get_chart_repo_from_file(eks_version, workload_name)
 
 
 def get_chart_values(data: Dict, workload_name: str) -> Dict:
@@ -212,7 +228,9 @@ def get_chart_values(data: Dict, workload_name: str) -> Dict:
     return {}
 
 
-def get_chart_version(eks_version: str, workload_name: str) -> str:
+def get_chart_version(
+    eks_version: str, workload_name: str, replication_metadata: Optional[Dict[Any, Any]] = None
+) -> str:
     """Get chart version
 
     Args:
@@ -222,8 +240,8 @@ def get_chart_version(eks_version: str, workload_name: str) -> str:
     Returns:
         str: Chart version
     """
-
-    return _get_chart_version_from_file(eks_version, workload_name)
+    override = get_helm_replication_metadata(workload_name, "version", replication_metadata)
+    return override if override else _get_chart_version_from_file(eks_version, workload_name)
 
 
 def get_image(eks_version: str, data: Dict, workload_name: str) -> str:
