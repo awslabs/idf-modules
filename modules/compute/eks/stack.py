@@ -296,12 +296,17 @@ class Eks(Stack):  # type: ignore
             )
         # AWS Distro for Opentelemetry
         if eks_addons_config.get("deploy_adot"):
-            self._deploy_adot_and_cert_manager(eks_cluster, eks_version, eks_addons_config)
+            self._deploy_adot_and_cert_manager(
+                eks_cluster, eks_version, eks_addons_config, replicated_ecr_images_metadata
+            )
 
         # CloudWatch Container Insights - Logs
         if eks_addons_config.get("deploy_cloudwatch_container_insights_logs"):
             self._deploy_fluent_bit_cloudwatch(
-                eks_cluster, eks_version, replicated_ecr_images_metadata, eks_addons_config
+                eks_cluster,
+                eks_version,
+                replicated_ecr_images_metadata,
+                eks_addons_config,
             )
 
         # Amazon Managed Prometheus (AMP)
@@ -735,9 +740,9 @@ class Eks(Stack):  # type: ignore
 
         vpc_cni_chart = eks_cluster.add_helm_chart(
             "aws-vpc-cni",
-            chart=get_chart_release(str(eks_version), AWS_VPC_CNI),
-            version=get_chart_version(str(eks_version), AWS_VPC_CNI),
-            repository=get_chart_repo(str(eks_version), AWS_VPC_CNI),
+            chart=get_chart_release(str(eks_version), AWS_VPC_CNI, replicated_ecr_images_metadata),
+            version=get_chart_version(str(eks_version), AWS_VPC_CNI, replicated_ecr_images_metadata),
+            repository=get_chart_repo(str(eks_version), AWS_VPC_CNI, replicated_ecr_images_metadata),
             release="aws-vpc-cni",
             namespace="kube-system",
             values=deep_merge(
@@ -817,9 +822,9 @@ class Eks(Stack):  # type: ignore
 
         awslbcontroller_chart = eks_cluster.add_helm_chart(
             "aws-load-balancer-controller",
-            chart=get_chart_release(str(eks_version), ALB_CONTROLLER),
-            version=get_chart_version(str(eks_version), ALB_CONTROLLER),
-            repository=get_chart_repo(str(eks_version), ALB_CONTROLLER),
+            chart=get_chart_release(str(eks_version), ALB_CONTROLLER, replicated_ecr_images_metadata),
+            version=get_chart_version(str(eks_version), ALB_CONTROLLER, replicated_ecr_images_metadata),
+            repository=get_chart_repo(str(eks_version), ALB_CONTROLLER, replicated_ecr_images_metadata),
             release="awslbcontroller",
             namespace="kube-system",
             values=deep_merge(
@@ -879,9 +884,9 @@ class Eks(Stack):  # type: ignore
             # For more info check out https://github.com/kubernetes/ingress-nginx/tree/main/charts/ingress-nginx
             nginx_controller_chart = eks_cluster.add_helm_chart(
                 "nginx-controller",
-                chart=get_chart_release(str(eks_version), NGINX_CONTROLLER),
-                version=get_chart_version(str(eks_version), NGINX_CONTROLLER),
-                repository=get_chart_repo(str(eks_version), NGINX_CONTROLLER),
+                chart=get_chart_release(str(eks_version), NGINX_CONTROLLER, replicated_ecr_images_metadata),
+                version=get_chart_version(str(eks_version), NGINX_CONTROLLER, replicated_ecr_images_metadata),
+                repository=get_chart_repo(str(eks_version), NGINX_CONTROLLER, replicated_ecr_images_metadata),
                 release="nginx-controller",
                 namespace="kube-system",
                 values=deep_merge(
@@ -1014,9 +1019,9 @@ class Eks(Stack):  # type: ignore
         # https://github.com/kubernetes-sigs/aws-ebs-csi-driver/tree/master/charts/aws-ebs-csi-driver
         awsebscsi_chart = eks_cluster.add_helm_chart(
             "aws-ebs-csi-driver",
-            chart=get_chart_release(str(eks_version), EBS_CSI_DRIVER),
-            version=get_chart_version(str(eks_version), EBS_CSI_DRIVER),
-            repository=get_chart_repo(str(eks_version), EBS_CSI_DRIVER),
+            chart=get_chart_release(str(eks_version), EBS_CSI_DRIVER, replicated_ecr_images_metadata),
+            version=get_chart_version(str(eks_version), EBS_CSI_DRIVER, replicated_ecr_images_metadata),
+            repository=get_chart_repo(str(eks_version), EBS_CSI_DRIVER, replicated_ecr_images_metadata),
             release="awsebscsidriver",
             namespace="kube-system",
             values=deep_merge(
@@ -1071,7 +1076,12 @@ class Eks(Stack):  # type: ignore
         ebs_csi_storageclass_gp3.node.add_dependency(awsebscsi_chart)
 
     def _deploy_efs_csi_driver(
-        self, eks_cluster, project_dir, eks_version, replicated_ecr_images_metadata, eks_addons_config
+        self,
+        eks_cluster,
+        project_dir,
+        eks_version,
+        replicated_ecr_images_metadata,
+        eks_addons_config,
     ):
         """
         Deploys the AWS EFS CSI Driver addon for the EKS cluster.
@@ -1096,9 +1106,9 @@ class Eks(Stack):  # type: ignore
 
         awsefscsi_chart = eks_cluster.add_helm_chart(
             "aws-efs-csi-driver",
-            chart=get_chart_release(str(eks_version), EFS_CSI_DRIVER),
-            version=get_chart_version(str(eks_version), EFS_CSI_DRIVER),
-            repository=get_chart_repo(str(eks_version), EFS_CSI_DRIVER),
+            chart=get_chart_release(str(eks_version), EFS_CSI_DRIVER, replicated_ecr_images_metadata),
+            version=get_chart_version(str(eks_version), EFS_CSI_DRIVER, replicated_ecr_images_metadata),
+            repository=get_chart_repo(str(eks_version), EFS_CSI_DRIVER, replicated_ecr_images_metadata),
             release="awsefscsidriver",
             namespace="kube-system",
             values=deep_merge(
@@ -1151,9 +1161,9 @@ class Eks(Stack):  # type: ignore
         # https://github.com/kubernetes-sigs/aws-fsx-csi-driver/tree/release-0.9/charts/aws-fsx-csi-driver
         awsfsxcsi_chart = eks_cluster.add_helm_chart(
             "aws-fsx-csi-driver",
-            chart=get_chart_release(str(eks_version), FSX_DRIVER),
-            version=get_chart_version(str(eks_version), FSX_DRIVER),
-            repository=get_chart_repo(str(eks_version), FSX_DRIVER),
+            chart=get_chart_release(str(eks_version), FSX_DRIVER, replicated_ecr_images_metadata),
+            version=get_chart_version(str(eks_version), FSX_DRIVER, replicated_ecr_images_metadata),
+            repository=get_chart_repo(str(eks_version), FSX_DRIVER, replicated_ecr_images_metadata),
             release="awsfsxcsidriver",
             namespace="kube-system",
             values=deep_merge(
@@ -1177,7 +1187,12 @@ class Eks(Stack):  # type: ignore
         awsfsxcsi_chart.node.add_dependency(awsfsxcsidriver_service_account)
 
     def _deploy_cluster_autoscaler(
-        self, eks_cluster, project_dir, eks_version, replicated_ecr_images_metadata, eks_addons_config
+        self,
+        eks_cluster,
+        project_dir,
+        eks_version,
+        replicated_ecr_images_metadata,
+        eks_addons_config,
     ):
         """
         Deploys the Cluster Autoscaler Helm chart for the EKS cluster for node level autoscaling.
@@ -1204,9 +1219,9 @@ class Eks(Stack):  # type: ignore
         # For more info see https://github.com/kubernetes/autoscaler/tree/master/charts/cluster-autoscaler
         clusterautoscaler_chart = eks_cluster.add_helm_chart(
             "cluster-autoscaler",
-            chart=get_chart_release(str(eks_version), CLUSTER_AUTOSCALER),
-            version=get_chart_version(str(eks_version), CLUSTER_AUTOSCALER),
-            repository=get_chart_repo(str(eks_version), CLUSTER_AUTOSCALER),
+            chart=get_chart_release(str(eks_version), CLUSTER_AUTOSCALER, replicated_ecr_images_metadata),
+            version=get_chart_version(str(eks_version), CLUSTER_AUTOSCALER, replicated_ecr_images_metadata),
+            repository=get_chart_repo(str(eks_version), CLUSTER_AUTOSCALER, replicated_ecr_images_metadata),
             release="clusterautoscaler",
             namespace="kube-system",
             values=deep_merge(
@@ -1237,9 +1252,9 @@ class Eks(Stack):  # type: ignore
         # Install the Kured addon
         eks_cluster.add_helm_chart(
             "kured",
-            chart=get_chart_release(str(eks_version), KURED),
-            version=get_chart_version(str(eks_version), KURED),
-            repository=get_chart_repo(str(eks_version), KURED),
+            chart=get_chart_release(str(eks_version), KURED, replicated_ecr_images_metadata),
+            version=get_chart_version(str(eks_version), KURED, replicated_ecr_images_metadata),
+            repository=get_chart_repo(str(eks_version), KURED, replicated_ecr_images_metadata),
             release="kured",
             namespace="kured",
             values=deep_merge(
@@ -1263,9 +1278,9 @@ class Eks(Stack):  # type: ignore
         # https://docs.projectcalico.org/charts
         calico_chart = eks_cluster.add_helm_chart(
             "tigera-operator",
-            chart=get_chart_release(str(eks_version), CALICO),
-            version=get_chart_version(str(eks_version), CALICO),
-            repository=get_chart_repo(str(eks_version), CALICO),
+            chart=get_chart_release(str(eks_version), CALICO, replicated_ecr_images_metadata),
+            version=get_chart_version(str(eks_version), CALICO, replicated_ecr_images_metadata),
+            repository=get_chart_repo(str(eks_version), CALICO, replicated_ecr_images_metadata),
             values=deep_merge(
                 calico_values,
             ),
@@ -1306,9 +1321,9 @@ class Eks(Stack):  # type: ignore
             # https://kyverno.github.io/kyverno/
             kyverno_chart = eks_cluster.add_helm_chart(
                 "kyverno",
-                chart=get_chart_release(str(eks_version), KYVERNO),
-                version=get_chart_version(str(eks_version), KYVERNO),
-                repository=get_chart_repo(str(eks_version), KYVERNO),
+                chart=get_chart_release(str(eks_version), KYVERNO, replicated_ecr_images_metadata),
+                version=get_chart_version(str(eks_version), KYVERNO, replicated_ecr_images_metadata),
+                repository=get_chart_repo(str(eks_version), KYVERNO, replicated_ecr_images_metadata),
                 values=deep_merge(
                     {
                         "resources": {
@@ -1353,9 +1368,9 @@ class Eks(Stack):  # type: ignore
 
             kyverno_policy_reporter_chart = eks_cluster.add_helm_chart(
                 "kyverno-policy-reporter",
-                chart=get_chart_release(str(eks_version), KYVERNO_POLICY_REPORTER),
-                version=get_chart_version(str(eks_version), KYVERNO_POLICY_REPORTER),
-                repository=get_chart_repo(str(eks_version), KYVERNO_POLICY_REPORTER),
+                chart=get_chart_release(str(eks_version), KYVERNO_POLICY_REPORTER, replicated_ecr_images_metadata),
+                version=get_chart_version(str(eks_version), KYVERNO_POLICY_REPORTER, replicated_ecr_images_metadata),
+                repository=get_chart_repo(str(eks_version), KYVERNO_POLICY_REPORTER, replicated_ecr_images_metadata),
                 release="policy-reporter",
                 namespace="policy-reporter",
                 values=deep_merge(
@@ -1382,9 +1397,9 @@ class Eks(Stack):  # type: ignore
         # Install the Metrics Server addon
         eks_cluster.add_helm_chart(
             "metrics-server",
-            chart=get_chart_release(str(eks_version), METRICS_SERVER),
-            version=get_chart_version(str(eks_version), METRICS_SERVER),
-            repository=get_chart_repo(str(eks_version), METRICS_SERVER),
+            chart=get_chart_release(str(eks_version), METRICS_SERVER, replicated_ecr_images_metadata),
+            version=get_chart_version(str(eks_version), METRICS_SERVER, replicated_ecr_images_metadata),
+            repository=get_chart_repo(str(eks_version), METRICS_SERVER, replicated_ecr_images_metadata),
             release="metricsserver",
             namespace="kube-system",
             values=deep_merge(
@@ -1429,9 +1444,9 @@ class Eks(Stack):  # type: ignore
         # Changed from the Bitnami chart for Graviton/ARM64 support
         externaldns_chart = eks_cluster.add_helm_chart(
             "external-dns",
-            chart=get_chart_release(str(eks_version), EXTERNAL_DNS),
-            version=get_chart_version(str(eks_version), EXTERNAL_DNS),
-            repository=get_chart_repo(str(eks_version), EXTERNAL_DNS),
+            chart=get_chart_release(str(eks_version), EXTERNAL_DNS, replicated_ecr_images_metadata),
+            version=get_chart_version(str(eks_version), EXTERNAL_DNS, replicated_ecr_images_metadata),
+            repository=get_chart_repo(str(eks_version), EXTERNAL_DNS, replicated_ecr_images_metadata),
             release="externaldns",
             namespace="kube-system",
             values=deep_merge(
@@ -1456,18 +1471,9 @@ class Eks(Stack):  # type: ignore
         # https://github.com/kubernetes-sigs/secrets-store-csi-driver/tree/main/charts/secrets-store-csi-driver
         eks_cluster.add_helm_chart(
             "csi-secrets-store",
-            chart=get_chart_release(
-                str(eks_version),
-                SECRETS_MANAGER_CSI_DRIVER,
-            ),
-            version=get_chart_version(
-                str(eks_version),
-                SECRETS_MANAGER_CSI_DRIVER,
-            ),
-            repository=get_chart_repo(
-                str(eks_version),
-                SECRETS_MANAGER_CSI_DRIVER,
-            ),
+            chart=get_chart_release(str(eks_version), SECRETS_MANAGER_CSI_DRIVER, replicated_ecr_images_metadata),
+            version=get_chart_version(str(eks_version), SECRETS_MANAGER_CSI_DRIVER, replicated_ecr_images_metadata),
+            repository=get_chart_repo(str(eks_version), SECRETS_MANAGER_CSI_DRIVER, replicated_ecr_images_metadata),
             release="csi-secrets-store",
             namespace="kube-system",
             # Since sometimes you want these secrets as environment variables enabling syncSecret
@@ -1554,9 +1560,9 @@ class Eks(Stack):  # type: ignore
         # https://github.com/external-secrets/external-secrets/tree/main/deploy/charts/external-secrets
         eks_cluster.add_helm_chart(
             "external-secrets",
-            chart=get_chart_release(str(eks_version), EXTERNAL_SECRETS),
-            version=get_chart_version(str(eks_version), EXTERNAL_SECRETS),
-            repository=get_chart_repo(str(eks_version), EXTERNAL_SECRETS),
+            chart=get_chart_release(str(eks_version), EXTERNAL_SECRETS, replicated_ecr_images_metadata),
+            version=get_chart_version(str(eks_version), EXTERNAL_SECRETS, replicated_ecr_images_metadata),
+            repository=get_chart_repo(str(eks_version), EXTERNAL_SECRETS, replicated_ecr_images_metadata),
             release="external-secrets",
             namespace="kube-system",
             values=deep_merge(
@@ -1617,7 +1623,9 @@ class Eks(Stack):  # type: ignore
             manifest_id = "CWAgent" + str(loop_iteration)
             eks_cluster.add_manifest(manifest_id, value)
 
-    def _deploy_adot_and_cert_manager(self, eks_cluster, eks_version, eks_addons_config):
+    def _deploy_adot_and_cert_manager(
+        self, eks_cluster, eks_version, eks_addons_config, replicated_ecr_images_metadata
+    ):
         """
         Deploys the ADOT (AWS Distro for OpenTelemetry) and Cert-Manager addons for the EKS cluster.
         """
@@ -1669,9 +1677,9 @@ class Eks(Stack):  # type: ignore
         # Deploy the Cert-Manager Helm chart
         cert_manager_chart = eks_cluster.add_helm_chart(
             "cert-manager",
-            chart=get_chart_release(str(eks_version), CERT_MANAGER),
-            version=get_chart_version(str(eks_version), CERT_MANAGER),
-            repository=get_chart_repo(str(eks_version), CERT_MANAGER),
+            chart=get_chart_release(str(eks_version), CERT_MANAGER, replicated_ecr_images_metadata),
+            version=get_chart_version(str(eks_version), CERT_MANAGER, replicated_ecr_images_metadata),
+            repository=get_chart_repo(str(eks_version), CERT_MANAGER, replicated_ecr_images_metadata),
             release="cert-manager",
             namespace="cert-manager",
             create_namespace=False,
@@ -1725,9 +1733,9 @@ class Eks(Stack):  # type: ignore
         # https://github.com/fluent/helm-charts/tree/main/charts/fluent-bit
         fluentbit_chart_cw = eks_cluster.add_helm_chart(
             "fluentbit-cw",
-            chart=get_chart_release(str(eks_version), FLUENTBIT),
-            version=get_chart_version(str(eks_version), FLUENTBIT),
-            repository=get_chart_repo(str(eks_version), FLUENTBIT),
+            chart=get_chart_release(str(eks_version), FLUENTBIT, replicated_ecr_images_metadata),
+            version=get_chart_version(str(eks_version), FLUENTBIT, replicated_ecr_images_metadata),
+            repository=get_chart_repo(str(eks_version), FLUENTBIT, replicated_ecr_images_metadata),
             release="fluent-bit-cw",
             namespace="kube-system",
             values=deep_merge(
@@ -1794,9 +1802,9 @@ class Eks(Stack):  # type: ignore
         # This should be acceptable as the metrics are immediatly streamed to the AMP
         amp_prometheus_chart = eks_cluster.add_helm_chart(
             "prometheus-chart",
-            chart=get_chart_release(str(eks_version), PROMETHEUS_STACK),
-            version=get_chart_version(str(eks_version), PROMETHEUS_STACK),
-            repository=get_chart_repo(str(eks_version), PROMETHEUS_STACK),
+            chart=get_chart_release(str(eks_version), PROMETHEUS_STACK, replicated_ecr_images_metadata),
+            version=get_chart_version(str(eks_version), PROMETHEUS_STACK, replicated_ecr_images_metadata),
+            repository=get_chart_repo(str(eks_version), PROMETHEUS_STACK, replicated_ecr_images_metadata),
             release="prometheus-for-amp",
             namespace="kube-system",
             values=deep_merge(
@@ -1862,9 +1870,9 @@ class Eks(Stack):  # type: ignore
         # This should be acceptable as the metrics are immediatly streamed to the AMP
         nvidia_device_plugin_chart = eks_cluster.add_helm_chart(
             plugin,
-            chart=get_chart_release(str(eks_version), NVIDIA_DEVICE_PLUGIN),
-            version=get_chart_version(str(eks_version), NVIDIA_DEVICE_PLUGIN),
-            repository=get_chart_repo(str(eks_version), NVIDIA_DEVICE_PLUGIN),
+            chart=get_chart_release(str(eks_version), NVIDIA_DEVICE_PLUGIN, replicated_ecr_images_metadata),
+            version=get_chart_version(str(eks_version), NVIDIA_DEVICE_PLUGIN, replicated_ecr_images_metadata),
+            repository=get_chart_repo(str(eks_version), NVIDIA_DEVICE_PLUGIN, replicated_ecr_images_metadata),
             release=plugin,
             namespace=plugin,
             create_namespace=False,
@@ -1916,9 +1924,9 @@ class Eks(Stack):  # type: ignore
         # For more information see https://github.com/grafana/helm-charts/tree/main/charts/grafana
         amp_grafana_chart = eks_cluster.add_helm_chart(
             "amp-grafana-chart",
-            chart=get_chart_release(str(eks_version), GRAFANA),
-            version=get_chart_version(str(eks_version), GRAFANA),
-            repository=get_chart_repo(str(eks_version), GRAFANA),
+            chart=get_chart_release(str(eks_version), GRAFANA, replicated_ecr_images_metadata),
+            version=get_chart_version(str(eks_version), GRAFANA, replicated_ecr_images_metadata),
+            repository=get_chart_repo(str(eks_version), GRAFANA, replicated_ecr_images_metadata),
             release="grafana-for-amp",
             namespace="kube-system",
             values=deep_merge(

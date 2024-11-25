@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - add prometheus and prometheus-workspaces endpoints
 
 ### **Changed**
+- adding override support for charts in the EKS module
+
+### **Removed**
 
 =======
 
