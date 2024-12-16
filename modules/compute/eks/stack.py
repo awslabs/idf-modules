@@ -919,7 +919,6 @@ class Eks(Stack):  # type: ignore
             name="s3-csi-driver-sa",
             namespace="kube-system",
             labels={"app.kubernetes.io/name": "aws-mountpoint-s3-csi-driver"},
-            # annotations={"eks.amazonaws.com/role-arn": s3_addon_role.role_arn},
         )
 
         s3_csi_service_account.role.attach_inline_policy(
@@ -1683,7 +1682,6 @@ class Eks(Stack):  # type: ignore
                 {
                     "installCRDs": True,
                     "extraArgs": ["--dns01-recursive-nameservers-only=false"],
-                    # "podSecurityPolicy": {"enabled": False},
                     "serviceAccount": {
                         "create": False,
                         "name": cert_manager_service_account.service_account_name,
