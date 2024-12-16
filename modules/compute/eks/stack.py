@@ -902,41 +902,43 @@ class Eks(Stack):  # type: ignore
             arns = [f"arn:{self._partition}:s3:::{project_name}*"]
             arns_with_paths = [f"arn:{self._partition}:s3:::{project_name}*/*"]
 
-        # IRSA for S3 Addon
-        s3_addon_role = iam.Role(
-            self,
-            "S3Role",
-            assumed_by=iam.FederatedPrincipal(
-                eks_cluster.open_id_connect_provider.open_id_connect_provider_arn,
-                assume_role_action="sts:AssumeRoleWithWebIdentity",
-                conditions={
-                    "StringEquals": CfnJson(
-                        self,
-                        "S3RoleProvider",
-                        value={f"{eks_cluster.cluster_open_id_connect_issuer}:aud": "sts.amazonaws.com"},
-                    )
-                },
-            ),
-            inline_policies={
-                "mpfullbucketaccess": iam.PolicyDocument(
-                    statements=[
-                        iam.PolicyStatement(
-                            effect=iam.Effect.ALLOW,
-                            resources=arns,
-                            actions=["s3:ListBucket"],
-                        )
-                    ],
-                ),
-                "mpfullobjectaccess": iam.PolicyDocument(
-                    statements=[
-                        iam.PolicyStatement(
-                            effect=iam.Effect.ALLOW,
-                            resources=arns_with_paths,
-                            actions=["s3:GetObject", "s3:PutObject", "s3:AbortMultipartUpload", "s3:DeleteObject"],
-                        )
-                    ],
-                ),
+        s3_csi_storageclass = eks_cluster.add_manifest(
+            "S3CSIStorageClass",
+            {
+                "kind": "StorageClass",
+                "apiVersion": "storage.k8s.io/v1",
+                "metadata": {"name": "s3-csi"},
+                "parameters": {"type": "standard"},
+                "provisioner": "s3.csi.aws.com",
             },
+        )
+
+        # Create service account
+        s3_csi_service_account = eks_cluster.add_service_account(
+            "s3-csi-driver-sa",
+            name="s3-csi-driver-sa",
+            namespace="kube-system",
+            labels={"app.kubernetes.io/name": "aws-mountpoint-s3-csi-driver"},
+            # annotations={"eks.amazonaws.com/role-arn": s3_addon_role.role_arn},
+        )
+
+        s3_csi_service_account.role.attach_inline_policy(
+            iam.Policy(
+                self,
+                "S3Policy",
+                statements=[
+                    iam.PolicyStatement(
+                        effect=iam.Effect.ALLOW,
+                        resources=arns,
+                        actions=["s3:ListBucket"],
+                    ),
+                    iam.PolicyStatement(
+                        effect=iam.Effect.ALLOW,
+                        resources=arns_with_paths,
+                        actions=["s3:GetObject", "s3:PutObject", "s3:AbortMultipartUpload", "s3:DeleteObject"],
+                    ),
+                ],
+            )
         )
 
         s3_addon = eks.CfnAddon(
@@ -945,9 +947,11 @@ class Eks(Stack):  # type: ignore
             addon_name="aws-mountpoint-s3-csi-driver",
             resolve_conflicts="OVERWRITE",
             cluster_name=eks_cluster.cluster_name,
-            service_account_role_arn=s3_addon_role.role_arn,
+            service_account_role_arn=s3_csi_service_account.role.role_arn,
         )
         s3_addon.node.add_dependency(eks_cluster)
+        s3_addon.node.add_dependency(s3_csi_storageclass)
+        s3_addon.node.add_dependency(s3_csi_service_account)
 
     def _create_cloudwatch_observability_addon(self, eks_cluster):
         """
@@ -1679,7 +1683,7 @@ class Eks(Stack):  # type: ignore
                 {
                     "installCRDs": True,
                     "extraArgs": ["--dns01-recursive-nameservers-only=false"],
-                    "podSecurityPolicy": {"enabled": False},
+                    # "podSecurityPolicy": {"enabled": False},
                     "serviceAccount": {
                         "create": False,
                         "name": cert_manager_service_account.service_account_name,
@@ -1687,6 +1691,7 @@ class Eks(Stack):  # type: ignore
                             "eks.amazonaws.com/role-arn": cert_manager_service_account.role.role_arn,
                         },
                     },
+                    "webhook": {"securePort": 10260, "hostNetwork": True},
                 },
                 get_chart_values(str(eks_version), CERT_MANAGER),
             ),
