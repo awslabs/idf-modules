@@ -10,10 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## UNRELEASED
 
 ### **Added**
+- add prometheus and prometheus-workspaces endpoints
 
 ### **Changed**
 - fix s3 csi driver addon in `eks` module
 - update charts versions in `1.29.yaml`
+- adding override support for charts in the EKS module
+
+### **Removed**
+
 
 =======
 

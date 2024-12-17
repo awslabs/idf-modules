@@ -248,9 +248,11 @@ class NetworkingStack(Stack):  # type: ignore
             "emr-containers": ec2.InterfaceVpcEndpointAwsService("emr-containers"),
             "databrew": ec2.InterfaceVpcEndpointAwsService("databrew"),
             "bedrock": ec2.InterfaceVpcEndpointAwsService("bedrock"),
-            "bedrock_agent": ec2.InterfaceVpcEndpointAwsService("bedrock-agent"),
-            "bedrock_agent_runtime": ec2.InterfaceVpcEndpointAwsService("bedrock-agent-runtime"),
+            # "bedrock_agent": ec2.InterfaceVpcEndpointAwsService("bedrock-agent"),
+            # "bedrock_agent_runtime": ec2.InterfaceVpcEndpointAwsService("bedrock-agent-runtime"),
             "bedrock_runtime": ec2.InterfaceVpcEndpointAwsService("bedrock-runtime"),
+            "prometheus": ec2.InterfaceVpcEndpointAwsService.PROMETHEUS,
+            "prometheus_workspaces": ec2.InterfaceVpcEndpointAwsService.PROMETHEUS_WORKSPACES,
         }
 
         for name, interface_service in vpc_interface_endpoints.items():
