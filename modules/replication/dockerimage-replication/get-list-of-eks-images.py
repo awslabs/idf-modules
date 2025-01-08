@@ -12,9 +12,11 @@ from helmparser.arguments import parse_args
 from helmparser.logging import logger
 from helmparser.parser import parser
 from helmparser.utils.utils import deep_merge
+from replication_utils.utils import get_credentials
 
 project_path = os.path.realpath(os.path.dirname(__file__))
-
+repo_secret = os.getenv("SEEDFARMER_PARAMETER_HELM_REPO_SECRET_NAME", None)
+repo_key = os.getenv("SEEDFARMER_PARAMETER_HELM_REPO_SECRET_KEY", None)
 
 def main() -> None:
     """Main handler"""
@@ -27,12 +29,13 @@ def main() -> None:
         parser.get_ami_version(args.versions_dir, args.eks_version),
     )
 
-    images = []
+    images_wip = []
 
     additional_images = parser.get_additional_images(args.versions_dir, args.eks_version)
+    docker_mappings = parser.get_docker_mappings(args.versions_dir, args.eks_version)
 
     for _, image in additional_images.items():
-        images.append(image)
+        images_wip.append(image)
 
     updated_additional_images = {}
     for name, image in additional_images.items():
@@ -43,9 +46,10 @@ def main() -> None:
     workloads_data = parser.get_workloads(args.versions_dir, args.eks_version)
 
     if args.update_helm:
+        username,pwd = get_credentials(repo_secret, repo_key)
         for workload, values in workloads_data.items():
             logger.info("Syncing %s", workload)
-            helm.add_repo(workload, values["repository"])
+            helm.add_repo(workload, values["repository"],username,pwd)
 
         helm.update_repos()
 
@@ -79,6 +83,10 @@ def main() -> None:
             },
             "values": {},
         }
+        if args.replicate_charts:
+            custom_chart_values[workload]["helm"]["srcRepository"] =  values.get("repository")
+            new_r_name =  values["repository"].rstrip('/').split('/')[-1]
+            custom_chart_values[workload]["helm"]["repository"] = f"oci://{args.registry_prefix}{new_r_name}/{values['name']}"
 
         logger.debug("Chart %s:", workload)
 
@@ -153,16 +161,50 @@ def main() -> None:
                 if tag:
                     image += f":{tag}"
 
-                logger.debug("\t\t%s", image)
-                images.append(image)
+                logger.debug("\t\t%s", image)                
+                images_wip.append(image)
 
         logger.debug("\tCustom chart values:")
         logger.debug("\t\t%s", json.dumps(custom_chart_values[workload]))
-
-    sorted_images = sorted(set(images))
-
+    sorted_images = sorted(set(images_wip))
+    updated_images = []
+    
+    def process_image(full_image,docker_mappings):
+        if not docker_mappings:
+            return full_image
+        i_t = full_image.split(":")
+        image = i_t[0]
+        tag = i_t[1] if len(i_t) > 1 else "latest"
+        if "." in image:
+            s = image.rstrip('/').split('/')
+            dns = s[0]
+            reassembled_url = "/".join(s[1:])
+            if dns in docker_mappings.keys():
+                return f"{docker_mappings.get(dns)}/{reassembled_url}:{tag}"
+        else:
+            if docker_mappings.get("default"):
+                return f"{docker_mappings.get('default')}/{image}:{tag}"
+        return full_image
+            
+    for name, image in additional_images.items():
+        working_image = process_image(image, docker_mappings)
+        updated_images.append({"src":working_image,"target":f"{args.registry_prefix}{image}"})
+    for image in images_wip:
+        working_image = process_image(image, docker_mappings)
+        updated_images.append({"src":working_image,"target":f"{args.registry_prefix}{image}"})
+            
     ami_json = {"ami": {"version": parser.get_ami_version(args.versions_dir, args.eks_version)}}
     charts_json = {"charts": custom_chart_values}
+
+    #  Add custom rules here....
+    try:
+        # cert-manager v1.6.x has removed the appVersion definition from crd...
+        if custom_chart_values['cert_manager']['values']['appVersion']:
+            del custom_chart_values['cert_manager']['values']['appVersion']
+    
+    except Exception as e:
+        logger.error("Error: %s", e)
+        raise e
 
     with open(
         os.path.join(project_path, "replication-result.json"),
@@ -172,12 +214,11 @@ def main() -> None:
         file.write(json.dumps(deep_merge(ami_json, charts_json, additional_images_json)))
 
     with open(
-        os.path.join(project_path, "images.txt"),
+        os.path.join(project_path, "updated_images.json"),
         "w",
         encoding="utf-8",
     ) as file:
-        file.write("\n".join(sorted_images))
-
+        file.write(json.dumps(updated_images, indent=4))
 
 if __name__ == "__main__":
     main()
