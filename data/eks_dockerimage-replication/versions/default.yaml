@@ -28,11 +28,10 @@ charts:
     name: aws-vpc-cni
     repository: "https://aws.github.io/eks-charts"
     version: 1.1.12
-    # override: "repo/org/image:tag"
   calico:
     name: tigera-operator
     repository: "https://docs.projectcalico.org/charts/"
-    version: 3.21.4
+    version: v3.21.4
     images:
       tigera_operator:
         registry:
@@ -117,7 +116,7 @@ charts:
   cert_manager:
     name: cert-manager
     repository: "https://charts.jetstack.io"
-    version: v1.11.1
+    version: v1.16.2
     images:
       cert-manager-controller:
         repository:
@@ -355,9 +354,12 @@ charts:
   grafana:
     name: grafana
     repository: "https://grafana.github.io/helm-charts"
-    version: 6.21.1
+    version: 8.6.1
     images:
       grafana:
+        registry:
+          location: values
+          path: image.registry
         repository:
           location: values
           path: image.repository
@@ -365,6 +367,9 @@ charts:
           location: chart
           path: appVersion
       download_dashboards_image:
+        registry:
+          location: values
+          path: downloadDashboardsImage.registry
         repository:
           location: values
           path: downloadDashboardsImage.repository
@@ -372,13 +377,19 @@ charts:
           location: values
           path: downloadDashboardsImage.tag
       test_framework:
+        registry:
+          location: values
+          path: testFramework.image.registry
         repository:
           location: values
-          path: testFramework.image
+          path: testFramework.image.repository
         tag:
           location: values
-          path: testFramework.tag
+          path: testFramework.image.tag
       init_chown_data:
+        registry:
+          location: values
+          path: initChownData.image.registry
         repository:
           location: values
           path: initChownData.image.repository
@@ -386,6 +397,9 @@ charts:
           location: values
           path: initChownData.image.tag
       sidecar:
+        registry:
+          location: values
+          path: sidecar.image.registry
         repository:
           location: values
           path: sidecar.image.repository
@@ -393,6 +407,9 @@ charts:
           location: values
           path: sidecar.image.tag
       image_renderer:
+        registry:
+          location: values
+          path: imageRenderer.image.registry
         repository:
           location: values
           path: imageRenderer.image.repository
@@ -453,7 +470,7 @@ charts:
   kyverno_policy_reporter:
     name: policy-reporter
     repository: "https://kyverno.github.io/policy-reporter/"
-    version: v2.13.0
+    version: 2.13.0
     subcharts:
       - ui
       - kyvernoPlugin
