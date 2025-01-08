@@ -49,11 +49,3 @@ charts:
 additional_images:
   cloudwatch_agent: "public.ecr.aws/cloudwatch-agent/cloudwatch-agent:1.300041.0b681"
   secrets_store_csi_driver_provider_aws: "public.ecr.aws/aws-secrets-manager/secrets-store-csi-driver-provider-aws:1.0.r2-2021.08.13.20.34-linux-amd64"
-docker_mappings:
-    quay.io: qartifactory-eu.qualcomm.com/qcc-platform-docker-remote-quay-io
-    registry.k8s.io: qartifactory-eu.qualcomm.com/qcc-platform-docker-remote-registry-k8s-io
-    docker.io: qartifactory-eu.qualcomm.com/qcc-platform-docker-remote-hub-docker-com
-    ghcr.io: qartifactory-eu.qualcomm.com/qcc-platform-docker-remote-ghcr-io
-    public.ecr.aws: qartifactory-eu.qualcomm.com/qcc-platform-docker-remote-public-ecr-aws
-    cr.fluentbit.io: qartifactory-eu.qualcomm.com/qcc-platform-docker-remote-cr-fluentbit-io
-    default: qartifactory-eu.qualcomm.com/qcc-platform-docker-remote-hub-docker-com
