@@ -15,6 +15,9 @@ account_id= os.getenv("AWS_ACCOUNT_ID")
 region = os.getenv("AWS_DEFAULT_REGION")
 repo_secret = os.getenv("SEEDFARMER_PARAMETER_HELM_REPO_SECRET_NAME", None)
 repo_key = os.getenv("SEEDFARMER_PARAMETER_HELM_REPO_SECRET_KEY", None)
+aws_partition = os.getenv("AWS_PARTITION", "aws")
+aws_domain = "amazonaws.com" if aws_partition == "aws" else "amazonaws.com.cn"
+
 
 def mask_sensitive_data(command):
     """Mask sensitive data like passwords in the command string."""
@@ -64,7 +67,7 @@ def log_into_ecr():
     command= f"""aws ecr get-login-password \
      --region {region} | helm registry login \
      --username AWS \
-     --password-stdin {account_id}.dkr.ecr.{region}.amazonaws.com
+     --password-stdin {account_id}.dkr.ecr.{region}.{aws_domain}
      """
     return run_command(f"{command}")
 

@@ -4,7 +4,7 @@ deploy:
     install:
       commands:
         - pip install -r requirements.txt
-        - python3 install_helm.py
+        - python install_helm.py
     build:
       commands:
         # dkr - docker; img - images; rep - replications; md - metadata
@@ -20,14 +20,20 @@ deploy:
             sleep 15
           fi
         - |
-          python3 get-list-of-eks-images.py \
+          if [ "$AWS_PARTITION" = "aws-cn" ]; then
+            DOMAIN="amazonaws.com.cn"
+          else
+            DOMAIN="amazonaws.com"
+          fi
+        - |
+          python get-list-of-eks-images.py \
             --eks-version ${SEEDFARMER_PARAMETER_EKS_VERSION} \
             --versions-directory data/eks_dockerimage-replication/versions \
             --update-helm-repos \
-            --registry-prefix "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${SEEDFARMER_PROJECT_NAME}-" \
+            --registry-prefix "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.${DOMAIN}/${SEEDFARMER_PROJECT_NAME}-" \
             --replicate-charts
-        - python3 replicate_images.py
-        - python3 replicate_charts.py
+        - python replicate_images.py
+        - python replicate_charts.py
         - aws s3 cp replication-result.json s3://${S3_BUCKET_NAME}/${S3_OBJECT_NAME}
         - seedfarmer metadata add -k S3Bucket -v ${S3_BUCKET_NAME}
         - seedfarmer metadata add -k S3Object -v ${S3_OBJECT_NAME}
