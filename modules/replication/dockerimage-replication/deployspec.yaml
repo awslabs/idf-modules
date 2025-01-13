@@ -26,7 +26,7 @@ deploy:
             DOMAIN="amazonaws.com"
           fi
         - |
-          python get-list-of-eks-images.py \
+          python get_list_eks_images.py \
             --eks-version ${SEEDFARMER_PARAMETER_EKS_VERSION} \
             --versions-directory data/eks_dockerimage-replication/versions \
             --update-helm-repos \
@@ -50,5 +50,5 @@ destroy:
         - pip install -r requirements.txt
     build:
       commands:
-        - python delete-repos.py ${SEEDFARMER_PROJECT_NAME}
+        - python delete_repos.py ${SEEDFARMER_PROJECT_NAME}
 build_type: BUILD_GENERAL1_XLARGE

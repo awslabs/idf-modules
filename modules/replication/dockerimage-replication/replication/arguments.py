@@ -65,5 +65,4 @@ def parse_args(args: Any) -> argparse.Namespace:
         help="replicate charts",
     )
 
-
     return parser.parse_args(args)

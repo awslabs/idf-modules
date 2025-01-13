@@ -8,7 +8,6 @@ import shlex
 import shutil
 import subprocess  # nosec B404
 from typing import Any, Dict, Optional
-from helmparser.logging import logger
 
 import yaml
 
@@ -92,7 +91,7 @@ def show_subchart(project_path: str, repo: str, chart: str, subchart: str, versi
     return result
 
 
-def add_repo(name: str, repo: str, username: Optional[str]=None, pwd: Optional[str]=None ) -> None:
+def add_repo(name: str, repo: str, username: Optional[str] = None, pwd: Optional[str] = None) -> None:
     """Adds a chart repository locally
 
     Args:
