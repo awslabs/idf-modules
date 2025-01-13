@@ -16,6 +16,15 @@ The cleanup workflow invokes a python script which deletes the replicated docker
 
 - `eks_version`: The EKS Cluster version to lock the version to
 
+#### Optional Parameters
+
+- `HelmRepoSecretName`:
+- `HelmRepoSecretKey`:  
+- `HelmDistroSecretName`: 
+- `HelmDistroUrl`: 
+- `HekmDistroSecretKey`:
+
+
 #### Required Files
 
 - `dataFiles`: The docker replication module consumes the EKS version specific helm charts inventory to replicate the docker images
@@ -25,21 +34,35 @@ The cleanup workflow invokes a python script which deletes the replicated docker
 ```yaml
 name: replication
 #path: modules/replication/dockerimage-replication/
-path: git::https://github.com/awslabs/idf-modules.git//modules/replication/dockerimage-replication?ref=release/1.1.0&depth=1
+path: git::https://github.com/awslabs/idf-modules.git//modules/replication/dockerimage-replication?ref=release/1.13.0
 dataFiles:
-  - filePath: data/eks_dockerimage-replication/versions/1.25.yaml
+  - filePath: data/eks_dockerimage-replication/versions/1.29.yaml
   - filePath: data/eks_dockerimage-replication/versions/default.yaml
 parameters:
   - name: eks-version
-    value: "1.25"
-    # valueFrom:
-    #   envVariable: GLOBAL_EKS_VERSION
+    value: "1.29"
+  - name: HelmRepoSecretName
+    value: replicationbmw
+  - name: HelmDistroSecretName
+    value: replicationbmw
+  - name: HelmDistroUrl
+    value: https://somehostedurl.com/something/relativeurl/helm-v3.11.3-linux-amd64.tar.gz
+
 ```
 
 ### Module Metadata Outputs
 
 ```json
 {
-    "aws-efs-csi-driver": "1234567890.dkr.ecr.eu-central-1.amazonaws.com/idf-amazon/aws-efs-csi-driver:v1.3.6"
+  "repl": {
+    "S3Bucket": "idftest-dkr-img-rep-md-us-east-1-123456789012",
+    "S3FullPath": "idftest-dkr-img-rep-md-us-east-1-123456789012/repltestrepl-repl-repl-metadata.json",
+    "S3Object": "repltestrepl-repl-repl-metadata.json",
+    "s3_bucket": "idftest-dkr-img-rep-md-us-east-1-123456789012", // For backard compatability
+    "s3_full_path": "idftest-dkr-img-rep-md-us-east-1-123456789012/repltestrepl-repl-repl-metadata.json", // For backard compatability
+    "s3_object": "repltestrepl-repl-repl-metadata.json" // For backard compatability
+  }
 }
 ```
+
+

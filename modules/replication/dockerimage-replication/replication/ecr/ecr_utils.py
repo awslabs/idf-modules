@@ -7,13 +7,13 @@ from replication.utils import run_command
 
 
 class ECRUtils:
-    def __init__(self, aws_account_id, aws_region, aws_domain):
+    def __init__(self, aws_account_id: str, aws_region: str, aws_domain: str):
         self.aws_account_id = aws_account_id
         self.aws_region = aws_region
         self.aws_domain = aws_domain
         self.ecr_client = boto3.client("ecr", region_name=aws_region)
 
-    def login_to_ecr(self, type: str = "docker"):
+    def login_to_ecr(self, type: str = "docker") -> bool:
         login_type = "docker"
         if type == "helm":
             login_type = "helm registry"
@@ -26,7 +26,7 @@ class ECRUtils:
         return run_command(command)
 
     # Check if repository exists
-    def repository_exists(self, repo_name) -> bool:
+    def repository_exists(self, repo_name: str) -> bool:
         try:
             self.ecr_client.describe_repositories(repositoryNames=[repo_name])
             return True
@@ -34,7 +34,7 @@ class ECRUtils:
             return False
 
     # Create repository
-    def create_repository(self, repo_name):
+    def create_repository(self, repo_name: str) -> None:
         logger.info(f"Checking if ECR repository '{repo_name}' exists...")
         if not self.repository_exists(repo_name):
             logger.info(f"ECR repository '{repo_name}' does not exist. Creating...")
@@ -45,7 +45,7 @@ class ECRUtils:
             logger.info(f"ECR repository '{repo_name}' already exists.")
 
     # Check if image exists in ECR
-    def image_exists(self, repo_name, image_tag) -> bool:
+    def image_exists(self, repo_name: str, image_tag: str) -> bool:
         try:
             response = self.ecr_client.batch_get_image(
                 repositoryName=repo_name,

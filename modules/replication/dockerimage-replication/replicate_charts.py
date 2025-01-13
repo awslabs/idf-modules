@@ -5,6 +5,7 @@ import json
 import os
 import sys
 import time
+from typing import Any, Dict
 
 from replication.ecr.ecr_utils import ECRUtils
 from replication.logging import logger
@@ -22,7 +23,7 @@ repo_secret = os.getenv("SEEDFARMER_PARAMETER_HELM_REPO_SECRET_NAME", None)
 repo_key = os.getenv("SEEDFARMER_PARAMETER_HELM_REPO_SECRET_KEY", None)
 
 
-def process_chart(ecr_utils, chart_key, chart_data):
+def process_chart(ecr_utils: ECRUtils, chart_key: str, chart_data: Dict[str, Any]) -> None:
     """Process a single chart from the JSON document."""
     logger.info(f"Processing chart: {chart_key} ")
 
@@ -44,7 +45,7 @@ def process_chart(ecr_utils, chart_key, chart_data):
         return
 
     # Log in to the source repository
-    repo_user, repo_password = get_credentials(repo_secret, repo_key)
+    repo_user, repo_password = get_credentials(repo_secret, repo_key)  # type:ignore
     if repo_user and repo_password:
         logger.info(f"Logging into source Helm repository: {src_repository}")
         helm_login_command = f"helm registry login {src_repository} --username {repo_user} --password {repo_password}"
@@ -93,7 +94,7 @@ def process_chart(ecr_utils, chart_key, chart_data):
     time.sleep(2)
 
 
-def main():
+def main() -> None:
     """Main function."""
     # Input JSON file
     input_file = "./replication-result.json"
@@ -115,7 +116,7 @@ def main():
     # Enable OCI experimental feature in Helm
     os.environ["HELM_EXPERIMENTAL_OCI"] = "1"
 
-    ecr_utils = ECRUtils(aws_account_id, aws_region, aws_domain)
+    ecr_utils = ECRUtils(aws_account_id, aws_region, aws_domain)  # type: ignore
     if not ecr_utils.login_to_ecr("helm"):
         logger.info("Cannot log into account ECR, skipping everything")
         return
@@ -124,8 +125,8 @@ def main():
     for chart_key, chart_data in charts.items():
         process_chart(ecr_utils, chart_key, chart_data)
 
-    export_results("Successfully replicated charts", successful_replication)
-    export_results("FAILED replicated charts", failed_replication)
+    export_results("Successfully replicated charts", successful_replication)  # type: ignore
+    export_results("FAILED replicated charts", failed_replication)  # type: ignore
 
     logger.info("Script completed.")
 

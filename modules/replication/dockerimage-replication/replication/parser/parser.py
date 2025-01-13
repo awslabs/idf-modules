@@ -149,7 +149,7 @@ def get_additional_images(versions_dir: str, eks_version: str) -> dict:  # type:
 
 def get_docker_mappings(versions_dir: str, eks_version: str) -> dict:  # type: ignore
     workload_versions = _parse_versions_file(versions_dir, eks_version)
-    docker_mappings = {}
+    docker_mappings = {}  # type: ignore
     if "docker_mappings" in workload_versions:
         return workload_versions["docker_mappings"]  # type: ignore
 

@@ -6,6 +6,7 @@
 import json
 import os
 import sys
+from typing import Dict, Optional
 
 import replication.helm.commands as helm
 from replication.arguments import parse_args
@@ -46,7 +47,7 @@ def main() -> None:
     workloads_data = parser.get_workloads(args.versions_dir, args.eks_version)
 
     if args.update_helm:
-        username, pwd = get_credentials(repo_secret, repo_key)
+        username, pwd = get_credentials(repo_secret, repo_key)  # type: ignore
         for workload, values in workloads_data.items():
             logger.info("Syncing %s", workload)
             helm.add_repo(workload, values["repository"], username, pwd)
@@ -170,7 +171,7 @@ def main() -> None:
         logger.debug("\t\t%s", json.dumps(custom_chart_values[workload]))
     updated_images = []
 
-    def process_image(full_image, docker_mappings):
+    def process_image(full_image: str, docker_mappings: Optional[Dict[str, str]]) -> str:
         if not docker_mappings:
             return full_image
         i_t = full_image.split(":")

@@ -4,7 +4,7 @@
 import json
 import subprocess
 from copy import deepcopy
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import boto3
 from botocore.exceptions import ClientError
@@ -65,7 +65,7 @@ def mask_sensitive_data(command: str) -> str:
 
 
 def run_command(
-    command: str,
+    command: Union[str, List[str]],
     input: Optional[str] = None,
     capture_output: Optional[bool] = True,
     shell: Optional[bool] = True,
@@ -73,20 +73,20 @@ def run_command(
 ) -> bool:
     """Run a shell command."""
     try:
-        result = subprocess.run(command, input=input, shell=shell, check=True, text=True, capture_output=capture_output)
+        result = subprocess.run(command, input=input, shell=shell, check=True, text=True, capture_output=capture_output)  # type: ignore
         if error_indicator in result.stderr:
-            logger.info(f"Error Occurred execution command {mask_sensitive_data(command)}")
+            logger.info(f"Error Occurred execution command {mask_sensitive_data(command)}")  # type: ignore
             return False
         else:
             return True
     except subprocess.CalledProcessError as e:
         # Sanitize the command to hide passwords
-        sanitized_command = mask_sensitive_data(command)
+        sanitized_command = mask_sensitive_data(command)  # type: ignore
         logger.info(f"Error running command: {sanitized_command}\n{e.stderr if capture_output else ''}")
         return False
 
 
-def export_results(message: str, replication_result: Dict[str, str]):
+def export_results(message: str, replication_result: Dict[str, str]) -> None:
     logger.info(message)
     if replication_result:
         for im in replication_result:

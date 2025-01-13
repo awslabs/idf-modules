@@ -2,7 +2,7 @@ import os
 import shutil
 import tarfile
 
-import requests
+import requests  # type: ignore
 
 from replication.logging import logger
 from replication.utils import get_credentials
@@ -15,7 +15,7 @@ extracted_dir = "linux-amd64"
 dest_path = "/usr/local/bin/helm"
 
 
-def get_distro():
+def get_distro() -> requests.models.Response:
     if distro_secret is None:
         logger.info(f"Using with URL: {distro_url} without authentication")
         response = requests.get(distro_url, stream=True)
@@ -34,7 +34,7 @@ def get_distro():
             return response
 
 
-def install_helm():
+def install_helm() -> None:
     response = get_distro()
     if response.status_code == 200:
         with open(tar_filename, "wb") as file:

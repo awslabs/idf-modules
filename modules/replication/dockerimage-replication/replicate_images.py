@@ -23,12 +23,14 @@ repo_key = os.getenv("SEEDFARMER_PARAMETER_HELM_REPO_SECRET_KEY", None)
 
 
 # Pull and push Docker image
-def pull_and_push_image(src_repo, src, target_ecr_tag, username=None, password=None) -> bool:
+def pull_and_push_image(
+    src_repo: str, src: str, target_ecr_tag: str, username: Optional[str] = None, password: Optional[str] = None
+) -> bool:
     try:
         if username and password:
             # logger.info(f"Username and PWD found {username} to log into the src docker repo")
             login_cmd = ["docker", "login", "-u", username, "-p", password, src_repo]
-            logged_in = run_command(login_cmd, shell=False)
+            logged_in = run_command(login_cmd, shell=False)  # tyep: ignore
             if not logged_in:
                 logger.info(f"Failed to login to {src_repo}")
                 return False
@@ -53,7 +55,7 @@ def create(
     image_repl: Dict[str, str],
     src_repo_user: Optional[str] = None,
     src_repo_pwd: Optional[str] = None,
-):
+) -> None:
     try:
         src = image_repl["src"]
         target = image_repl["target"]
@@ -84,7 +86,7 @@ def create(
     successful_replication.append(image_repl)
 
 
-def main():
+def main() -> None:
     input_file = "./updated_images.json"
     # Check if the input file exists
     if not os.path.isfile(input_file):
@@ -95,13 +97,13 @@ def main():
     with open(input_file, "r") as f:
         image_data = json.load(f)
     # Log in to the source repository
-    repo_user, repo_password = get_credentials(repo_secret, repo_key)
+    repo_user, repo_password = get_credentials(repo_secret, repo_key)  # type:ignore
     if not repo_user or not repo_password:
         logger.info("Not using any auth for source repos for images")
         repo_user, repo_password = None, None
     else:
         logger.info("Using auth for source repos for images")
-    ecr_utils = ECRUtils(aws_account_id, aws_region, aws_domain)
+    ecr_utils = ECRUtils(aws_account_id, aws_region, aws_domain)  # type:ignore
     try:
         ecr_utils.login_to_ecr(type="docker")
     except Exception:
@@ -109,8 +111,8 @@ def main():
         exit(1)
     for image_repl in image_data:
         create(ecr_utils, image_repl, repo_user, repo_password)
-    export_results("Successfully replicated images", successful_replication)
-    export_results("FAILED replicated image", failed_replication)
+    export_results("Successfully replicated images", successful_replication)  # type:ignore
+    export_results("FAILED replicated image", failed_replication)  # type:ignore
     logger.info("Script completed.")
     logger.info("------------------------------------------------")
 
