@@ -6,7 +6,7 @@
 import json
 import os
 import sys
-from typing import Dict, Optional
+from typing import Any, Dict, List, Optional
 
 import replication.helm.commands as helm
 from replication.arguments import parse_args
@@ -19,34 +19,8 @@ repo_secret = os.getenv("SEEDFARMER_PARAMETER_HELM_REPO_SECRET_NAME", None)
 repo_key = os.getenv("SEEDFARMER_PARAMETER_HELM_REPO_SECRET_KEY", None)
 
 
-def main() -> None:
-    """Main handler"""
-    args = parse_args(sys.argv[1:])
-
-    logger.info("EKS version: %s", args.eks_version)
-
-    logger.info(
-        "EKS node AMI image version: %s",
-        parser.get_ami_version(args.versions_dir, args.eks_version),
-    )
-
-    images_wip = []
-
-    additional_images = parser.get_additional_images(args.versions_dir, args.eks_version)
-    docker_mappings = parser.get_docker_mappings(args.versions_dir, args.eks_version)
-
-    for _, image in additional_images.items():
-        images_wip.append(image)
-
-    updated_additional_images = {}
-    for name, image in additional_images.items():
-        updated_additional_images[name] = f"{args.registry_prefix}{image}"
-
-    additional_images_json = {"additional_images": updated_additional_images}
-
-    workloads_data = parser.get_workloads(args.versions_dir, args.eks_version)
-
-    if args.update_helm:
+def update_helm(update_helm: bool, workloads_data: Dict[str, Any]) -> None:
+    if update_helm:
         username, pwd = get_credentials(repo_secret, repo_key)  # type: ignore
         for workload, values in workloads_data.items():
             logger.info("Syncing %s", workload)
@@ -54,8 +28,8 @@ def main() -> None:
 
         helm.update_repos()
 
-    custom_chart_values = {}
 
+def parse_charts(workloads_data: Dict[str, Any]) -> Dict[str, Any]:
     parsed_charts = {}  # type: ignore
     for workload, values in workloads_data.items():
         parsed_charts[workload] = {}
@@ -74,7 +48,31 @@ def main() -> None:
                 parsed_charts[workload]["subcharts"][subchart] = helm.show_subchart(
                     project_path, workload, values["name"], subchart, values["version"]
                 )
+    return parsed_charts
 
+
+def process_image(full_image: str, docker_mappings: Optional[Dict[str, str]]) -> str:
+    if not docker_mappings:
+        return full_image
+    i_t = full_image.split(":")
+    image = i_t[0]
+    tag = i_t[1] if len(i_t) > 1 else "latest"
+    if "." in image:
+        s = image.rstrip("/").split("/")
+        dns = s[0]
+        reassembled_url = "/".join(s[1:])
+        if dns in docker_mappings.keys():
+            return f"{docker_mappings.get(dns)}/{reassembled_url}:{tag}"
+    else:
+        if docker_mappings.get("default"):
+            return f"{docker_mappings.get('default')}/{image}:{tag}"
+    return full_image
+
+
+def apply_custom_charts(
+    workloads_data: Dict[str, Any], parsed_charts: Dict[str, Any], registry_prefix: str, images_wip_list: List[str]
+) -> Dict[str, Any]:
+    custom_chart_values = {}
     for workload, values in workloads_data.items():
         custom_chart_values[workload] = {
             "helm": {
@@ -84,15 +82,10 @@ def main() -> None:
             },
             "values": {},
         }
-        if args.replicate_charts:
-            custom_chart_values[workload]["helm"]["srcRepository"] = values.get("repository")
-            new_r_name = values["repository"].rstrip("/").split("/")[-1]
-            custom_chart_values[workload]["helm"]["repository"] = (
-                f"oci://{args.registry_prefix}{new_r_name}/{values['name']}"
-            )
-
+        custom_chart_values[workload]["helm"]["srcRepository"] = values.get("repository")
+        new_r_name = values["repository"].rstrip("/").split("/")[-1]
+        custom_chart_values[workload]["helm"]["repository"] = f"oci://{registry_prefix}{new_r_name}/{values['name']}"
         logger.debug("Chart %s:", workload)
-
         if "images" in values:
             logger.debug("\tImages:")
 
@@ -110,7 +103,7 @@ def main() -> None:
                             custom_chart_values[workload]["values"] = parser.add_branch_to_dict(
                                 custom_chart_values[workload]["values"],
                                 v,
-                                f"{args.registry_prefix}{registry}",
+                                f"{registry_prefix}{registry}",
                             )
 
                         continue
@@ -126,7 +119,7 @@ def main() -> None:
 
                         repository_in_chart_values = repository
                         if not registry:
-                            repository_in_chart_values = f"{args.registry_prefix}{repository}"
+                            repository_in_chart_values = f"{registry_prefix}{repository}"
 
                         custom_chart_values[workload]["values"] = parser.add_branch_to_dict(
                             custom_chart_values[workload]["values"],
@@ -162,36 +155,52 @@ def main() -> None:
                 if registry:
                     image = f"{registry}/{repository}"
                 if tag:
-                    image += f":{tag}"
+                    image += f":{tag}"  # type: ignore
 
                 logger.debug("\t\t%s", image)
-                images_wip.append(image)
+                images_wip_list.append(str(image))
 
         logger.debug("\tCustom chart values:")
         logger.debug("\t\t%s", json.dumps(custom_chart_values[workload]))
-    updated_images = []
+    return custom_chart_values
 
-    def process_image(full_image: str, docker_mappings: Optional[Dict[str, str]]) -> str:
-        if not docker_mappings:
-            return full_image
-        i_t = full_image.split(":")
-        image = i_t[0]
-        tag = i_t[1] if len(i_t) > 1 else "latest"
-        if "." in image:
-            s = image.rstrip("/").split("/")
-            dns = s[0]
-            reassembled_url = "/".join(s[1:])
-            if dns in docker_mappings.keys():
-                return f"{docker_mappings.get(dns)}/{reassembled_url}:{tag}"
-        else:
-            if docker_mappings.get("default"):
-                return f"{docker_mappings.get('default')}/{image}:{tag}"
-        return full_image
+
+def main() -> None:
+    """Main handler"""
+    args = parse_args(sys.argv[1:])
+
+    logger.info("EKS version: %s", args.eks_version)
+
+    logger.info(
+        "EKS node AMI image version: %s",
+        parser.get_ami_version(args.versions_dir, args.eks_version),
+    )
+
+    images_wip_list = []
+
+    additional_images = parser.get_additional_images(args.versions_dir, args.eks_version)
+    docker_mappings = parser.get_docker_mappings(args.versions_dir, args.eks_version)
+    updated_additional_images = {}
+
+    for name, image in additional_images.items():
+        images_wip_list.append(image)
+        updated_additional_images[name] = f"{args.registry_prefix}{image}"
+
+    additional_images_json = {"additional_images": updated_additional_images}
+
+    workloads_data = parser.get_workloads(args.versions_dir, args.eks_version)
+
+    update_helm(args.update_helm, workloads_data)
+    # custom_chart_values = {}
+    parsed_charts = parse_charts(workloads_data)
+    custom_chart_values = apply_custom_charts(workloads_data, parsed_charts, args.registry_prefix, images_wip_list)
+
+    updated_images = []
 
     for name, image in additional_images.items():
         working_image = process_image(image, docker_mappings)
         updated_images.append({"src": working_image, "target": f"{args.registry_prefix}{image}"})
-    for image in images_wip:
+    for image in images_wip_list:
         working_image = process_image(image, docker_mappings)
         updated_images.append({"src": working_image, "target": f"{args.registry_prefix}{image}"})
 
@@ -213,7 +222,7 @@ def main() -> None:
         "w",
         encoding="utf-8",
     ) as file:
-        file.write(json.dumps(deep_merge(ami_json, charts_json, additional_images_json)))
+        file.write(json.dumps(deep_merge(ami_json, charts_json, additional_images_json),indent=4))
 
     with open(
         os.path.join(project_path, "updated_images.json"),

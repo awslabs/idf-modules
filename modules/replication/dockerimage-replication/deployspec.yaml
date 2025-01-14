@@ -30,8 +30,7 @@ deploy:
             --eks-version ${SEEDFARMER_PARAMETER_EKS_VERSION} \
             --versions-directory data/eks_dockerimage-replication/versions \
             --update-helm-repos \
-            --registry-prefix "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.${DOMAIN}/${SEEDFARMER_PROJECT_NAME}-" \
-            --replicate-charts
+            --registry-prefix "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.${DOMAIN}/${SEEDFARMER_PROJECT_NAME}-"
         - python replicate_images.py
         - python replicate_charts.py
         - aws s3 cp replication-result.json s3://${S3_BUCKET_NAME}/${S3_OBJECT_NAME}

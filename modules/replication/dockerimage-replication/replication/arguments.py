@@ -58,11 +58,4 @@ def parse_args(args: Any) -> argparse.Namespace:
         type=str,
         required=True,
     )
-    parser.add_argument(
-        "--replicate-charts",
-        action="store_true",
-        dest="replicate_charts",
-        help="replicate charts",
-    )
-
     return parser.parse_args(args)
