@@ -38,9 +38,7 @@ def fetch_chart_info(workloads_data: Dict[str, Any]) -> Dict[str, Any]:
 
         logger.debug("Getting %s data", workload)
         parsed_charts[workload]["chart"] = helm.show("chart", f"{workload}/{values['name']}", values["version"])
-
         parsed_charts[workload]["values"] = helm.show("values", f"{workload}/{values['name']}", values["version"])
-
         if "subcharts" in values:
             parsed_charts[workload]["subcharts"] = {}
             for subchart in values["subcharts"]:
@@ -222,7 +220,7 @@ def main() -> None:
         "w",
         encoding="utf-8",
     ) as file:
-        file.write(json.dumps(deep_merge(ami_json, charts_json, additional_images_json),indent=4))
+        file.write(json.dumps(deep_merge(ami_json, charts_json, additional_images_json), indent=4))
 
     with open(
         os.path.join(project_path, "updated_images.json"),
