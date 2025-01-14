@@ -29,7 +29,7 @@ def update_helm(update_helm: bool, workloads_data: Dict[str, Any]) -> None:
         helm.update_repos()
 
 
-def parse_charts(workloads_data: Dict[str, Any]) -> Dict[str, Any]:
+def fetch_chart_info(workloads_data: Dict[str, Any]) -> Dict[str, Any]:
     parsed_charts = {}  # type: ignore
     for workload, values in workloads_data.items():
         parsed_charts[workload] = {}
@@ -51,7 +51,7 @@ def parse_charts(workloads_data: Dict[str, Any]) -> Dict[str, Any]:
     return parsed_charts
 
 
-def process_image(full_image: str, docker_mappings: Optional[Dict[str, str]]) -> str:
+def apply_image_mapping(full_image: str, docker_mappings: Optional[Dict[str, str]]) -> str:
     if not docker_mappings:
         return full_image
     i_t = full_image.split(":")
@@ -69,7 +69,7 @@ def process_image(full_image: str, docker_mappings: Optional[Dict[str, str]]) ->
     return full_image
 
 
-def apply_custom_charts(
+def apply_chart_info(
     workloads_data: Dict[str, Any], parsed_charts: Dict[str, Any], registry_prefix: str, images_wip_list: List[str]
 ) -> Dict[str, Any]:
     custom_chart_values = {}
@@ -192,16 +192,16 @@ def main() -> None:
 
     update_helm(args.update_helm, workloads_data)
     # custom_chart_values = {}
-    parsed_charts = parse_charts(workloads_data)
-    custom_chart_values = apply_custom_charts(workloads_data, parsed_charts, args.registry_prefix, images_wip_list)
+    parsed_charts = fetch_chart_info(workloads_data)
+    custom_chart_values = apply_chart_info(workloads_data, parsed_charts, args.registry_prefix, images_wip_list)
 
     updated_images = []
 
     for name, image in additional_images.items():
-        working_image = process_image(image, docker_mappings)
+        working_image = apply_image_mapping(image, docker_mappings)
         updated_images.append({"src": working_image, "target": f"{args.registry_prefix}{image}"})
     for image in images_wip_list:
-        working_image = process_image(image, docker_mappings)
+        working_image = apply_image_mapping(image, docker_mappings)
         updated_images.append({"src": working_image, "target": f"{args.registry_prefix}{image}"})
 
     ami_json = {"ami": {"version": parser.get_ami_version(args.versions_dir, args.eks_version)}}
