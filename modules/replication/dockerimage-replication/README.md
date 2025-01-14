@@ -4,11 +4,27 @@ Docker Images replication
 
 ### Description
 
-This module helps with replicating Docker images from the list of provided helm charts and any docker image from a public registry into an AWS account's Private ECR. For deploying EKS module or any container related apps in isolated subnets (which has access to AWS APIs via Private endpoints), the respective docker images should be available internally in an ECR repo as a pre-requisiste. This module will generate a `.txt` file which will be populated with list of `to-be-replicated` docker images and the seedfarmer's `deployspec.yaml` invokes the replication.
+This module helps with replicating Docker images and Helm charts from the list of provided Helm charts and any docker image from a public registry into an AWS account's Private ECR. For deploying EKS module or any container related apps in isolated subnets (which has access to AWS APIs via Private endpoints), the respective docker images and helm charts should be available internally in an ECR repo as a pre-requisiste. This module will generate two files for internal processing:
+
+- `replication_result.json` - an inventory of the charts and image information, this provides the source and target address of the charts
+- `updated_images.json` - the src and target of all images referenced
+
+The `replication_result.json` gets copied to a new filename as indicated by the output parameter `S3Object` (see below).  This file serves as the chart value overrides when the helm charts are applied.  NOTE: this file can also apply changes to values when the charts are deployed on EKS.
+
+ALL resulting ECR repositories (images and helm charts) are scoped to the project, not the deployment, so they can be used across deployments within a project.  
+
+
+
 
 ***CLEANUP***
 
 The cleanup workflow invokes a python script which deletes the replicated docker images from ECR whose prefix starts with `project_name`. This may cause issues if the replicated images are being used by other applications in the same/cross account. The current `deployspec.yaml` doesnt call the python script to cleanup the images, however an end-user can evaluate the need/risk associated and uncomment the relevant instruction under `destroy` phase.
+
+
+### AWS Secret Support
+
+
+
 
 ### Input Parameters
 
@@ -18,16 +34,21 @@ The cleanup workflow invokes a python script which deletes the replicated docker
 
 #### Optional Parameters
 
-- `HelmRepoSecretName`:
-- `HelmRepoSecretKey`:  
-- `HelmDistroSecretName`: 
-- `HelmDistroUrl`: 
-- `HekmDistroSecretKey`:
+- `HelmRepoSecretName`: If using a secret to access the helm or images hosted in a private DNS endpoint, this is the name of the AWS Secret that will provide a username and password 
+- `HelmRepoSecretKey`: If the AWS Secret for the HelmRepo has a nested entry (one nest only) this  is the key used to access that nest
+- `HelmDistroUrl`: If using a private DNS to host the helm CLI, this is the DNS that URL (full path with tar.qz name) used to fetch 
+- `HelmDistroSecretName`: used with `HelmDistroUrl`, this is the name of the AWS Secret used for basic auth.  If not provided, no basic auth will be referenced.
+- `HekmDistroSecretKey`:  If the AWS Secret for the HelmDistro has a nested entry (one nest only) this  is the key used to access that nest
+ 
 
 
 #### Required Files
 
 - `dataFiles`: The docker replication module consumes the EKS version specific helm charts inventory to replicate the docker images
+
+There should be at least two (2) datafiles:
+ - the `default.yaml` that has all the relative info (as prvided by the idf repository)
+ - the version yaml (ex `1.29.yaml`) that has the proper version updates to match your EKS version
 
 #### Manifest Example declaration
 
