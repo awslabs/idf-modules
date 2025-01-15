@@ -1,7 +1,7 @@
 ## DATAFILES REFERENCE
 
 ### Background
-The datafiles serve to configure the EKS module with the proper helm chart and image information necesary to deploy on EKS.  There are two (2) files **necessary** for this support:
+The datafiles serve to configure the EKS module with the proper helm chart and image information necessary to deploy on EKS.  There are two (2) files **necessary** for this support:
 - `default.yaml` - this base in which the data is provided
 - `<eks-version>.yaml` - the corresponding version file to override the version indicated in default.yaml to match the EKS cluster you are using
     - for example `1.29.yaml` corresponds to an EKS cluster v 1.29
@@ -11,7 +11,7 @@ If you are running an EKS cluster that has access to the public internet and do 
 ## Why the replication module
 The replication module serves three (3) purposes
 - supports EKS clusters that run in a private or isolate subnet
-- provides an output file that can be used to pass all / any customiztions to the `values` of a helm chart used by the EKS module 
+- provides an output file that can be used to pass all / any customizations to the `values` of a helm chart used by the EKS module 
 - allows altering the source DNS where helm charts and images are fetched (and added to the output file)
 
 ### Support for EKS isolated clusters
@@ -20,11 +20,11 @@ The replication module will take and fetch ALL the images and Helm charts as def
 ### Output file for value overrides in Helm charts
 The outputs from the replication module are:
 - a fully populated ECR repository (charts and images)
-- a metadata file that contains all relative `value` information / configruation for the EKS cluster module to use when deploying
+- a metadata file that contains all relative `value` information / configuration for the EKS cluster module to use when deploying
 
 This metadata file (as referenced in the output of the replication module) is the MINIMUM amount of information necessary for:
-- overrriding the DNS to fetch a chart for deployment (CDK code in EKS module will pull from AWS ECR without the need for internet connectivity)
-- overrride the DNS where the EKS cluster will pull images when deploying 
+- overriding the DNS to fetch a chart for deployment (CDK code in EKS module will pull from AWS ECR without the need for internet connectivity)
+- overriding the DNS where the EKS cluster will pull images when deploying 
 
 This file can be `augmented` with additional value overrides AS LONG AS the existing information is not altered.  The use-case here is to provide all the customizations that the helm chart can allow.  
 

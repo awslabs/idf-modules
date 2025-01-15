@@ -4,7 +4,7 @@ Docker Images and Helm Chart Replication
 
 ### Description
 
-This module replicates Docker images and Helm charts from the list of provided Helm charts and any docker image from a public registry into an AWS account's Private ECR. For deploying EKS module or any container related apps in isolated subnets (which has access to AWS APIs via Private endpoints), the respective docker images and helm charts should be available internally in an ECR repo as a pre-requisiste. This module will generate two files for internal processing:
+This module replicates Docker images and Helm charts from the list of provided Helm charts and any docker image from a public registry into an AWS account's Private ECR. For deploying EKS module or any container related apps in isolated subnets (which has access to AWS APIs via Private endpoints), the respective docker images and helm charts should be available internally in an ECR repo as a prerequisite. This module will generate two files for internal processing:
 
 - `replication_result.json` - an inventory of the charts and image information, this provides the source and target address of the charts
 - `updated_images.json` - the src and target of all images referenced
@@ -86,7 +86,7 @@ The following `Optional Parameters` can be used with the AWS SecretsManager:
 - `<eks-version>.yaml` - the version override support for your cluster
 
 There should be at least two (2) datafiles:
- - the `default.yaml` that has all the relative info (as prvided by the idf repository)
+ - the `default.yaml` that has all the relative info (as provided by the idf repository)
  - the version yaml (ex `1.29.yaml`) that has the proper version updates to match your EKS version
 
 #### Manifest Example declaration
@@ -124,9 +124,9 @@ parameters:
     "S3Bucket": "idftest-dkr-img-rep-md-us-east-1-123456789012",
     "S3FullPath": "idftest-dkr-img-rep-md-us-east-1-123456789012/repltestrepl-repl-repl-metadata.json",
     "S3Object": "repltestrepl-repl-repl-metadata.json",
-    "s3_bucket": "idftest-dkr-img-rep-md-us-east-1-123456789012", // For backard compatability
-    "s3_full_path": "idftest-dkr-img-rep-md-us-east-1-123456789012/repltestrepl-repl-repl-metadata.json", // For backard compatability
-    "s3_object": "repltestrepl-repl-repl-metadata.json" // For backard compatability
+    "s3_bucket": "idftest-dkr-img-rep-md-us-east-1-123456789012", // For backward compatibility
+    "s3_full_path": "idftest-dkr-img-rep-md-us-east-1-123456789012/repltestrepl-repl-repl-metadata.json", // For backward compatibility
+    "s3_object": "repltestrepl-repl-repl-metadata.json" // For backward compatibility
   }
 }
 ```
