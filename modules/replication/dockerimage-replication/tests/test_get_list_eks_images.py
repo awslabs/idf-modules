@@ -13,10 +13,6 @@ from get_list_eks_images import (
     update_helm,
 )
 
-# def test_write_it(data, path):
-#     with open(path, "w", encoding="utf-8") as f:
-#         f.write(json.dumps(data, indent=4))
-
 
 @pytest.fixture
 def mock_workloads_data():
