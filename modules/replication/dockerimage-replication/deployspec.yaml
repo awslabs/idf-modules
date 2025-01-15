@@ -49,5 +49,6 @@ destroy:
         - pip install -r requirements.txt
     build:
       commands:
-        - python delete_repos.py ${SEEDFARMER_PROJECT_NAME}
+        - echo "Deletion of ECR repos must be uncommented in deployspec"
+        #- python delete_repos.py ${SEEDFARMER_PROJECT_NAME}
 build_type: BUILD_GENERAL1_XLARGE
