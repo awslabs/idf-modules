@@ -50,9 +50,12 @@ If you want to support multiple auth credentials in a single secret, you can nes
     {
     "username": "my-username",
     "password": "my-password"
-    }
-  ...
-
+    },
+  "some-key":
+    {
+    "username": "my-username",
+    "password": "my-password"
+    }  
 }
 ```
 If using nested auth credentials in the AWS SecretManager, be sure to leverage the `HelmRepoSecretKey` or `HelmDistroSecretKey` based on the use case.

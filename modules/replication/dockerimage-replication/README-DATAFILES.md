@@ -69,7 +69,7 @@ You can do this for any chart in the file.  If your DNS is protected by Basic Au
 #### Changing the DNS for images
 To allow for overriding the DNS in which images are fetched, this is done via a mapping defined in the `<eks-version>.yaml` file.  This does a batch replace for any DNS defined.
 
-Lets use the `1.29.yaml` as an example.  This file currently as NO MAPPINGS defined.  But, you can alter it with a `docker_mappings` section.  For example:
+Let's use the `1.29.yaml` as an example.  This file currently has NO MAPPINGS defined.  But, you can alter it with a `docker_mappings` section.  For example:
 
 ```yaml
 docker_mappings:
@@ -82,8 +82,8 @@ docker_mappings:
     default: my-hosted-image/platform-docker-remote-hub-docker-com
 ```
 
-This file tells the replication module to look for EACH key and replace with the value.  Any image that is hosed at `quay.io` will be replaced with `my-hosted-image/platform-docker-remote-quay-io`.
+This section tells the replication module to look for EACH key and replace with the value.  Any image that is hosed at `quay.io` will be replaced with `my-hosted-image/platform-docker-remote-quay-io`.
 
-The `default` entry is enacted if an image does not match any key.  It is up to your discretion whether to use this or not. 
+The `default` entry is enacted if an image does not match any key.  It is up to your discretion whether to add a `default` key or not.  Any DNS that does not match exactly as the key(s) provided will remain unmodified. 
 
 As with the charts DNS: if your DNS is protected by Basic Auth, you MUST use the `HelmRepoSecretName` as defined in the [README](README.md) and comply with the standard as defined.  The `HelmRepoSecretKey` is optional. 
