@@ -48,5 +48,4 @@ charts:
     version: 1.3.2
 additional_images:
   cloudwatch_agent: "public.ecr.aws/cloudwatch-agent/cloudwatch-agent:1.300041.0b681"
-  #secrets_store_csi_driver_provider_aws: "public.ecr.aws/aws-secrets-manager/secrets-store-csi-driver-provider-aws:1.0.r2-2021.08.13.20.34-linux-amd64"
   secrets_store_csi_driver_provider_aws: "public.ecr.aws/aws-secrets-manager/secrets-store-csi-driver-provider-aws:1.0.r2-6-gee95299-2022.04.14.21.07"
