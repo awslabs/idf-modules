@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### **Added**
 - add prometheus and prometheus-workspaces endpoints
+- adding eks support v1.30 in datafiles `1.30.yaml`
 
 ### **Changed**
 - fix s3 csi driver addon in `eks` module
