@@ -97,6 +97,8 @@ def add_repo(name: str, repo: str, username: Optional[str] = None, pwd: Optional
     Args:
         name (str): Helm chart name
         repo (str): Helm repository name
+        username (Optional(str)): The username if basic auth is needed
+        pwd (Optional(str)): The password if basic auth is needed
     """
     all_set = False
     if username is not None and pwd is not None:

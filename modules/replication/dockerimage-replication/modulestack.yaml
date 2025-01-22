@@ -10,11 +10,11 @@ Parameters:
     Description: The name of the IAM Role
   HelmDistroSecretName:
     Type: String
-    Description: The name of the IAM Role
+    Description: The name of the AWS Secret for the Helm Distro
     Default: ""
   HostedRepoSecretName:
     Type: String
-    Description: The name of the IAM Role
+    Description: The name of the AWS Secret for the Hosted Repo
     Default: ""
 
 Conditions:

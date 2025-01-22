@@ -15,7 +15,7 @@ The replication module serves three (3) purposes
 - allows altering the source DNS where helm charts and images are fetched (and added to the output file)
 
 ### Support for EKS isolated clusters
-The replication module will take and fetch ALL the images and Helm charts as defined in the combination of the `default.yaml` and the `1.29.yaml` to AWS ECR, creating one repository per helm chart or image.  The helm chart storage is OCI compliant and allows versioning of each chart.  The images are docker compliant and allow versioning of each image.
+The replication module will take and fetch ALL the images and Helm charts as defined in the combination of the `default.yaml` and the `<eks-version>.yaml` to AWS ECR, creating one repository per helm chart or image.  The helm chart storage is OCI compliant and allows versioning of each chart.  The images are docker compliant and allow versioning of each image.
 
 ### Output file for value overrides in Helm charts
 The outputs from the replication module are:

@@ -20,7 +20,7 @@ ALL resulting ECR repositories (images and helm charts) are scoped to the projec
 
 The cleanup workflow invokes a python script which deletes the replicated docker images from ECR whose prefix starts with `project_name`. This may cause issues if the replicated images are being used by other applications in the same/cross account. The current `deployspec.yaml` doesn't call the python script to cleanup the images, however an end-user can evaluate the need/risk associated and uncomment the relevant instruction under `destroy` phase.  Also, you can run `delete_repos.py` with the project name to remove all ECR repos:
 ```bash
-python delete_images.py <project-name>
+python delete_repos.py <project-name>
 ```
 
 ## Image DNS Mappings
@@ -101,9 +101,9 @@ parameters:
   - name: eks-version
     value: "1.29"
   - name: HelmRepoSecretName
-    value: replicationbmw
+    value: replicationexample
   - name: HelmDistroSecretName
-    value: replicationbmw
+    value: replicationexample
   - name: HelmDistroUrl
     value: https://somehostedurl.com/something/relativeurl/helm-v3.11.3-linux-amd64.tar.gz
 
