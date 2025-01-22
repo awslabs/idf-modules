@@ -2,7 +2,7 @@ import os
 import shutil
 import tarfile
 
-import requests  # type: ignore
+import requests
 
 from replication.logging import logger
 from replication.utils import get_credentials

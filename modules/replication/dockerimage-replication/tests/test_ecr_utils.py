@@ -1,7 +1,8 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-from unittest.mock import patch
+import subprocess
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -21,19 +22,100 @@ def ecr_utils(mock_boto_client):
     return ECRUtils("123456789012", "us-west-2", "amazonaws.com")
 
 
-@patch("replication.ecr.ecr_utils.run_command")
-def test_login_to_ecr_docker(mock_run_command, ecr_utils):
-    mock_run_command.return_value = True
+@pytest.fixture
+def mock_subprocess_popen():
+    """Fixture to mock subprocess.Popen."""
+    with patch("subprocess.Popen") as mock_popen:
+        mock_instance = MagicMock()
+        mock_instance.stdout = MagicMock()
+        mock_popen.return_value = mock_instance
+        yield mock_popen, mock_instance
+
+
+@pytest.fixture
+def mock_subprocess_run():
+    """Fixture to mock subprocess.run."""
+    with patch("subprocess.run") as mock_run:
+        yield mock_run
+
+
+def test_login_to_ecr_docker_success(mock_subprocess_popen, mock_subprocess_run, ecr_utils):
+    """Test successful ECR login for Docker."""
+    mock_popen, mock_popen_instance = mock_subprocess_popen
+    mock_popen_instance.stdout.read.return_value = "mocked-password"
+
+    mock_run = mock_subprocess_run
+    mock_run.return_value.returncode = 0
+    mock_run.return_value.stdout = "Login Succeeded"
 
     result = ecr_utils.login_to_ecr(type="docker")
 
     assert result is True
-    mock_run_command.assert_called_once_with(
-        """aws ecr get-login-password \
-        --region us-west-2 | docker login \
-        --username AWS \
-        --password-stdin 123456789012.dkr.ecr.us-west-2.amazonaws.com
-        """
+    mock_popen.assert_called_once_with(
+        ["aws", "ecr", "get-login-password", "--region", "us-west-2"], shell=False, stdout=subprocess.PIPE
+    )
+    mock_run.assert_called_once_with(
+        ["docker", "login", "--username", "AWS", "--password-stdin", "123456789012.dkr.ecr.us-west-2.amazonaws.com"],
+        stdin=mock_popen_instance.stdout,
+        shell=False,
+        capture_output=True,
+        text=True,
+    )
+
+
+def test_login_to_ecr_docker_failure(mock_subprocess_popen, mock_subprocess_run, ecr_utils):
+    """Test failed ECR login for Docker."""
+    mock_popen, mock_popen_instance = mock_subprocess_popen
+    mock_popen_instance.stdout.read.return_value = "mocked-password"
+
+    mock_run = mock_subprocess_run
+    mock_run.return_value.returncode = 1
+    mock_run.return_value.stderr = "Login Failed"
+
+    result = ecr_utils.login_to_ecr(type="docker")
+
+    assert result is False
+    mock_popen.assert_called_once_with(
+        ["aws", "ecr", "get-login-password", "--region", "us-west-2"], shell=False, stdout=subprocess.PIPE
+    )
+    mock_run.assert_called_once_with(
+        ["docker", "login", "--username", "AWS", "--password-stdin", "123456789012.dkr.ecr.us-west-2.amazonaws.com"],
+        stdin=mock_popen_instance.stdout,
+        shell=False,
+        capture_output=True,
+        text=True,
+    )
+
+
+def test_login_to_ecr_helm_success(mock_subprocess_popen, mock_subprocess_run, ecr_utils):
+    """Test successful ECR login for Helm."""
+    mock_popen, mock_popen_instance = mock_subprocess_popen
+    mock_popen_instance.stdout.read.return_value = "mocked-password"
+
+    mock_run = mock_subprocess_run
+    mock_run.return_value.returncode = 0
+    mock_run.return_value.stdout = "Login Succeeded"
+
+    result = ecr_utils.login_to_ecr(type="helm")
+
+    assert result is True
+    mock_popen.assert_called_once_with(
+        ["aws", "ecr", "get-login-password", "--region", "us-west-2"], shell=False, stdout=subprocess.PIPE
+    )
+    mock_run.assert_called_once_with(
+        [
+            "helm",
+            "registry",
+            "login",
+            "--username",
+            "AWS",
+            "--password-stdin",
+            "123456789012.dkr.ecr.us-west-2.amazonaws.com",
+        ],
+        stdin=mock_popen_instance.stdout,
+        shell=False,
+        capture_output=True,
+        text=True,
     )
 
 

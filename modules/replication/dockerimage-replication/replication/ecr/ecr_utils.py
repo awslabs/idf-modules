@@ -1,9 +1,9 @@
+import subprocess
 import time
 
 import boto3
 
 from replication.logging import logger
-from replication.utils import run_command
 
 
 class ECRUtils:
@@ -14,16 +14,30 @@ class ECRUtils:
         self.ecr_client = boto3.client("ecr", region_name=aws_region)
 
     def login_to_ecr(self, type: str = "docker") -> bool:
-        login_type = "docker"
+        get_password_cmd = ["aws", "ecr", "get-login-password", "--region", f"{self.aws_region}"]
+        login_cmd_type = ["docker"]
         if type == "helm":
-            login_type = "helm registry"
+            login_cmd_type = ["helm", "registry"]
 
-        command = f"""aws ecr get-login-password \
-        --region {self.aws_region} | {login_type} login \
-        --username AWS \
-        --password-stdin {self.aws_account_id}.dkr.ecr.{self.aws_region}.{self.aws_domain}
-        """
-        return run_command(command)
+        login_cmd_tail = [
+            "login",
+            "--username",
+            "AWS",
+            "--password-stdin",
+            f"{self.aws_account_id}.dkr.ecr.{self.aws_region}.{self.aws_domain}",
+        ]
+        login_cmd = login_cmd_type + login_cmd_tail
+        auth_process = subprocess.Popen(get_password_cmd, shell=False, stdout=subprocess.PIPE)
+        login_process = subprocess.run(
+            login_cmd, stdin=auth_process.stdout, shell=False, capture_output=True, text=True
+        )
+
+        if login_process.returncode == 0:
+            logger.info(f"ECR login for {type} successful: {login_process.stdout.strip()}")
+            return True
+        else:
+            logger.info(f"ECR login for {type} failed: {login_process.stderr.strip()}")
+            return False
 
     # Check if repository exists
     def repository_exists(self, repo_name: str) -> bool:

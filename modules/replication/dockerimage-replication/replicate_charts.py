@@ -49,7 +49,7 @@ def process_chart(ecr_utils: ECRUtils, chart_key: str, chart_data: Dict[str, Any
     if repo_user and repo_password:
         logger.info(f"Logging into source Helm repository: {src_repository}")
         helm_login_command = f"helm registry login {src_repository} --username {repo_user} --password {repo_password}"
-        if not run_command(helm_login_command):
+        if not run_command(helm_login_command.split(), shell=False):
             logger.info(f"Error: Failed to log in to source Helm repository {src_repository}. Skipping {name}.")
             failed_replication.append(name)
             return
@@ -58,8 +58,8 @@ def process_chart(ecr_utils: ECRUtils, chart_key: str, chart_data: Dict[str, Any
     chart_path = f"{src_repository}/{name}"
 
     logger.info(f"Pulling chart: {name} (Version: {version}) from {chart_path}")
-
-    if not run_command(f"helm pull {chart_key}/{name} --version {version}"):
+    pull_command = f"helm pull {chart_key}/{name} --version {version}"
+    if not run_command(pull_command.split(), shell=False):
         logger.info(f"Error: Failed to pull chart: {chart_key}/{name} Skipping.")
         failed_replication.append(name)
         return
@@ -77,7 +77,8 @@ def process_chart(ecr_utils: ECRUtils, chart_key: str, chart_data: Dict[str, Any
 
     # Push the chart to the target ECR repository
     logger.info(f"Pushing chart: {chart_package} to {ecr_repo_target}")
-    if not run_command(f"helm push {chart_package} {ecr_repo_target}"):
+    push_command = f"helm push {chart_package} {ecr_repo_target}"
+    if not run_command(push_command.split(), shell=False):
         logger.info(f"Error: Failed to push chart: {ecr_repo_name}. Skipping.")
         failed_replication.append(name)
         return
@@ -86,7 +87,7 @@ def process_chart(ecr_utils: ECRUtils, chart_key: str, chart_data: Dict[str, Any
 
     # Clean up local chart package
     logger.info(f"Cleaning up local chart package: {chart_package}")
-    run_command(f"rm -f {chart_package}")
+    run_command((f"rm -f {chart_package}").split(), shell=False)
 
     logger.info(f"Successfully processed {name} -> {target_repository}")
     logger.info("------------------------------------------------")

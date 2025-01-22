@@ -42,15 +42,17 @@ def get_credentials(secret_name: str, secret_key: Optional[str] = None) -> Tuple
         exit(1)
     secret = get_secret_value_response["SecretString"]
     secret = json.loads(secret)
-    secret = secret[secret_key] if secret_key else secret
+    secret = secret[secret_key] if secret_key else secret  # type:ignore
     if USER in secret and PWD in secret:
-        return (secret[USER], secret[PWD])
+        return (secret[USER], secret[PWD])  # type:ignore
     else:
         return (None, None)
 
 
 def mask_sensitive_data(command: str) -> str:
     """Mask sensitive data like passwords in the command string."""
+    if isinstance(command, list):
+        command = " ".join(command)
     if "--password" in command:
         parts = command.split("--password", 1)
         if len(parts) > 1:
@@ -68,7 +70,7 @@ def run_command(
     command: Union[str, List[str]],
     input: Optional[str] = None,
     capture_output: Optional[bool] = True,
-    shell: Optional[bool] = True,
+    shell: Optional[bool] = False,
     error_indicator: Optional[str] = "ERROR",
 ) -> bool:
     """Run a shell command."""

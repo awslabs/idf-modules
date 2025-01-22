@@ -100,6 +100,8 @@ def test_mask_sensitive_data():
 @patch("subprocess.run")
 def test_run_command_success(mock_run):
     mock_run.return_value = MagicMock(returncode=0)
-    result = run_command("echo test")
+    result = run_command(["echo", "test"])
     assert result is True
-    mock_run.assert_called_once_with("echo test", input=None, shell=True, check=True, text=True, capture_output=True)
+    mock_run.assert_called_once_with(
+        ("echo test").split(), input=None, shell=False, check=True, text=True, capture_output=True
+    )

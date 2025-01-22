@@ -52,11 +52,11 @@ def test_process_chart(mock_logger, mock_environment_variables):
             ecr_utils_mock.image_exists.assert_called_once_with("target-repo", "1.0.0")
             ecr_utils_mock.create_repository.assert_called_once_with("target-repo")
             mock_run_command.assert_any_call(
-                "helm registry login oci://source-repo --username username --password password"
+                ("helm registry login oci://source-repo --username username --password password").split(), shell=False
             )
-            mock_run_command.assert_any_call("helm pull test-chart/example --version 1.0.0")
-            mock_run_command.assert_any_call("helm push example-1.0.0.tgz oci://target-repo")
-            mock_run_command.assert_any_call("rm -f example-1.0.0.tgz")
+            mock_run_command.assert_any_call(("helm pull test-chart/example --version 1.0.0").split(), shell=False)
+            mock_run_command.assert_any_call(("helm push example-1.0.0.tgz oci://target-repo").split(), shell=False)
+            mock_run_command.assert_any_call(("rm -f example-1.0.0.tgz").split(), shell=False)
 
             # Check logs
             mock_logger.info.assert_any_call("Processing chart: test-chart ")
