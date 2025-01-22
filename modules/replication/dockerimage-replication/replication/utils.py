@@ -42,9 +42,9 @@ def get_credentials(secret_name: str, secret_key: Optional[str] = None) -> Tuple
         exit(1)
     secret = get_secret_value_response["SecretString"]
     secret = json.loads(secret)
-    secret = secret[secret_key] if secret_key else secret  # type:ignore
+    secret = secret[secret_key] if secret_key else secret
     if USER in secret and PWD in secret:
-        return (secret[USER], secret[PWD])  # type:ignore
+        return (secret[USER], secret[PWD])
     else:
         return (None, None)
 
