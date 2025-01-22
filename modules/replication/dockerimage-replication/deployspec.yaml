@@ -49,6 +49,14 @@ destroy:
         - pip install -r requirements.txt
     build:
       commands:
-        - echo "Deletion of ECR repos must be uncommented in deployspec"
-        #- python delete_repos.py ${SEEDFARMER_PROJECT_NAME}
+        - UPPER_RETENTION_TYPE=${SEEDFARMER_PARAMETER_RETENTION_TYPE^^}
+        - |
+          if [ "$UPPER_RETENTION_TYPE" = "DESTROY" ]; then
+            echo "Destroying all ECR repositories"
+            echo "Retention type is DESTROY"
+            python delete_repos.py ${SEEDFARMER_PROJECT_NAME}
+          else
+            echo "Not destroying ECR repositories"
+            echo "Retention type is not DESTROY"
+          fi
 build_type: BUILD_GENERAL1_XLARGE

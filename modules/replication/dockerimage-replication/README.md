@@ -18,7 +18,8 @@ ALL resulting ECR repositories (images and helm charts) are scoped to the projec
 
 ***CLEANUP***
 
-The cleanup workflow invokes a python script which deletes the replicated docker images from ECR whose prefix starts with `project_name`. This may cause issues if the replicated images are being used by other applications in the same/cross account. The current `deployspec.yaml` doesn't call the python script to cleanup the images, however an end-user can evaluate the need/risk associated and uncomment the relevant instruction under `destroy` phase.  Also, you can run `delete_repos.py` with the project name to remove all ECR repos:
+The cleanup workflow invokes a python script which deletes the replicated docker images from ECR whose prefix starts with `project_name`. This may cause issues if the replicated images are being used by other applications in the same/cross account.  To prevent inadvertent deletion of the ECR repos, this module supports a configurable parameter `RetentionType`.  This is by default set to `RETAIN`.  If configured with the string `DESTROY`, then all ECR repositories with the prefix of the project will be permanently deleted. An end-user can also run `delete_repos.py` with the project name to remove all ECR repos manually:
+
 ```bash
 python delete_repos.py <project-name>
 ```
@@ -77,9 +78,8 @@ The following `Optional Parameters` can be used with the AWS SecretsManager:
 - `HelmDistroUrl`: If using a private DNS to host the helm CLI, this is the DNS that URL (full path with tar.qz name) used to fetch 
 - `HelmDistroSecretName`: used with `HelmDistroUrl`, this is the name of the AWS Secret used for basic auth.  If not provided, no basic auth will be referenced.
 - `HelmDistroSecretKey`:  If the AWS Secret for the HelmDistro has a nested entry (one nest only) this  is the key used to access that nest
+- `RetentionType`: if set to `DESTROY `, all ECR repos prefixed with the project name will be destroyed
  
-
-
 #### Required Files
 
 - `dataFiles`: The docker replication module consumes the EKS version specific helm charts inventory to replicate the docker images
