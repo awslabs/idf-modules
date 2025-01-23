@@ -58,7 +58,7 @@ idna==3.7
     # via requests
 importlib-resources==6.1.1
     # via jsii
-jinja2==3.1.4
+jinja2==3.1.5
     # via moto
 jmespath==1.0.1
     # via
@@ -125,7 +125,7 @@ typeguard==2.13.3
     #   cdk-nag
     #   constructs
     #   jsii
-typing-extensions>=4.12.0
+typing-extensions==4.12.2
     # via
     #   cattrs
     #   jsii
