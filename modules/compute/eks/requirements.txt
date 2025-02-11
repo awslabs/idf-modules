@@ -48,7 +48,7 @@ constructs==10.3.0
     #   aws-cdk-lambda-layer-kubectl-v29
     #   aws-cdk-lib
     #   cdk-nag
-cryptography==43.0.1
+cryptography==44.0.1
     # via moto
 deepmerge==1.1.0
     # via -r requirements.in
@@ -125,7 +125,7 @@ typeguard==2.13.3
     #   cdk-nag
     #   constructs
     #   jsii
-typing-extensions>=4.12.0
+typing-extensions==4.12.2
     # via
     #   cattrs
     #   jsii
