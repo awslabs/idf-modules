@@ -10,6 +10,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## UNRELEASED
 
 ### **Added**
+
+### **Changed**
+- add eks:DescribeClusterVersions to eks admin role
+
+### **Removed**
+
+=======
+
+## v1.14.0 (2025-01-23)
+
+### **Added**
 - add prometheus and prometheus-workspaces endpoints
 - adding eks support v1.30 in datafiles `1.30.yaml`
 

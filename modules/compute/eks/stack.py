@@ -670,6 +670,7 @@ class Eks(Stack):  # type: ignore
             "Effect": "Allow",
             "Action": [
                 "eks:DescribeCluster",
+                "eks:DescribeClusterVersions",
                 "iam:Get*",
                 "cloudformation:List*",
                 "cloudformation:Describe*",
