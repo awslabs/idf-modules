@@ -451,7 +451,7 @@ class Eks(Stack):  # type: ignore
             ),
         )
 
-        eks_node_ami_type = ng_config.get("eks_node_ami_type")
+        eks_node_ami_type = getattr(eks.NodegroupAmiType, ng_config.get("eks_node_ami_type", "").upper())
         if not eks_node_ami_type:
             # Backward compatiblity - use AL2
             # WARNING: For Kubernetes versions 1.33 and later, EKS will not provide
