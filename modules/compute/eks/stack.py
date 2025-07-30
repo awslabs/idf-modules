@@ -451,12 +451,19 @@ class Eks(Stack):  # type: ignore
             ),
         )
 
+        eks_node_ami_type = ng_config.get("eks_node_ami_type")
+        if not eks_node_ami_type:
+            # Backward compatiblity - use AL2
+            # WARNING: For Kubernetes versions 1.33 and later, EKS will not provide
+            # pre-built optimized Amazon Linux 2 (AL2) Amazon Machine Images (AMIs).
+            eks_node_ami_type = (
+                eks.NodegroupAmiType.AL2_X86_64_GPU if ng_config.get("use_gpu_ami") else eks.NodegroupAmiType.AL2_X86_64
+            )
+
         nodegroup = eks_cluster.add_nodegroup_capacity(
             f"cluster-default-{ng_config.get('eks_ng_name')}",
             capacity_type=node_capacity_type,
-            ami_type=eks.NodegroupAmiType.AL2_X86_64_GPU
-            if ng_config.get("use_gpu_ami")
-            else eks.NodegroupAmiType.AL2_X86_64,
+            ami_type=eks_node_ami_type,
             desired_size=ng_config.get("eks_node_quantity"),
             min_size=ng_config.get("eks_node_min_quantity"),
             max_size=ng_config.get("eks_node_max_quantity"),
