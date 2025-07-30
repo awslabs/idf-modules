@@ -10,8 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## UNRELEASED
 
 ### **Added**
+- added k8s version files for 1.31, 1.32, and 1.33
+- updated AMIs for 1.29, and 1.30
 
 ### **Changed**
+- added `eks_node_ami_type` to `eks` module node group config to allow using AL2023 & Bottlerocket AMI Types
 
 ### **Removed**
 
