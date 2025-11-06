@@ -1,0 +1,51 @@
+ami:
+  version: 1.31.7-20250715
+charts:
+  nvidia_device_plugin:
+    version: 0.17.3  # Latest version, supports K8s 1.31
+  alb_controller:
+    version: 1.13.3  # Latest AWS Load Balancer Controller
+  aws_vpc_cni:
+    version: 1.20.0  # Latest AWS VPC CNI
+  calico:
+    version: v3.25.1  # Keep existing - still compatible
+  cert_manager:
+    version: v1.18.2  # Latest cert-manager (supports K8s >= 1.22)
+  cluster_autoscaler:
+    version: 9.44.0  # Matches K8s 1.31.0 app version
+    replication:
+      cluster_autoscaler:
+        tag: v1.31.0  # Updated to match K8s version
+  ebs_csi_driver:
+    version: 2.17.2  # Keep existing - AWS managed
+  efs_csi_driver:
+    version: 2.4.1   # Keep existing - AWS managed
+  external_dns:
+    version: 1.18.0  # Latest external-dns
+  external_secrets:
+    # skip: true
+    version: 0.18.2  # Latest external-secrets (supports K8s >= 1.19)
+  fluentbit:
+    version: 0.50.0  # Latest fluent-bit
+  fsx_driver:
+    # skip: true
+    version: 1.9.0   # Keep existing - AWS managed
+  grafana:
+    # skip: true
+    version: 8.6.1   # Keep existing - part of prometheus stack
+  kured:
+    version: 5.6.2   # Latest kured
+  kyverno:
+    version: 3.4.4   # Latest kyverno (supports K8s >= 1.25)
+  kyverno_policy_reporter:
+    version: 3.3.2   # Latest policy reporter
+  metrics_server:
+    version: 3.13.0  # Latest metrics server
+  prometheus_stack:
+    # skip: true
+    version: 75.15.1  # Latest prometheus stack
+  secrets_manager_csi_driver:
+    version: 1.5.3   # Latest secrets store CSI driver
+additional_images:
+  cloudwatch_agent: "public.ecr.aws/cloudwatch-agent/cloudwatch-agent:1.300041.0b681"
+  secrets_store_csi_driver_provider_aws: "public.ecr.aws/aws-secrets-manager/secrets-store-csi-driver-provider-aws:1.0.r2-6-gee95299-2022.04.14.21.07"

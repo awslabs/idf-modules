@@ -98,9 +98,10 @@ Security:
           eks_node_min_quantity: Declare the Node group minimum size here
           eks_node_disk_size: Declare the Node group EBS volume disk size here
           eks_node_instance_type: Declare the Node group desired instance type here
+          eks_node_ami_type: Declare the Node AMI Type. Supported AMI types in [documentation](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_eks.NodegroupAmiType.html#members). By default, set to `AL2_X86_64`, or `AL2_X86_64_GPU` if `use_gpu_ami` is `True`. WARNING: For Kubernetes versions 1.33 and later, EKS will not provide pre-built optimized Amazon Linux 2 (AL2) Amazon Machine Images (AMIs).
+          use_gpu_ami: Enable if you want to deploy GPU instances in the node group
           eks_node_labels: Declare the Kubernetes labels here, so they will be propogated to the nodes
           eks_node_taints: Declare the Kubernetes taints here, so they will be propogated to the nodes. Pods should tolerate these taints for being able to schedule workloads on them
-          use_gpu_ami: Enable if you want to deploy GPU instances in the node group
           install_nvidia_device_plugin: Install [Nvidia Device plugin](https://github.com/NVIDIA/k8s-device-plugin) for management of available GPU resources on a node. You would need to use an AMI with GPU drivers, container runtime already configured. It is recommended to use AWS GPU Optimized AMI, which is done for you if you set the attribute `use_gpu_ami` above. Checkout the [example](https://github.com/NVIDIA/k8s-device-plugin?tab=readme-ov-file#running-gpu-jobs) here on how to request GPUs from the pod spec.
           
       ```
