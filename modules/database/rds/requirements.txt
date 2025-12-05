@@ -97,5 +97,5 @@ typing-extensions==4.8.0
     #   jsii
     #   pydantic
     #   pydantic-core
-urllib3==1.26.19
+urllib3==2.6.0
     # via botocore
