@@ -7,7 +7,7 @@ import sys
 import aws_cdk as cdk
 import pytest
 from aws_cdk.assertions import Template
-from moto import mock_ec2, mock_eks
+from moto import mock_aws
 
 
 @pytest.fixture(scope="function")
@@ -21,8 +21,7 @@ def stack_defaults():
         del sys.modules["stack"]
 
 
-@mock_eks
-@mock_ec2
+@mock_aws
 def test_synthesize_stack(stack_defaults):
     import stack
 
@@ -39,6 +38,7 @@ def test_synthesize_stack(stack_defaults):
                 "eks_node_min_quantity": 1,
                 "eks_node_disk_size": 20,
                 "eks_node_instance_type": "m5.large",
+                "eks_node_ami_type": "AL2_x86_64",
             }
         ],
         "eks_node_spot": "False",

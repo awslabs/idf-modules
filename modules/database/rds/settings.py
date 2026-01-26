@@ -11,7 +11,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing_extensions import Literal
 
 
-class EnvBaseSettings(BaseSettings, ABC):
+class EnvBaseSettings(BaseSettings, ABC):  # type: ignore[misc]
     """Defines common configuration for settings."""
 
     model_config = SettingsConfigDict(

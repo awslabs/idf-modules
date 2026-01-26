@@ -4,7 +4,7 @@
 import unittest
 
 import boto3
-from moto import mock_ec2
+from moto import mock_aws
 
 import helpers
 
@@ -77,7 +77,7 @@ class TestHelperMethods(unittest.TestCase):
         result = helpers.get_ami_version(eks_version)
         self.assertEqual(result, "1.25.7-20230406")
 
-    @mock_ec2
+    @mock_aws
     def test_get_az_from_subnet(self):
         boto3.setup_default_session()
         ec2 = boto3.resource("ec2", region_name="us-east-1")

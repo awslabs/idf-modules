@@ -37,9 +37,10 @@ def test_process_chart(mock_logger, mock_environment_variables):
         ecr_utils_mock.login_to_ecr.return_value = True
 
         # Mock run_command
-        with patch("replicate_charts.run_command") as mock_run_command, patch(
-            "replicate_charts.get_credentials"
-        ) as mock_get_credentials:
+        with (
+            patch("replicate_charts.run_command") as mock_run_command,
+            patch("replicate_charts.get_credentials") as mock_get_credentials,
+        ):
             mock_run_command.return_value = True
             mock_get_credentials.return_value = ("username", "password")
 
