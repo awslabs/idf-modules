@@ -94,7 +94,7 @@ python-dateutil==2.9.0.post0
     #   botocore
     #   jsii
     #   moto
-pyyaml==6.0.2
+pyyaml==6.0.3
     # via
     #   -r requirements.in
     #   responses

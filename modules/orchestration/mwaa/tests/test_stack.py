@@ -38,7 +38,7 @@ def test_synthesize_stack(stack_defaults):
         private_subnet_ids=["subnet-12345", "subnet-54321"],
         dag_bucket_name="test-idf-dag-bucket",
         dag_path="test-dags-path",
-        airflow_version="2.5.1",
+        airflow_version="2.11.1",
         environment_class="mw1.small",
         max_workers=25,
         unique_requirements_file="test.txt",
