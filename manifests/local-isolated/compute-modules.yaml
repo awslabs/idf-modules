@@ -39,7 +39,7 @@ parameters:
 name: eks
 path: modules/compute/eks/
 dataFiles:
-  - filePath: data/eks_dockerimage-replication/versions/1.25.yaml
+  - filePath: data/eks_dockerimage-replication/versions/1.30.yaml
   - filePath: data/eks_dockerimage-replication/versions/default.yaml
 parameters:
   - name: replicated-ecr-images-metadata-s3-path

@@ -10,8 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## UNRELEASED
 
 ### **Added**
-- added k8s version files for 1.31, 1.32, and 1.33
-- updated AMIs for 1.29, and 1.30
+- added k8s version files for 1.31, 1.32, 1.33, and 1.34
+- updated AMIs for 1.30
 - added Python 3.10, 3.11, and 3.12 to CI test matrix for broader version coverage
 
 ### **Changed**
@@ -22,8 +22,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - upgraded moto from 4.x to 5.x in EKS module tests (changed `mock_ec2`/`mock_eks` to `mock_aws`)
 - updated all pyproject.toml files to target Python 3.11
 - regenerated all requirements.txt files with Python 3.11 compatibility
+- updated default EKS version in manifests and documentation from 1.25/1.29 to 1.30
 
 ### **Removed**
+- removed deprecated EKS version files: 1.23, 1.24, 1.25, 1.26, 1.29 (end of life or extended support ending soon)
 
 =======
 

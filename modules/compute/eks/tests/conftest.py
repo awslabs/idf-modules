@@ -3,6 +3,10 @@
 
 import os
 
+# Set environment variables early, before module imports
+os.environ["AWS_DEFAULT_REGION"] = "us-east-1"
+os.environ["VERSIONS_DIR"] = "tests/versions"
+
 
 def pytest_generate_tests(metafunc):
     os.environ["AWS_DEFAULT_REGION"] = "us-east-1"

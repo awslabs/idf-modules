@@ -2,7 +2,7 @@
 
 - `default.yaml`: This is configuration file specifying the default version of EKS Addons to be deployed
 
-- `k8s-version.yaml`(This is named after a specific EKS version): This file is a version-specific configuration file for EKS Addons.It contains specific configuration values relevant to EKS version 1.25, 1.24, etc.
+- `k8s-version.yaml`(This is named after a specific EKS version): This file is a version-specific configuration file for EKS Addons.It contains specific configuration values relevant to EKS version 1.30, 1.31, etc.
 
 - `stack.py`: This reads the default.yaml file to determine the default version of EKS Addon to be deployed. This version is used later when adding the Helm chart for Addon to the EKS cluster.
 

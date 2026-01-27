@@ -47,9 +47,9 @@ otherwise the tag values would be in the below format.
 
 * Browse for the open source add on repository over the internet. 
 
-* Check for the latest stable version in the tags section, add that version in the files(default.yaml & 1.25.yaml, etc) in the versions directory. 
+* Check for the latest stable version in the tags section, add that version in the files(default.yaml & 1.30.yaml, etc) in the versions directory.
 
-* Go to charts folder, check for the values.yaml. Check for the image in the images specification and add those images in the (default.yaml & 1.25.yaml, etc). 
+* Go to charts folder, check for the values.yaml. Check for the image in the images specification and add those images in the (default.yaml & 1.30.yaml, etc). 
 
 
 `2. Terminal`: Inspecting the images, values locally through the terminal 

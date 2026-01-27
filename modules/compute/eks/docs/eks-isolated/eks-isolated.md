@@ -77,7 +77,7 @@ dataFiles:
   - filePath: data/eks_dockerimage-replication/versions/default.yaml
 parameters:
   - name: eks-version
-    value: 1.25
+    value: 1.30
     # valueFrom:
     #   envVariable: GLOBAL_EKS_VERSION
 ```
@@ -122,7 +122,7 @@ parameters:
   - name: eks-read-only-role-name
     value: ReadOnly
   - name: eks-version
-    # value: 1.25
+    # value: 1.30
     valueFrom:
       envVariable: GLOBAL_EKS_VERSION
   - name: eks-compute
@@ -216,7 +216,7 @@ parameters:
   - name: eks-read-only-role-name
     value: ReadOnly
   - name: eks-version
-    # value: 1.25
+    # value: 1.30
     valueFrom:
       envVariable: GLOBAL_EKS_VERSION
   - name: eks-compute

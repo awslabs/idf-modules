@@ -88,7 +88,7 @@ def test_synthesize_stack(stack_defaults):
         vpc_id="vpc-12345",
         controlplane_subnet_ids=["subnet-12345", "subnet-54321"],
         dataplane_subnet_ids=["subnet-12345", "subnet-54321"],
-        eks_version="1.29",
+        eks_version="1.30",
         eks_compute_config=eks_compute_config,
         eks_addons_config=eks_addons_config,
         custom_subnet_ids=["subnet-12345", "subnet-54321"],
