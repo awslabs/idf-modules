@@ -17,19 +17,17 @@ dest_path = "/usr/local/bin/helm"
 
 def get_distro() -> requests.models.Response:
     if distro_secret is None:
-        logger.info(f"Using with URL: {distro_url} without authentication")
+        logger.info("Downloading Helm distribution without authentication")
         response = requests.get(distro_url, stream=True)
         return response
     else:
         user, pwd = get_credentials(distro_secret, distro_key)
         if user is None or pwd is None:
-            logger.info(
-                f"Using with URL: {distro_url} without authentication as no user/pwd were found with {distro_secret}"
-            )
+            logger.info("Downloading Helm distribution without authentication (credentials not found in secret)")
             response = requests.get(distro_url, stream=True)
             return response
         else:
-            logger.info(f"Using with URL: {distro_url} with authentication from {distro_secret}")
+            logger.info("Downloading Helm distribution with authentication")
             response = requests.get(distro_url, stream=True, auth=(user, pwd))
             return response
 

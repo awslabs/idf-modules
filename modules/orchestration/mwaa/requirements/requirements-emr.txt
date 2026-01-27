@@ -1,9 +1,9 @@
 Pillow~=10.3.0
 awscli~=1.22.80
 airflow-kubernetes-job-operator~=2.0.4
-apache-airflow[package-extra]==2.5.1
+apache-airflow[package-extra]==2.11.1
 apache-airflow[amazon]
-apache-airflow-providers-cncf-kubernetes~=3.0.0
+apache-airflow-providers-cncf-kubernetes~=8.5.0
 boto3-stubs[essential]~=1.42.0
 mypy-boto3-batch~=1.42.0
-sagemaker==2.218.0
+sagemaker==2.237.3

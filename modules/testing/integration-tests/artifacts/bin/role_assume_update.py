@@ -15,13 +15,13 @@ trusted_principals = iam.get_role(RoleName=ROLE_NAME)["Role"][
 if not isinstance(trusted_principals, list):
     trusted_principals = [trusted_principals]
     print(
-        f"Current principals in assume role policy for {ROLE_NAME}: {trusted_principals}"
+        f"Current principals count in assume role policy for {ROLE_NAME}: {len(trusted_principals)}"
     )
 
 principals = []
 for principal in trusted_principals:
     if "arn:" not in principal:
-        print(f"Removing non-existent principal: {principal}")
+        print("Removing non-existent principal (non-ARN format)")
     else:
         principals.append(principal)
 

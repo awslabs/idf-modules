@@ -77,14 +77,15 @@ def run_command(
     try:
         result = subprocess.run(command, input=input, shell=shell, check=True, text=True, capture_output=capture_output)  # type: ignore
         if error_indicator in result.stderr:
-            logger.info(f"Error Occurred execution command {mask_sensitive_data(command)}")  # type: ignore
+            logger.info(f"Error occurred executing command {mask_sensitive_data(command)}")  # type: ignore
             return False
         else:
             return True
-    except subprocess.CalledProcessError as e:
+    except subprocess.CalledProcessError:
         # Sanitize the command to hide passwords
         sanitized_command = mask_sensitive_data(command)  # type: ignore
-        logger.info(f"Error running command: {sanitized_command}\n{e.stderr if capture_output else ''}")
+        # Do not log stderr as it may contain sensitive information such as credentials
+        logger.info(f"Error running command: {sanitized_command}")
         return False
 
 

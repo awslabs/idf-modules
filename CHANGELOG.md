@@ -22,6 +22,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - upgraded moto from 4.x to 5.x in EKS module tests (changed `mock_ec2`/`mock_eks` to `mock_aws`)
 - updated all pyproject.toml files to target Python 3.11
 - regenerated all requirements.txt files with Python 3.11 compatibility
+- upgraded `tj-actions/changed-files` from v44 to v46.0.1 in GitHub Actions workflows
+- upgraded Apache Airflow from 2.5.1 to 2.11.1 in `mwaa` module
+- upgraded `apache-airflow-providers-cncf-kubernetes` from ~3.0.0 to ~8.5.0
+- upgraded `sagemaker` from 2.218.0 to 2.237.3 in MWAA requirements files
+- upgraded `wheel` from ~0.43.0 to ~0.46.2 in dev dependencies
+- added explicit `permissions: contents: read` to GitHub Actions workflow jobs
+- fixed clear-text logging in `dockerimage-replication` and `integration-tests` modules
 
 ### **Removed**
 
