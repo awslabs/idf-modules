@@ -103,6 +103,6 @@ class CDKSettings(EnvBaseSettings):
 class ApplicationSettings(EnvBaseSettings):
     """Application settings."""
 
-    seedfarmer_settings: SeedFarmerSettings = Field(default_factory=SeedFarmerSettings)
-    module_settings: ModuleSettings = Field(default_factory=ModuleSettings)
-    cdk_settings: CDKSettings = Field(default_factory=CDKSettings)
+    seedfarmer_settings: SeedFarmerSettings = Field(default_factory=lambda: SeedFarmerSettings())
+    module_settings: ModuleSettings = Field(default_factory=lambda: ModuleSettings())
+    cdk_settings: CDKSettings = Field(default_factory=lambda: CDKSettings())

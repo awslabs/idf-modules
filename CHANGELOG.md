@@ -23,6 +23,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - updated all pyproject.toml files to target Python 3.11
 - regenerated all requirements.txt files with Python 3.11 compatibility
 - updated default EKS version in manifests and documentation from 1.25/1.29 to 1.30
+- upgraded `tj-actions/changed-files` from v44 to v46.0.1 in GitHub Actions workflows
+- upgraded Apache Airflow from 2.5.1 to 2.11.1 in `mwaa` module
+- upgraded `apache-airflow-providers-cncf-kubernetes` from ~3.0.0 to ~8.5.0
+- upgraded `sagemaker` from 2.218.0 to 2.237.3 in MWAA requirements files
+- upgraded `wheel` from ~0.43.0 to ~0.46.2 in dev dependencies
+- added explicit `permissions: contents: read` to GitHub Actions workflow jobs
+- fixed clear-text logging in `dockerimage-replication` and `integration-tests` modules
 
 ### **Removed**
 - removed deprecated EKS version files: 1.23, 1.24, 1.25, 1.26, 1.29 (end of life or extended support ending soon)
