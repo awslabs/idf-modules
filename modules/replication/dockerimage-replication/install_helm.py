@@ -17,17 +17,20 @@ dest_path = "/usr/local/bin/helm"
 
 def get_distro() -> requests.models.Response:
     if distro_secret is None:
-        logger.info("Downloading Helm distribution without authentication")
+        # Security: This log message only indicates authentication mode, no credentials are logged.
+        logger.info("Downloading Helm distribution without authentication")  # nosec
         response = requests.get(distro_url, stream=True)
         return response
     else:
         user, pwd = get_credentials(distro_secret, distro_key)
         if user is None or pwd is None:
-            logger.info("Downloading Helm distribution without authentication (credentials not found in secret)")
+            # Security: This log message only indicates authentication mode, no credentials are logged.
+            logger.info("Downloading Helm distribution without authentication (credentials not found in secret)")  # nosec
             response = requests.get(distro_url, stream=True)
             return response
         else:
-            logger.info("Downloading Helm distribution with authentication")
+            # Security: This log message only indicates authentication mode, no credentials are logged.
+            logger.info("Downloading Helm distribution with authentication")  # nosec
             response = requests.get(distro_url, stream=True, auth=(user, pwd))
             return response
 
