@@ -54,7 +54,7 @@ parameters:
 - `dag-path`: path in the S3 Bucket to configure the MWAA Environment to monitor for DAG artifacts. Defaults to `dags` if none is provided
 - `environment-class`: the MWAA Environement Instance Class. Defaults to `mw1.small` if none is provided
 - `max-workers`: the Maximum number of workers to configure the MWAA Environment to allow. Defaults to `25` if none is provided
-- `airflow-version`: The Airflow version you would want to set in the module. It is defaulted to `2.5.1`
+- `airflow-version`: The Airflow version you would want to set in the module. It is defaulted to `2.11.1`
 - `mwaa-requirements-file` - Support for customized requiremements file installed on MWAA
   - ANY file referenced MUST be located `modules/core/mwaa/requirements/*.txt` and be python requirements compliant
   - in if not provided, default is `requirements.txt`

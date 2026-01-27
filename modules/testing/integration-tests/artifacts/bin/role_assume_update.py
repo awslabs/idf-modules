@@ -14,19 +14,22 @@ trusted_principals = iam.get_role(RoleName=ROLE_NAME)["Role"][
 ]["Statement"][0]["Principal"]["AWS"]
 if not isinstance(trusted_principals, list):
     trusted_principals = [trusted_principals]
-    print(
-        f"Current principals in assume role policy for {ROLE_NAME}: {trusted_principals}"
+    # Security: Only logging a count (integer) and role name - no secrets or credentials exposed.
+    print(  # nosec
+        f"Current principals count in assume role policy for {ROLE_NAME}: {len(trusted_principals)}"
     )
 
 principals = []
 for principal in trusted_principals:
     if "arn:" not in principal:
-        print(f"Removing non-existent principal: {principal}")
+        # Security: Status message only, no sensitive data logged.
+        print("Removing non-existent principal (non-ARN format)")  # nosec
     else:
         principals.append(principal)
 
 if ROLE_ARN not in principals:
-    print(f"{ROLE_ARN} not in trusted principals list and will be added.")
+    # Security: Role ARNs are resource identifiers, not secrets or credentials.
+    print(f"{ROLE_ARN} not in trusted principals list and will be added.")  # nosec
     principals.append(ROLE_ARN)
 
 policy_document = json.dumps(
