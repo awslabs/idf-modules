@@ -229,13 +229,16 @@ class Eks(Stack):  # type: ignore
                     self._install_nvidia_device_plugin(eks_cluster, eks_version, replicated_ecr_images_metadata)
 
         # AWS Load Balancer Controller
+        awslbcontroller_chart = None
         if eks_addons_config.get("deploy_aws_lb_controller"):
             awslbcontroller_chart = self._create_aws_lb_controller(
                 eks_cluster, eks_version, vpc_id, replicated_ecr_images_metadata, eks_addons_config
             )
 
         if eks_addons_config.get("deploy_nginx_controller"):
-            self._create_nginx_controller(eks_cluster, eks_version, replicated_ecr_images_metadata, eks_addons_config)
+            self._create_nginx_controller(
+                eks_cluster, eks_version, replicated_ecr_images_metadata, eks_addons_config, awslbcontroller_chart
+            )
 
         # AWS S3 CSI Driver
         if eks_addons_config.get("deploy_aws_s3_csi"):
@@ -341,7 +344,12 @@ class Eks(Stack):  # type: ignore
         # Kyverno policies
         if eks_addons_config.get("deploy_kyverno"):
             self._deploy_kyverno(
-                eks_cluster, project_dir, eks_version, replicated_ecr_images_metadata, eks_addons_config
+                eks_cluster,
+                project_dir,
+                eks_version,
+                replicated_ecr_images_metadata,
+                eks_addons_config,
+                awslbcontroller_chart,
             )
 
         # Configure EKS/K8s RBAC with ready to assume roles based on org reqs
@@ -451,7 +459,8 @@ class Eks(Stack):  # type: ignore
             ),
         )
 
-        eks_node_ami_type = getattr(eks.NodegroupAmiType, ng_config.get("eks_node_ami_type", "").upper())
+        ami_type_str = ng_config.get("eks_node_ami_type", "")
+        eks_node_ami_type = getattr(eks.NodegroupAmiType, ami_type_str.upper(), None) if ami_type_str else None
         if not eks_node_ami_type:
             # Backward compatiblity - use AL2
             # WARNING: For Kubernetes versions 1.33 and later, EKS will not provide
@@ -835,6 +844,7 @@ class Eks(Stack):  # type: ignore
             repository=get_chart_repo(str(eks_version), ALB_CONTROLLER, replicated_ecr_images_metadata),
             release="awslbcontroller",
             namespace="kube-system",
+            wait=True,  # Wait for ALB Controller pods to be ready (webhook must be available)
             values=deep_merge(
                 {
                     "clusterName": eks_cluster.cluster_name,
@@ -854,7 +864,9 @@ class Eks(Stack):  # type: ignore
         awslbcontroller_chart.node.add_dependency(awslbcontroller_service_account)
         return awslbcontroller_chart
 
-    def _create_nginx_controller(self, eks_cluster, eks_version, replicated_ecr_images_metadata, eks_addons_config):
+    def _create_nginx_controller(
+        self, eks_cluster, eks_version, replicated_ecr_images_metadata, eks_addons_config, awslbcontroller_chart=None
+    ):
         """
         Creates the NGINX Ingress Controller.
         """
@@ -903,6 +915,9 @@ class Eks(Stack):  # type: ignore
                 ),
             )
             nginx_controller_chart.node.add_dependency(nginx_controller_service_account)
+            # Ensure ALB Controller webhook is ready before installing NGINX (creates Service resources)
+            if awslbcontroller_chart:
+                nginx_controller_chart.node.add_dependency(awslbcontroller_chart)
 
     def _create_s3_csi_addon(self, eks_cluster, project_name, mountpoint_buckets):
         """
@@ -1324,7 +1339,15 @@ class Eks(Stack):  # type: ignore
 
         default_deny_policy.node.add_dependency(allow_tigera_operator_policy)
 
-    def _deploy_kyverno(self, eks_cluster, project_dir, eks_version, replicated_ecr_images_metadata, eks_addons_config):
+    def _deploy_kyverno(
+        self,
+        eks_cluster,
+        project_dir,
+        eks_version,
+        replicated_ecr_images_metadata,
+        eks_addons_config,
+        awslbcontroller_chart=None,
+    ):
         """
         Deploys the Kyverno policy engine plugin for the EKS cluster.
         """
@@ -1347,6 +1370,9 @@ class Eks(Stack):  # type: ignore
                 release="kyverno",
                 namespace="kyverno",
             )
+            # Ensure ALB Controller webhook is ready before installing Kyverno (creates Service resources)
+            if awslbcontroller_chart:
+                kyverno_chart.node.add_dependency(awslbcontroller_chart)
 
             if eks_addons_config.get("deploy_calico"):
                 with open(os.path.join(project_dir, "network-policies/default-allow-kyverno.json"), "r") as f:
@@ -1400,6 +1426,9 @@ class Eks(Stack):  # type: ignore
             )
 
             kyverno_policy_reporter_chart.node.add_dependency(kyverno_chart)
+            # Ensure ALB Controller webhook is ready before installing policy reporter (creates Service resources)
+            if awslbcontroller_chart:
+                kyverno_policy_reporter_chart.node.add_dependency(awslbcontroller_chart)
 
     def _deploy_metrics_server(self, eks_cluster, eks_version, replicated_ecr_images_metadata, eks_addons_config):
         """
