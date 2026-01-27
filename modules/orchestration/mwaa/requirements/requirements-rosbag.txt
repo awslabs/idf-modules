@@ -2,6 +2,6 @@ Pillow~=10.3.0
 awscli~=1.22.80
 airflow-kubernetes-job-operator~=2.0.4
 apache-airflow-providers-cncf-kubernetes~=2.1.0
-boto3-stubs[essential]~=1.21.37
-mypy-boto3-batch~=1.22.8
+boto3-stubs[essential]~=1.42.0
+mypy-boto3-batch~=1.42.0
 sagemaker==2.218.0

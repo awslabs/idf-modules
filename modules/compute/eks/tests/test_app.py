@@ -32,6 +32,7 @@ def stack_defaults():
                     "eks_node_min_quantity": 1,
                     "eks_node_disk_size": 20,
                     "eks_node_instance_type": "m5.large",
+                    "eks_node_ami_type": "AL2_x86_64",
                 },
                 {
                     "eks_ng_name": "ng2",
@@ -40,6 +41,7 @@ def stack_defaults():
                     "eks_node_min_quantity": 1,
                     "eks_node_disk_size": 20,
                     "eks_node_instance_type": "m5.xlarge",
+                    "eks_node_ami_type": "AL2_x86_64",
                 },
             ],
             "eks_node_spot": "False",

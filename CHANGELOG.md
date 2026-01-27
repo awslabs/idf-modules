@@ -12,9 +12,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### **Added**
 - added k8s version files for 1.31, 1.32, and 1.33
 - updated AMIs for 1.29, and 1.30
+- added Python 3.10, 3.11, and 3.12 to CI test matrix for broader version coverage
 
 ### **Changed**
 - added `eks_node_ami_type` to `eks` module node group config to allow using AL2023 & Bottlerocket AMI Types
+- upgraded Python from 3.9 to 3.11 across all modules
+- upgraded urllib3 from 1.26.19 to 2.6.3, remediating 60 Dependabot alerts (45 High, 15 Medium)
+- upgraded boto3 from 1.26-1.34 to 1.42+ across all modules
+- upgraded moto from 4.x to 5.x in EKS module tests (changed `mock_ec2`/`mock_eks` to `mock_aws`)
+- updated all pyproject.toml files to target Python 3.11
+- regenerated all requirements.txt files with Python 3.11 compatibility
 
 ### **Removed**
 
