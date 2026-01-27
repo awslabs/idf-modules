@@ -32,7 +32,7 @@ def parse_args(args: Any) -> argparse.Namespace:
         "-e",
         "--eks-version",
         action="store",
-        default="1.25",
+        default="1.30",
         dest="eks_version",
         help="specify eks version",
         type=str,

@@ -10,8 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## UNRELEASED
 
 ### **Added**
-- added k8s version files for 1.31, 1.32, and 1.33
-- updated AMIs for 1.29, and 1.30
+- added k8s version files for 1.31, 1.32, 1.33, and 1.34
+- updated AMIs for 1.30
 - added Python 3.10, 3.11, and 3.12 to CI test matrix for broader version coverage
 
 ### **Changed**
@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - upgraded moto from 4.x to 5.x in EKS module tests (changed `mock_ec2`/`mock_eks` to `mock_aws`)
 - updated all pyproject.toml files to target Python 3.11
 - regenerated all requirements.txt files with Python 3.11 compatibility
+- updated default EKS version in manifests and documentation from 1.25/1.29 to 1.30
 - upgraded `tj-actions/changed-files` from v44 to v46.0.1 in GitHub Actions workflows
 - upgraded Apache Airflow from 2.5.1 to 2.11.1 in `mwaa` module
 - upgraded `apache-airflow-providers-cncf-kubernetes` from ~3.0.0 to ~8.5.0
@@ -31,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - fixed clear-text logging in `dockerimage-replication` and `integration-tests` modules
 
 ### **Removed**
+- removed deprecated EKS version files: 1.23, 1.24, 1.25, 1.26, 1.29 (end of life or extended support ending soon)
 
 =======
 

@@ -11,55 +11,55 @@ import helpers
 
 class TestHelperMethods(unittest.TestCase):
     def test__get_ami_version_from_file(self):
-        eks_version = "1.25"
+        eks_version = "1.30"
 
         result = helpers._get_ami_version_from_file(eks_version)
-        self.assertEqual(result, "1.25.7-20230406")
+        self.assertEqual(result, "1.30.11-20250715")
 
     def test__get_chart_release_from_file(self):
-        eks_version = "1.25"
+        eks_version = "1.30"
         workload = "alb_controller"
 
         result = helpers._get_chart_release_from_file(eks_version, workload)
         self.assertEqual(result, "aws-load-balancer-controller")
 
     def test__get_chart_release_from_file_non_default(self):
-        eks_version = "1.25"
+        eks_version = "1.30"
         workload = "test_workload"
 
         result = helpers._get_chart_release_from_file(eks_version, workload)
         self.assertEqual(result, "test-workload")
 
     def test__get_chart_repo_from_file(self):
-        eks_version = "1.25"
+        eks_version = "1.30"
         workload = "alb_controller"
 
         result = helpers._get_chart_repo_from_file(eks_version, workload)
         self.assertEqual(result, "https://aws.github.io/eks-charts")
 
     def test__get_chart_repo_from_file_non_default(self):
-        eks_version = "1.25"
+        eks_version = "1.30"
         workload = "test_workload"
 
         result = helpers._get_chart_repo_from_file(eks_version, workload)
         self.assertEqual(result, "https://kubernetes-sigs.github.io/test-workload/charts")
 
     def test__get_chart_version_from_file(self):
-        eks_version = "1.25"
+        eks_version = "1.30"
         workload = "alb_controller"
 
         result = helpers._get_chart_version_from_file(eks_version, workload)
-        self.assertEqual(result, "1.4.8")
+        self.assertEqual(result, "1.7.0")
 
     def test__get_chart_version_from_file_non_default(self):
-        eks_version = "1.25"
+        eks_version = "1.30"
         workload = "test_workload"
 
         result = helpers._get_chart_version_from_file(eks_version, workload)
         self.assertEqual(result, "1.0.1")
 
     def test__parse_versions_file(self):
-        eks_version = "1.25"
+        eks_version = "1.30"
 
         self.assertEqual(helpers._parse_versions_file(eks_version), None)
 
@@ -72,10 +72,10 @@ class TestHelperMethods(unittest.TestCase):
         self.assertEqual(result, {"a": 1, "b": 3, "c": 5, "d": 6})
 
     def test_get_ami_version(self):
-        eks_version = "1.25"
+        eks_version = "1.30"
 
         result = helpers.get_ami_version(eks_version)
-        self.assertEqual(result, "1.25.7-20230406")
+        self.assertEqual(result, "1.30.11-20250715")
 
     @mock_aws
     def test_get_az_from_subnet(self):
@@ -98,14 +98,14 @@ class TestHelperMethods(unittest.TestCase):
         )
 
     def test_get_chart_release(self):
-        eks_version = "1.25"
+        eks_version = "1.30"
         workload = "alb_controller"
 
         result = helpers.get_chart_release(eks_version, workload)
         self.assertEqual(result, "aws-load-balancer-controller")
 
     def test_get_chart_repo(self):
-        eks_version = "1.25"
+        eks_version = "1.30"
         workload = "alb_controller"
 
         result = helpers.get_chart_repo(eks_version, workload)
@@ -119,8 +119,8 @@ class TestHelperMethods(unittest.TestCase):
         self.assertEqual(result, {"image": {"repository": "test"}})
 
     def test_get_chart_version(self):
-        eks_version = "1.25"
+        eks_version = "1.30"
         workload = "alb_controller"
 
         result = helpers.get_chart_version(eks_version, workload)
-        self.assertEqual(result, "1.4.8")
+        self.assertEqual(result, "1.7.0")

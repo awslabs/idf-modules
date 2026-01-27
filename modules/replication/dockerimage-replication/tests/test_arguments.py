@@ -8,8 +8,8 @@ from replication.arguments import parse_args
 
 class TestArguments(unittest.TestCase):
     def test_arguments(self):
-        parser = parse_args(["-e", "1.25", "-d", "tests_versions", "-p", "000000"])
-        self.assertEqual(parser.eks_version, "1.25")
+        parser = parse_args(["-e", "1.30", "-d", "tests_versions", "-p", "000000"])
+        self.assertEqual(parser.eks_version, "1.30")
         self.assertEqual(parser.versions_dir, "tests_versions")
         self.assertEqual(parser.registry_prefix, "000000")
         self.assertFalse(parser.update_helm)

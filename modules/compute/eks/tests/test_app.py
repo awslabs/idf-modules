@@ -20,7 +20,7 @@ def stack_defaults():
     os.environ["SEEDFARMER_PARAMETER_VPC_ID"] = "vpc-12345"
     os.environ["SEEDFARMER_PARAMETER_DATAPLANE_SUBNET_IDS"] = json.dumps(["subnet-12345", "subnet-54321"])
     os.environ["SEEDFARMER_PARAMETER_CONTROLPLANE_SUBNET_IDS"] = json.dumps(["subnet-12345", "subnet-54321"])
-    os.environ["SEEDFARMER_PARAMETER_EKS_VERSION"] = "1.29"
+    os.environ["SEEDFARMER_PARAMETER_EKS_VERSION"] = "1.30"
     os.environ["SEEDFARMER_PARAMETER_MOUNTPOINT_BUCKETS"] = json.dumps(["test-bucket1"])
     os.environ["SEEDFARMER_PARAMETER_EKS_COMPUTE"] = json.dumps(
         {

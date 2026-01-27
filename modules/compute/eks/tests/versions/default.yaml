@@ -11,6 +11,10 @@ charts:
         tag:
           location: values
           path: image.tag
+  test_workload:
+    name: test-workload
+    repository: "https://kubernetes-sigs.github.io/test-workload/charts"
+    version: 1.0.1
   aws_vpc_cni:
     name: aws-vpc-cni
     repository: "https://aws.github.io/eks-charts"

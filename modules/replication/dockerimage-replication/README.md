@@ -87,7 +87,7 @@ The following `Optional Parameters` can be used with the AWS SecretsManager:
 
 There should be at least two (2) datafiles:
  - the `default.yaml` that has all the relative info (as provided by the idf repository)
- - the version yaml (ex `1.29.yaml`) that has the proper version updates to match your EKS version
+ - the version yaml (ex `1.30.yaml`) that has the proper version updates to match your EKS version
 
 #### Manifest Example declaration
 
@@ -95,11 +95,11 @@ There should be at least two (2) datafiles:
 name: replication
 path: git::https://github.com/awslabs/idf-modules.git//modules/replication/dockerimage-replication?ref=release/1.13.0
 dataFiles:
-  - filePath: data/eks_dockerimage-replication/versions/1.29.yaml
+  - filePath: data/eks_dockerimage-replication/versions/1.30.yaml
   - filePath: data/eks_dockerimage-replication/versions/default.yaml
 parameters:
   - name: eks-version
-    value: "1.29"
+    value: "1.30"
   - name: HelmRepoSecretName
     value: replicationexample
   - name: HelmDistroSecretName

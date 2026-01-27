@@ -4,7 +4,7 @@
 The datafiles serve to configure the EKS module with the proper helm chart and image information necessary to deploy on EKS.  There are two (2) files **necessary** for this support:
 - `default.yaml` - this base in which the data is provided
 - `<eks-version>.yaml` - the corresponding version file to override the version indicated in default.yaml to match the EKS cluster you are using
-    - for example `1.29.yaml` corresponds to an EKS cluster v 1.29
+    - for example `1.30.yaml` corresponds to an EKS cluster v 1.30
 
 If you are running an EKS cluster that has access to the public internet and do not want to change anything, there is no need for you to use the replication module.  Just refer to the proper data files in your manifest for the EKS module.
 
@@ -69,7 +69,7 @@ You can do this for any chart in the file.  If your DNS is protected by Basic Au
 #### Changing the DNS for images
 To allow for overriding the DNS in which images are fetched, this is done via a mapping defined in the `<eks-version>.yaml` file.  This does a batch replace for any DNS defined.
 
-Let's use the `1.29.yaml` as an example.  This file currently has NO MAPPINGS defined.  But, you can alter it with a `docker_mappings` section.  For example:
+Let's use the `1.30.yaml` as an example.  This file currently has NO MAPPINGS defined.  But, you can alter it with a `docker_mappings` section.  For example:
 
 ```yaml
 docker_mappings:
