@@ -79,4 +79,8 @@ CfnOutput(
     ),
 )
 
+custom_tags = json.loads(os.getenv(_param("CUSTOM_TAGS"), "{}"))
+for tag_key, tag_value in custom_tags.items():
+    aws_cdk.Tags.of(app).add(tag_key, tag_value)
+
 app.synth(force=True)
