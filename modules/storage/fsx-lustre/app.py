@@ -5,7 +5,7 @@ import json
 import logging
 import os
 
-from aws_cdk import App, CfnOutput, Environment
+from aws_cdk import App, CfnOutput, Environment, Tags
 
 from stack import FsxFileSystem
 
@@ -138,5 +138,9 @@ CfnOutput(
         }
     ),
 )
+
+custom_tags = json.loads(os.getenv(_param("CUSTOM_TAGS"), "{}"))
+for tag_key, tag_value in custom_tags.items():
+    Tags.of(app).add(tag_key, tag_value)
 
 app.synth(force=True)

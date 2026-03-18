@@ -1,6 +1,7 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
+import json
 import os
 
 import aws_cdk
@@ -75,5 +76,9 @@ aws_cdk.CfnOutput(
 )
 
 aws_cdk.Aspects.of(app).add(cdk_nag.AwsSolutionsChecks(log_ignores=True))
+
+custom_tags = json.loads(os.getenv("SEEDFARMER_PARAMETER_CUSTOM_TAGS", "{}"))
+for tag_key, tag_value in custom_tags.items():
+    aws_cdk.Tags.of(app).add(tag_key, tag_value)
 
 app.synth(force=True)

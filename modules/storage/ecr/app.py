@@ -1,6 +1,7 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
+import json
 import os
 
 import aws_cdk as cdk
@@ -69,5 +70,9 @@ if stack.lifecycle_max_image_count is not None:
     metadata["LifecycleMaxImages"] = stack.lifecycle_max_image_count
 
 CfnOutput(stack, "metadata", value=stack.to_json_string(metadata))
+
+custom_tags = json.loads(os.getenv(_param("CUSTOM_TAGS"), "{}"))
+for tag_key, tag_value in custom_tags.items():
+    cdk.Tags.of(app).add(tag_key, tag_value)
 
 app.synth()

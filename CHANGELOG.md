@@ -10,9 +10,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## UNRELEASED
 
 ### **Added**
+
+### **Changed**
+
+## v1.15.0
+
+### **Added**
 - added k8s version files for 1.31, 1.32, 1.33, and 1.34
 - updated AMIs for 1.30
 - added Python 3.10, 3.11, and 3.12 to CI test matrix for broader version coverage
+- added optional `custom_tags` parameter to buckets, ecr, fsx-lustre, basic-cdk, eks, and fsx-lustre-on-eks modules for customer-provided tag support
 
 ### **Changed**
 - added `eks_node_ami_type` to `eks` module node group config to allow using AL2023 & Bottlerocket AMI Types
