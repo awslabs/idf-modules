@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## UNRELEASED
 
 ### **Added**
+
+### **Changed**
+
+## v1.15.0
+
+### **Added**
 - added k8s version files for 1.31, 1.32, 1.33, and 1.34
 - updated AMIs for 1.30
 - added Python 3.10, 3.11, and 3.12 to CI test matrix for broader version coverage
