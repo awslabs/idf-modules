@@ -16,6 +16,7 @@ This module creates a Neptune cluster for use in IDF
 
 #### Optional
 - `number-instances`: The number of compute nodes, defaults to `2`
+- `parameter-group-family`: The Neptune parameter group family version (e.g., `1.2`, `1.3`, `1.4`), defaults to `1.4`
 
 
 ### Module Metadata Outputs

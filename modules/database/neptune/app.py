@@ -33,6 +33,7 @@ if not private_subnet_ids:
     raise ValueError("missing input parameter private-subnet-ids")
 
 num_instances = int(os.getenv(_param("NUMBER_INSTANCES"), "1"))
+parameter_group_family = os.getenv(_param("PARAMETER_GROUP_FAMILY"), "1.4")
 
 app = App()
 
@@ -49,6 +50,7 @@ stack = NeptuneStack(
     vpc_id=vpc_id,
     private_subnet_ids=private_subnet_ids,
     number_instances=num_instances,
+    parameter_group_family=parameter_group_family,
 )
 
 CfnOutput(

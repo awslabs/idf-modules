@@ -26,6 +26,7 @@ class NeptuneStack(Stack):
         vpc_id: str,
         private_subnet_ids: List[str],
         number_instances: int,
+        parameter_group_family: str = "1.4",
         **kwargs: Any,
     ) -> None:
         super().__init__(scope, id, description="This stack deploys Amazon Neptune Cluster resources", **kwargs)
@@ -41,6 +42,18 @@ class NeptuneStack(Stack):
         dep_mod = dep_mod[:27]
         # Tagging all resources
         Tags.of(scope=cast(IConstruct, self)).add(key="Deployment", value=full_dep_mod)
+
+        # Map parameter group family string to enum
+        family_map = {
+            "1.2": neptune.ParameterGroupFamily.NEPTUNE_1_2,
+            "1.3": neptune.ParameterGroupFamily.NEPTUNE_1_3,
+            "1.4": neptune.ParameterGroupFamily.NEPTUNE_1_4,
+        }
+        pg_family = family_map.get(parameter_group_family)
+        if pg_family is None:
+            raise ValueError(
+                f"Unsupported parameter-group-family: {parameter_group_family}. Supported values: 1.2, 1.3, 1.4"
+            )
 
         # Importing the VPC
         self.vpc = ec2.Vpc.from_lookup(
@@ -74,7 +87,7 @@ class NeptuneStack(Stack):
             self,
             f"{dep_mod}ClusterParams",
             description="Cluster parameter group",
-            family=neptune.ParameterGroupFamily.NEPTUNE_1_3,
+            family=pg_family,
             parameters={"neptune_enable_audit_log": "1"},
         )
 
@@ -82,7 +95,7 @@ class NeptuneStack(Stack):
             self,
             "DbParams",
             description="Db parameter group",
-            family=neptune.ParameterGroupFamily.NEPTUNE_1_3,
+            family=pg_family,
             parameters={"neptune_query_timeout": "120000"},
         )
 
