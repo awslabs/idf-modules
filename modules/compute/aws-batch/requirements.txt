@@ -85,5 +85,5 @@ typing-extensions==4.15.0
     # via
     #   cattrs
     #   jsii
-urllib3==2.6.3
+urllib3==2.8.0
     # via botocore
