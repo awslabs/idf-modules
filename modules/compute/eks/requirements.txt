@@ -128,7 +128,7 @@ urllib3==2.6.3
     #   botocore
     #   requests
     #   responses
-werkzeug==3.1.5
+werkzeug==3.1.9
     # via moto
 xmltodict==1.0.2
     # via moto
